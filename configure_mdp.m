@@ -25,27 +25,28 @@ switch model_name
         mdp = load(strcat(model_name,'.mat'));
         mdp.force_start = 0;
         % sarsa
-        mdp.sarsa.max_iter = 2000;
+        mdp.sarsa.max_iter = 700;
         mdp.sarsa.init_temp = 2;
         mdp.sarsa.temp_mult = 0.99;
         mdp.sarsa.stop_criterion = 0.001;
         mdp.sarsa.default_value = 5;
         mdp.sarsa.init_lr = 0.7;
-        mdp.ql.max_iter = 2000;
-        mdp.ql.init_temp = 0.2;
-        mdp.ql.stop_criterion = 0.001;
+        % q-learning
+        mdp.ql.max_iter = 500;
+        mdp.ql.init_temp = 0.3;
+        mdp.ql.stop_criterion = 0.0001;
         mdp.ql.optimistic_init = true;
-        mdp.ql.default_value = 5;
+        mdp.ql.default_value = 2;
         mdp.ql.init_lr = 0.7;
     case 'maze_2d'
         mdp = load(strcat(model_name,'.mat'));
         mdp.force_start = 1;
         % sarsa
         mdp.sarsa.max_iter = 20000;
-        mdp.sarsa.init_temp = 10;
-        mdp.sarsa.temp_mult = 0.9995;
+        mdp.sarsa.init_temp = 8;
+        mdp.sarsa.temp_mult = 0.999;
         mdp.sarsa.stop_criterion = 0.0001;
-        mdp.sarsa.default_value = 5;
+        mdp.sarsa.default_value = 10;
         mdp.sarsa.init_lr = 0.7;
         mdp.ql.max_iter = 2000;
         mdp.ql.init_temp = 0.4;
