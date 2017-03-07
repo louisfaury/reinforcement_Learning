@@ -15,11 +15,10 @@ switch model_name
         mdp.sarsa.default_value = 5;
         mdp.sarsa.init_lr = 0.7;
         % q-learning
-        mdp.ql.max_iter = 500;
-        mdp.ql.init_temp = 0.3;
-        mdp.ql.stop_criterion = 0.0001;
-        mdp.ql.optimistic_init = true;
-        mdp.ql.default_value = 2;
+        mdp.ql.max_iter = 2000;
+        mdp.ql.init_temp = 0.2;
+        mdp.ql.stop_criterion = 0.001;
+        mdp.ql.default_value = 5;
         mdp.ql.init_lr = 0.7;
     case 'obstacle_grid_2d'
         mdp = load(strcat(model_name,'.mat'));
@@ -34,13 +33,11 @@ switch model_name
         mdp.ql.max_iter = 2000;
         mdp.ql.init_temp = 0.2;
         mdp.ql.stop_criterion = 0.001;
-        mdp.ql.optimistic_init = true;
         mdp.ql.default_value = 5;
         mdp.ql.init_lr = 0.7;
     case 'maze_2d'
         mdp = load(strcat(model_name,'.mat'));
         mdp.force_start = 1;
-        % sarsa
         mdp.sarsa.max_iter = 20000;
         mdp.sarsa.init_temp = 10;
         mdp.sarsa.temp_mult = 0.9995;
@@ -50,7 +47,6 @@ switch model_name
         mdp.ql.max_iter = 2000;
         mdp.ql.init_temp = 0.4;
         mdp.ql.stop_criterion = 0.000;
-        mdp.ql.optimistic_init = false;
         mdp.ql.default_value = 0.2;
         mdp.ql.init_lr = 1;
     otherwise

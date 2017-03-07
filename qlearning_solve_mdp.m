@@ -26,7 +26,11 @@ for i=1:n
        if (mdp.states(i).terminal)
         mdp.states(i).actions(j).value = 0; 
        else
-           mdp.states(i).actions(j).value = 2*default_value_bound*(rand-0.5);
+           if (mdp.ql.optimistic_init)
+               mdp.states(i).actions(j).value = default_value_bound;
+           else
+               mdp.states(i).actions(j).value = 2*default_value_bound*(rand-0.5);
+           end
        end
     end
 end
