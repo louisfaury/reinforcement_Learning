@@ -13,7 +13,7 @@ if (mdp.force_start == 0)
         terminal = state.terminal;
     end
 else
-    index = mdp.force_start;
+    index = mdforce_start;
 end
 
 state_index = index;

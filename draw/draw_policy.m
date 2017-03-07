@@ -9,7 +9,7 @@ X = zeros(n,2);
 arrows = X;
 arrow_length = 0.8;
 
-for i=1:120
+for i=1:121
     X(i,:) = [mdp_states(i).coord];
 end
 

@@ -4,17 +4,19 @@ function [pi,mdp] = qlearning_solve_mdp(mdp)
 % @returns : - mdp = updated mdp
 %            - pi : optimal greedy policy w.r.t learned Q-values. 
 
-%% params
+%% hyper parameters
 n = size(mdp.states,2);
-max_iter = 1000;
+% mdp fixed by user
+max_iter                = mdp.ql.max_iter;
+temperature             = mdp.ql.init_temp;
+stop_criterion          = mdp.ql.stop_criterion;
+default_value_bound     = mdp.ql.default_value;
+alpha                   = mdp.ql.init_lr;
+% allocate
 deltas = zeros(max_iter,1);
 cum_reward_per_episode = zeros(max_iter,1);
-stop_criterion = 0.001;
 delta = 10;
-default_value = 2;
-alpha = 0.7; % initial learning rate 
 counts = ones(n,4); % counts for each state - learning rate adaptation 
-temperature = 0.3; % initial temperature for Bolztmann softmax 
 mini_batch_size = 15;
 
 %%  init qvalues
@@ -24,7 +26,7 @@ for i=1:n
        if (mdp.states(i).terminal)
         mdp.states(i).actions(j).value = 0; 
        else
-           mdp.states(i).actions(j).value = default_value;
+           mdp.states(i).actions(j).value = 2*default_value_bound*(rand-0.5);
        end
     end
 end
@@ -35,7 +37,7 @@ while (k<max_iter && delta>stop_criterion)
     delta = 0;
     cum_reward = 0;
     for j=1:mini_batch_size
-        state_index = pick_random_state(mdp.states);
+        state_index = pick_random_state(mdp);
         
         while(~mdp.states(state_index).terminal)
             % choosing next action, observing new state and reward 
@@ -47,7 +49,7 @@ while (k<max_iter && delta>stop_criterion)
             % update
             qvalue = mdp.states(state_index).actions(action_index).value;
             n_max_qvalue = max([mdp.states(next_state_index).actions.value]);
-            lrate = alpha/(counts(state_index,action_index)^(0.52));
+            lrate = alpha/(counts(state_index,action_index)^(0.51));
             u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_max_qvalue);
             counts(state_index,action_index) = counts(state_index,action_index)+1;
             delta = max(delta,abs(u_qvalue-qvalue));
@@ -61,7 +63,7 @@ while (k<max_iter && delta>stop_criterion)
     deltas(k) = delta;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
     %temperature = 0.99*temperature;
-    k = k+1;
+    k = k+1
 end
 
 pi = generate_greedy_policy(mdp.states);

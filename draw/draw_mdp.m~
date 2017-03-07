@@ -1,17 +1,17 @@
-function draw_mdp(mdp)
+function draw_mdp(mdp_states)
 % @brief : draws the state space of the mdp and rewards function
 % @param : state space of the mdp
 figure('units','normalized','outerposition',[0 0 1 1])
 
-n = size(mdp.states,2);
+n = size(mdp_states,2);
 hold on;
-max_reward = max([mdp.states.reward]);
+max_reward = max([mdp_states.reward]);
 
 for i=1:n
-    pos = mdp.states(i).coord;
+    pos = mdp_states(i).coord;
     face_color = [0.95,0.95,0.95];
     fontweight = 'normal';
-    reward = mdp.states(i).reward;
+    reward = mdp_states(i).reward;
     if (reward > 0)
         if (reward==max_reward)
             face_color = [0.9,0.1,0.1];
@@ -25,10 +25,10 @@ for i=1:n
         fontweight = 'bold';
     end
     if (mdp.force_start ==i)
-        face_color = [0.1,0.9,0.1];
+        face_color = [0.1,0.1,0.1];
     end
     rectangle('Position',[pos(1)-0.5,pos(2)-0.5,1,1],'FaceColor',face_color);
-    text(pos(1)+0.1,pos(2)+0.4,num2str(mdp.states(i).reward),'FontSize',6,'FontWeight',fontweight);
+    text(pos(1)+0.1,pos(2)+0.4,num2str(mdp_states(i).reward),'FontSize',6,'FontWeight',fontweight);
 end
 
 axis square;

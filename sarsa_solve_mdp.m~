@@ -3,20 +3,18 @@ function [pi,mdp] = sarsa_solve_mdp(mdp)
 % @param : mdp = Markov Decision Process to be solved using dynamic prog. 
 % @return : pi = optimal policy 
 
-%% hyper-parameters 
+%hyper-parameters 
 n = size(mdp.states,2);
-% mdp fixed by user
-max_iter                = mdp.sarsa.max_iter;
-temperature             = mdp.sarsa.init_temp;
-temperature_mult_factor = mdp.sarsa.temp_mult;
-stop_criterion          = mdp.sarsa.stop_criterion;
-default_value           = mdp.sarsa.default_value;
-alpha                   = mdp.sarsa.init_lr;
-% allocate
+max_iter = mdp.sarsa.max_iter;
 deltas = zeros(max_iter,1);
 cum_reward_per_episode = zeros(max_iter,1);
+stop_criterion = mdp.sarsa.stop_criterion;
 delta = 10;
-counts = ones(n,4); % counts for each state - learning rate tuning 
+default_value = mdp.sarsa.default_value;
+alpha = 0.7;                        % initial learning rate 
+counts = ones(n,4);                 % counts for each state - learning rate adaptation 
+temperature = mdp.sarsa.init_temperature;                   % initial temperature
+temperature_mult_factor = mdp.sarsa.temp_mult;   % temperature mult. factor update 
 mini_batch_size = 15;
 
 %%  init qvalues

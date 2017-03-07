@@ -45,24 +45,35 @@ save('./stored_mdps/free_grid_2d.mat','states');
 
 %% 2d- grid with obstacles
 for i=58:64
-    states(i).reward = -10;
+    states(i).reward = -5;
     states(i).terminal = true;
 end
 save('./stored_mdps/obstacle_grid_2d.mat','states');
 
 
+%% Maze for several rewards 
 for i=58:64
     states(i).reward = -0.1;
     states(i).terminal = false;
 end
 for i=34:42
-    states(i).reward = -10;
+    states(i).reward = -5;
     states(i).terminal = true;
 end
-for i=69:77
-    states(i).reward = -10;
+for i=58:62
+    states(i).reward = -5;
     states(i).terminal = true;
 end
+
+states(45).reward = 10; states(45).terminal = true;
+states(46).reward = -5; states(46).terminal = true;
+states(47).reward = -5; states(47).terminal = true;
+states(48).reward = -5; states(48).terminal = true;
+states(49).reward = -5; states(49).terminal = true;
+states(73).reward = -5; states(73).terminal = true;
+states(84).reward = -5; states(84).terminal = true;
+states(95).reward = -5; states(95).terminal = true;
+states(50).reward = 2; states(50).terminal = true;
+states(m*n).reward = -0.1; states(m*n).terminal = false;
+
 save('./stored_mdps/maze_2d.mat','states');
-
-
