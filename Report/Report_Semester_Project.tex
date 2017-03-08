@@ -268,16 +268,95 @@
 	
 		\section{Grid-world examples}
 		{
+			\paragraph{} We hereinafter describe two grid-world space, on which we will apply the learning rule derived in the latest section. Such example are trivial and are displayed here just to show convergence and behavior of the different algorithms. 
+			
+			\paragraph{} We'll consider the two following state space : 
+			\begin{figure}[h!]
+				\begin{minipage}{0.45\linewidth}
+					\includegraphics[width=\linewidth]{free_grid}
+					\caption{The \emph{free\_grid} state space}
+				\end{minipage}
+				\hfill
+				\begin{minipage}{0.45\linewidth}
+					\includegraphics[width=\linewidth]{bar_grid}
+					\caption{The \emph{bar\_grid} state space}
+				\end{minipage}
+			\end{figure}
 			\subsection{Dynamic Programing solving}
 			{
-			
+				\paragraph{} Let us run the DP algorithm on such grid worlds. We'll consider a stochastic environnement, with the transition probability : 
+				\begin{equation}
+					\mathcal{P}_{s,s'}^a = \left\{\begin{aligned} &0.9 &\text{ if }s' = s(a) \\ &0.1 &\text{ otherwise} \end{aligned}\right.
+				\end{equation}
+				Running the value iteration algorithm (assuming we now the environment model), we obtain the following policies and learning curves. The stopping criterion adresses the maximum absolute change brought to the value function as the sweeping goes through the state space : 
+				\begin{equation}
+					\text{ If } \max_{s\in\mathcal{S}} \vert V_{k+1}(s) - V_k \vert < \delta \text{ then stop}
+				\end{equation}
+				
+				\begin{figure}[h!]
+				\begin{minipage}{0.45\linewidth}
+					\includegraphics[width=\linewidth]{free_grid_bellman_policy}
+					\caption{The \emph{free\_grid} learned optimal policy}
+				\end{minipage}
+				\hfill
+				\begin{minipage}{0.45\linewidth}
+					\includegraphics[width=\linewidth]{bar_grid_bellman_policy}
+					\caption{The \emph{bar\_grid} learned optimal policy}
+				\end{minipage}
+				\end{figure}
+				
+				\begin{figure}[h!]
+				\begin{minipage}{0.45\linewidth}
+					\includegraphics[width=\linewidth]{free_grid_bellman_lc}
+					\caption{The \emph{free\_grid} value iteration learning curve}
+				\end{minipage}
+				\hfill
+				\begin{minipage}{0.45\linewidth}
+					\includegraphics[width=\linewidth]{bar_grid_bellman_lc}
+					\caption{The \emph{bar\_grid} value iteration learning curve}
+				\end{minipage}
+				\end{figure}
+				
+				\paragraph{} One can notice that for the \emph{bar\_grid} environment, the agent undergoes a longer trajectory than necessary, at the left of the obstacle. This is because of the stochastic nature of the environment, causing the agent to learn to takes its distance with the obstacle in order not to accidentally hit it (and then receive a very negative reward). 
+				
+				\paragraph{} The learned policy are indeed optimal. The next algorithms (SARSA and Q-learning) will try to reproduce them without a model for the environment. 
 			}
 			\subsection{SARSA solving}
 			{
-
+				\paragraph{} We display here the learning curves for the \emph{free\_grid} state space using SARSA. The algorithm manages to learn the optimal policy and the right action-value functions. We use \emph{optimistic initialization} to encourage exploration, and Gibbs sampling for following a soft-policy : $\forall (s,a) \in\mathcal{S}\times \mathcal{A}(s)$ 
+				\begin{equation}
+					\pi(s,a) = \displaystyle \frac{ e^{Q(s,a)/\tau}}{\sum_{a'\in\mathcal{A}(s)}e^{Q(s,a')/\tau}}
+				\end{equation}
+				We'll tune the distribution's temperature $\tau$ to zero, in order to converge toward the greedy policy w.r.t the learned action-value function. 
+				
+				\paragraph{} Following this strategy and tuning our learning rate to comply with the stochastic approximation conditions, we obtain the following learning curves. Again, our stopping criterion addresses the \emph{maximum change in the acton-value function over all the trajectories of a mini-batch}. 
+				\begin{figure}[h!]
+					\begin{minipage}{0.4\linewidth}
+						\includegraphics[width=\linewidth]{sarsa_learning_curve_free_grid}
+						\caption{Learning curve for SARSA on \emph{free\_grid}}
+					\end{minipage}
+					\hfill
+					\begin{minipage}{0.4\linewidth}
+						\includegraphics[width=\linewidth]{sarsa_average_rewards_freegrid}
+						\caption{Averaged rewards over mini-batch for SARSA on \emph{free\_grid}}
+					\end{minipage}
+				\end{figure}
+				  
 			}
 			\subsection{Q-learning solving}
 			{
+				\paragraph{} We display here the learning curves for the \emph{bar\_grid} state space using Q-learning. Again, the algorithm manages to learn the optimal policy and the right action-value functions. We use Gibbs sampling for the behavior policy, without any tuning for the temperature (the behavior policy doesn't need to be greedy in limit). The learning curves obtained are given hereinafter.
+				\begin{figure}[h!]
+					\begin{minipage}{0.4\linewidth}
+						\includegraphics[width=\linewidth]{bargrid_ql_learning_curve}
+						\caption{Learning curve for Q-learning on \emph{bar\_grid}}
+					\end{minipage}
+					\hfill
+					\begin{minipage}{0.4\linewidth}
+						\includegraphics[width=\linewidth]{bargrid_ql_averaged_rewards}
+						\caption{Averaged rewards over mini-batch for Q-learning on \emph{bar\_grid}}
+					\end{minipage}
+				\end{figure}
 
 			}
 		}
@@ -285,7 +364,10 @@
 	
 	\chapter{Compliant-based reinforcement learning}
 	{
-
+		\section{Problem selection}
+		{
+			\paragraph{} 
+		}
 	}
 	
 	\chapter{Results}
