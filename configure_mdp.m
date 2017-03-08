@@ -42,12 +42,12 @@ switch model_name
         mdp = load(strcat(model_name,'.mat'));
         mdp.force_start = 1;
         % sarsa
-        mdp.sarsa.max_iter = 20000;
-        mdp.sarsa.init_temp = 8;
-        mdp.sarsa.temp_mult = 0.999;
-        mdp.sarsa.stop_criterion = 0.0001;
-        mdp.sarsa.default_value = 10;
-        mdp.sarsa.init_lr = 0.7;
+        mdp.sarsa.max_iter = 8000;
+        mdp.sarsa.init_temp = 5;
+        mdp.sarsa.temp_mult = 0.9995;
+        mdp.sarsa.stop_criterion = 0.00001;
+        mdp.sarsa.default_value = 3;
+        mdp.sarsa.init_lr = 1;
         mdp.ql.max_iter = 2000;
         mdp.ql.init_temp = 0.4;
         mdp.ql.stop_criterion = 0.000;

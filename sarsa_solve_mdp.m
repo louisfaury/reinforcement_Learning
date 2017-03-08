@@ -64,8 +64,8 @@ while (k<max_iter && delta>stop_criterion)
     end
     temperature = temperature*temperature_mult_factor;
     deltas(k) = delta;
-    cum_reward_per_episode(k) = cum_reward/mini_batch_size; % TODO : add a low pass filter on it
-    k = k+1
+    cum_reward_per_episode(k) = cum_reward/mini_batch_size;
+    k = k+1;
 end
 
 pi = generate_greedy_policy(mdp.states);  
