@@ -17,7 +17,7 @@ deltas = zeros(max_iter,1);
 cum_reward_per_episode = zeros(max_iter,1);
 delta = 10;
 counts = ones(n,4); % counts for each state - learning rate adaptation 
-mini_batch_size = 15;
+mini_batch_size = 10;
 
 %%  init qvalues
 for i=1:n

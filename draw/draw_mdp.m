@@ -24,7 +24,7 @@ for i=1:n
         face_color = [0.1,0.1,0.1];
         fontweight = 'bold';
     end
-    if (mdp.force_start ==i)
+    if (any(mdp.force_start==i))
         face_color = [0.1,0.9,0.1];
     end
     rectangle('Position',[pos(1)-0.5,pos(2)-0.5,1,1],'FaceColor',face_color);
