@@ -18,7 +18,7 @@ switch model_name
         mdp.ql.max_iter = 300;
         mdp.ql.init_temp = 0.5;
         mdp.ql.stop_criterion = 0.001;
-        mdp.ql.optimistic_init = false;
+        mdp.ql.optimistic_init = true;
         mdp.ql.default_value = 2;
         mdp.ql.init_lr = 0.7;
     case 'obstacle_grid_2d'
@@ -32,9 +32,9 @@ switch model_name
         mdp.sarsa.default_value = 5;
         mdp.sarsa.init_lr = 0.7;
         % q-learning
-        mdp.ql.max_iter = 500;
-        mdp.ql.init_temp = 0.3;
-        mdp.ql.stop_criterion = 0.0001;
+        mdp.ql.max_iter = 300;
+        mdp.ql.init_temp = 0.5;
+        mdp.ql.stop_criterion = 0.001;
         mdp.ql.optimistic_init = true;
         mdp.ql.default_value = 2;
         mdp.ql.init_lr = 0.7;
