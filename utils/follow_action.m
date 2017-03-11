@@ -1,6 +1,6 @@
 function next_state_index = follow_action(current_state_index, actions, action_index, success_proba)
 
-hdim = 10; % TODO : fix this, not pretty 
+hdim = 30; % TODO : fix this, not pretty 
 
 if (rand<=success_proba)
     action_name = string(actions(action_index).name);

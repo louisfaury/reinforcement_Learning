@@ -8,7 +8,7 @@ n = size(mdp.states,2);
 max_iter = 50;
 figure;
 deltas = zeros(max_iter);
-stop_criterion = 0.001;
+stop_criterion = 0.00001;
 delta = 10;
 k=1;
 default_value = 2;

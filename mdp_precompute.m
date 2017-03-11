@@ -1,14 +1,14 @@
 %% Precompute the given MDPs needed for the project 
 %  This script computes the following mdps needed for the project
-%  (discount and transition probabilities areeeeee supposed to be user specified)
+%  (discount and transition probabilities are supposed to be user specified)
 %  The computed mdp's are 
 clear all;
 close all; 
 clc; 
 
 %% Basic 2d-grid
-horizontal_span = -5:5;
-vertical_span = -5:5; 
+horizontal_span = -15:15;
+vertical_span = -15:15; 
 [Y,X] = meshgrid(horizontal_span, vertical_span);
 [n,m] = size(X);
 

@@ -9,6 +9,7 @@ function action_value = compute_action_value(mdp_states,state_index,action_index
 
 value = 0;
 m = size(mdp_states(state_index).actions,2);
+hdim = 30;
 
 for j=1:m
     switch (string(mdp_states(state_index).actions(j).name))
@@ -17,9 +18,9 @@ for j=1:m
         case 'down'
             n_state = mdp_states(state_index-1);
         case 'left'
-            n_state = mdp_states(state_index-11);
+            n_state = mdp_states(state_index-(hdim+1));
         case 'right'
-            n_state = mdp_states(state_index+11);
+            n_state = mdp_states(state_index+(hdim+1));
         otherwise
             error('Action not known');
     end

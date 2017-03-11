@@ -28,11 +28,11 @@ for i=1:n
         face_color = [0.1,0.9,0.1];
     end
     rectangle('Position',[pos(1)-0.5,pos(2)-0.5,1,1],'FaceColor',face_color);
-    text(pos(1)+0.1,pos(2)+0.4,num2str(mdp.states(i).reward),'FontSize',6,'FontWeight',fontweight);
+    text(pos(1)+0.1,pos(2)+0.4,num2str(mdp.states(i).reward),'FontSize',2,'FontWeight',fontweight);
 end
 
 axis square;
-axis([-6,6,-6,6]);
+axis([-16,16,-16,16]);
 
 title('Grid world MDP');
 end

@@ -9,11 +9,11 @@ X = zeros(n,2);
 arrows = X;
 arrow_length = 0.8;
 
-for i=1:121
+for i=1:n
     X(i,:) = [mdp_states(i).coord];
 end
 
-for i=1:121
+for i=1:n
     if (~mdp_states(i).terminal)
         switch (string(pi(i)))
             case 'up'

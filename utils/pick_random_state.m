@@ -1,16 +1,21 @@
-function state_index = pick_random_state(mdp_states)
+function state_index = pick_random_state(mdp)
 % @brief : pick random state in state space
-% @param : mdp_state = state space of the mdp
+% @param : mdp  = considered Markov Decision Process
 % @return : randomly selected (non-terminal) state's index
 
-terminal = false;
-n = size(mdp_states,2);
+terminal = true;
+n = size(mdp.states,2);
 
-while (~terminal)
-    index = randi(n);
-    state = mdp_states(index);
-    terminal = state.terminal;
+if (mdp.force_start == 0)
+    while (terminal)
+        index = randi(n);
+        state = mdp.states(index);
+        terminal = state.terminal;
+    end
+else
+    index = mdp.force_start;
 end
+
 state_index = index;
 
 end

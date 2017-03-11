@@ -12,10 +12,10 @@ addpath(genpath('./draw'));
 addpath(genpath('./utils'));
 
 %% init
-%model_name = 'free_grid_2d'; % defines model's name 
+model_name = 'free_grid_2d'; % defines model's name 
 %model_name = 'obstacle_grid_2d';
-model_name = 'maze_2d'; % defines model's name 
-stochasticy = false; 
+%model_name = 'maze_2d'; % defines model's name 
+stochasticy = true; 
 discount = 1;
 force_start = 1;
 
