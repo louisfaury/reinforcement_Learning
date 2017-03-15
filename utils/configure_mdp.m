@@ -48,7 +48,7 @@ switch model_name
         mdp.sarsa.stop_criterion = 0.0001;
         mdp.sarsa.default_value = 3;
         mdp.sarsa.init_lr = 1;
-        mdp.ql.max_iter = 400;
+        mdp.ql.max_iter = 500;
         mdp.ql.init_temp = 0.3;
         mdp.ql.stop_criterion = 0.001;
         mdp.ql.optimistic_init = false;
