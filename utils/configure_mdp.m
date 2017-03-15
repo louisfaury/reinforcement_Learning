@@ -59,10 +59,18 @@ switch model_name
         mdp.sarsa_lambda.max_iter = 300;
         mdp.sarsa_lambda.init_temp = 5;
         mdp.sarsa_lambda.temp_mult = 0.97;
-        mdp.sarsa_lambda.stop_criterion = -0.1;
+        mdp.sarsa_lambda.stop_criterion = -0.1; % TODO : solve this issue
         mdp.sarsa_lambda.default_value = 2;
         mdp.sarsa_lambda.init_lr = 0.5;
         mdp.sarsa_lambda.lambda = 0.8;
+        % Watkins Q(lambda)
+        mdp.ql_lambda.max_iter = 300;
+        mdp.ql_lambda.init_temp = 2;
+        mdp.ql_lambda.temp_mult = 0.95;
+        mdp.ql_lambda.stop_criterion = -0.1; % TODO : solve this issue
+        mdp.ql_lambda.default_value = 2;
+        mdp.ql_lambda.init_lr = 0.8;
+        mdp.ql_lambda.lambda = 0.8;
     otherwise
         error('File name is not known (thrown in configure_model(.))');
 end
