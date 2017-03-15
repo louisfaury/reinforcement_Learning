@@ -1,9 +1,12 @@
 function [pi,mdp] = sarsa_solve_mdp(mdp)
-% @brief : This function solves the given MDP using the value iteration algorithm 
-% @param : mdp = Markov Decision Process to be solved using dynamic prog. 
+%% <======================= HEADER =======================>
+% @brief : This function solves the given MDP using SARSA algorithm
+% @param : mdp = Markov Decision Process to be solved. 
 % @return : pi = optimal policy 
+%  <======================================================>
 
-%% hyper-parameters 
+
+%% <======================= hyper-parameters =======================>
 n = size(mdp.states,2);
 % mdp fixed by user
 max_iter                = mdp.sarsa.max_iter;
@@ -11,15 +14,20 @@ temperature             = mdp.sarsa.init_temp;
 temperature_mult_factor = mdp.sarsa.temp_mult;
 stop_criterion          = mdp.sarsa.stop_criterion;
 default_value           = mdp.sarsa.default_value;
-alpha                   = mdp.sarsa.init_lr;
+alpha    
+= mdp.sarsa.init_lr;
 % allocate
 deltas = zeros(max_iter,1);
 cum_reward_per_episode = zeros(max_iter,1);
 delta = 10;
 counts = ones(n,4); % counts for each state - learning rate tuning 
 mini_batch_size = 15;
+%%  <==============================================================>
+%
+%
+%
+%% <======================= initialization =======================>
 
-%%  init qvalues
 for i=1:n
     m = size(mdp.states(i).actions,2);
     for j=1:m
@@ -30,9 +38,12 @@ for i=1:n
        end
     end
 end
-
-
-%% run
+%%  <==============================================================>
+%
+%
+%
+%
+%% <======================= run =======================>
 k=1;
 while (k<max_iter && delta>stop_criterion)
     delta = 0;
@@ -70,6 +81,9 @@ end
 
 pi = generate_greedy_policy(mdp.states);  
 
+%%  <==============================================================>
+%
+%
 %% plots
 figure('units','normalized','outerposition',[0 0 1 1]) 
 % plot the changes in qvalues per minibatch
