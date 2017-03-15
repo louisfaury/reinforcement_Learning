@@ -14,15 +14,14 @@ temperature             = mdp.sarsa.init_temp;
 temperature_mult_factor = mdp.sarsa.temp_mult;
 stop_criterion          = mdp.sarsa.stop_criterion;
 default_value           = mdp.sarsa.default_value;
-alpha    
-= mdp.sarsa.init_lr;
+alpha                   = mdp.sarsa.init_lr;
 % allocate
 deltas = zeros(max_iter,1);
 cum_reward_per_episode = zeros(max_iter,1);
 delta = 10;
 counts = ones(n,4); % counts for each state - learning rate tuning 
 mini_batch_size = 15;
-%%  <==============================================================>
+% <==============================================================>
 %
 %
 %
@@ -38,8 +37,7 @@ for i=1:n
        end
     end
 end
-%%  <==============================================================>
-%
+% <==============================================================>
 %
 %
 %
@@ -81,7 +79,7 @@ end
 
 pi = generate_greedy_policy(mdp.states);  
 
-%%  <==============================================================>
+%  <==============================================================>
 %
 %
 %% plots

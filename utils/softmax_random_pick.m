@@ -5,7 +5,7 @@ function action_index = softmax_random_pick(state_actions,temperature)
 % @return : randomly selected actions's index
 
 m = size(state_actions,2);
-eps = 0.05;
+eps = 0.03;
 
 exp_qvalues = zeros(m,1);
 for i=1:m
