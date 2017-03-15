@@ -57,8 +57,8 @@ switch model_name
         mdp.ql.init_lr = 0.8;
         % sarsa lambda
         mdp.sarsa_lambda.max_iter = 300;
-        mdp.sarsa_lambda.init_temp = 2;
-        mdp.sarsa_lambda.temp_mult = 0.98;
+        mdp.sarsa_lambda.init_temp = 3;
+        mdp.sarsa_lambda.temp_mult = 0.97;
         mdp.sarsa_lambda.stop_criterion = -0.1;
         mdp.sarsa_lambda.default_value = 2;
         mdp.sarsa_lambda.init_lr = 1;

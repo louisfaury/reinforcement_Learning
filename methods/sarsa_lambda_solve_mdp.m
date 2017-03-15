@@ -15,13 +15,13 @@ stop_criterion          = mdp.sarsa_lambda.stop_criterion;
 default_value           = mdp.sarsa_lambda.default_value;
 alpha                   = mdp.sarsa_lambda.init_lr;
 lambda                  = mdp.sarsa_lambda.lambda;
-eps                     = 1e-3;
+eps                     = 5*1e-3;
 % allocate
 deltas = zeros(max_iter,1);
 cum_reward_per_episode = zeros(max_iter,1);
 delta = 10;
 counts = ones(n,4); % counts for each state - learning rate tuning 
-mini_batch_size = 10;
+mini_batch_size = 15;
 eligibility_traces = zeros(n,4);
 % <======================================================>
 %
