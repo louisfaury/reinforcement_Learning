@@ -65,7 +65,7 @@ while (k<max_iter && delta>stop_criterion)
             
             [ix,iy] = find(eligibility_traces>eps);
             for l=1:size(ix,1)
-                lrate = alpha/(counts(ix(l),iy(l))^(0.6));
+                lrate = alpha/(counts(ix(l),iy(l))^(0.51));
                 mdp.states(ix(l)).actions(iy(l)).value =  mdp.states(ix(l)).actions(iy(l)).value + lrate*delta*eligibility_traces(ix(l),iy(l));
             end            
             eligibility_traces = eligibility_traces * lambda * mdp.discount;

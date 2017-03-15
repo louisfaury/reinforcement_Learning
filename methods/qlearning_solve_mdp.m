@@ -66,7 +66,7 @@ while (k<max_iter && delta>stop_criterion)
     end
     deltas(k) = delta;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
-    %temperature = 0.99*temperature;
+    temperature = 0.98*temperature;
     k = k+1;
 end
 

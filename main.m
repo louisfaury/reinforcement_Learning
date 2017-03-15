@@ -27,11 +27,11 @@ tic
 % with bellman
 %[pi_star,mdp] = bellman_solve_mdp(mdp);
 % with Q-learning
-%[pi_star,mdp] = qlearning_solve_mdp(mdp);
+[pi_star,mdp] = qlearning_solve_mdp(mdp);
 % with SARSA
 %[pi_star,mdp] = sarsa_solve_mdp(mdp);
-% with SARSA(lambda) TODO 
-[pi_star,mdp] = sarsa_lambda_solve_mdp(mdp);
+% with SARSA(lambda) 
+%[pi_star,mdp] = sarsa_lambda_solve_mdp(mdp);
 % with Watkins Q(lambda) TODO 
 
 %% plots the optimal policy 

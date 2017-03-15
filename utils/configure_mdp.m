@@ -49,19 +49,19 @@ switch model_name
         mdp.sarsa.default_value = 3;
         mdp.sarsa.init_lr = 1;
         % q-learning
-        mdp.ql.max_iter = 900;
-        mdp.ql.init_temp = 0.2;
+        mdp.ql.max_iter = 600;
+        mdp.ql.init_temp = 4;
         mdp.ql.stop_criterion = 0.001;
-        mdp.ql.optimistic_init = false;
+        mdp.ql.optimistic_init = true;
         mdp.ql.default_value = 0.5;
         mdp.ql.init_lr = 0.8;
         % sarsa lambda
         mdp.sarsa_lambda.max_iter = 300;
-        mdp.sarsa_lambda.init_temp = 3;
+        mdp.sarsa_lambda.init_temp = 5;
         mdp.sarsa_lambda.temp_mult = 0.97;
         mdp.sarsa_lambda.stop_criterion = -0.1;
         mdp.sarsa_lambda.default_value = 2;
-        mdp.sarsa_lambda.init_lr = 1;
+        mdp.sarsa_lambda.init_lr = 0.5;
         mdp.sarsa_lambda.lambda = 0.8;
     otherwise
         error('File name is not known (thrown in configure_model(.))');
