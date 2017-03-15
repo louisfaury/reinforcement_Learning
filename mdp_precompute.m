@@ -7,8 +7,8 @@ close all;
 clc; 
 
 %% Basic 2d-grid
-horizontal_span = -15:15;
-vertical_span = -15:15; 
+horizontal_span = -20:20;
+vertical_span = -20:20; 
 [Y,X] = meshgrid(horizontal_span, vertical_span);
 [n,m] = size(X);
 
@@ -56,13 +56,13 @@ for i=440:455
     states(i).reward = -0.1; states(i).terminal = false;
 end
 states(m*n).reward = -0.1; states(m*n).terminal = false;
-states(481).reward = 10; states(481).terminal = true; 
+states((m*n-1)/2+1).reward = 10; states((m*n-1)/2+1).terminal = true; 
 
-start_points = [96,113,561,578];
-for k = start_points
-    for i=1:10
-        for j=1:10
-            states(k + (j-1)+(i-1)*31).reward = -5; states(k + (j-1)+(i-1)*31).terminal = true;
+obs_start_points = [127,149,1029,1051];
+for k = obs_start_points
+    for i=1:13
+        for j=1:13
+            states(k + (j-1)+(i-1)*41).reward = -5; states(k + (j-1)+(i-1)*41).terminal = true;
         end
     end
 end
