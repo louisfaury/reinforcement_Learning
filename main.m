@@ -10,6 +10,7 @@ clc;
 addpath(genpath('./stored_mdps'));
 addpath(genpath('./draw'));
 addpath(genpath('./utils'));
+addpath(genpath('./methods'));
 
 %% init
 %model_name = 'free_grid_2d'; % defines model's name 
@@ -29,6 +30,9 @@ tic
 %[pi_star,mdp] = qlearning_solve_mdp(mdp);
 % with SARSA
 [pi_star,mdp] = sarsa_solve_mdp(mdp);
+% with SARSA(lambda) TODO 
+
+% with Watkins Q(lambda) TODO 
 
 %% plots the optimal policy 
 toc

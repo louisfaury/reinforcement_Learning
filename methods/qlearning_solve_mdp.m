@@ -53,7 +53,7 @@ while (k<max_iter && delta>stop_criterion)
             % update
             qvalue = mdp.states(state_index).actions(action_index).value;
             n_max_qvalue = max([mdp.states(next_state_index).actions.value]);
-            lrate = alpha/(counts(state_index,action_index)^(0.51));
+            lrate = alpha/(counts(state_index,action_index)^(0.505));
             u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_max_qvalue);
             counts(state_index,action_index) = counts(state_index,action_index)+1;
             delta = max(delta,abs(u_qvalue-qvalue));

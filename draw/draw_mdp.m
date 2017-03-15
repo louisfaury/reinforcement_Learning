@@ -32,7 +32,7 @@ for i=1:n
 end
 
 axis square;
-axis([-16,16,-16,16]);
+axis([-20.5,20.5,-20.5,20.5]);
 
 title('Grid world MDP');
 end

@@ -40,20 +40,20 @@ switch model_name
         mdp.ql.init_lr = 0.7;
     case 'maze_2d'
         mdp = load(strcat(model_name,'.mat'));
-        mdp.force_start = [1,31,931,961];
+        mdp.force_start = [1,41,1681,1641];
         % sarsa
-        mdp.sarsa.max_iter = 500;
-        mdp.sarsa.init_temp = 4;
+        mdp.sarsa.max_iter = 600;
+        mdp.sarsa.init_temp = 3;
         mdp.sarsa.temp_mult = 0.99;
         mdp.sarsa.stop_criterion = 0.0001;
         mdp.sarsa.default_value = 3;
         mdp.sarsa.init_lr = 1;
-        mdp.ql.max_iter = 500;
-        mdp.ql.init_temp = 0.3;
+        mdp.ql.max_iter = 900;
+        mdp.ql.init_temp = 0.2;
         mdp.ql.stop_criterion = 0.001;
         mdp.ql.optimistic_init = false;
         mdp.ql.default_value = 0.5;
-        mdp.ql.init_lr = 1;
+        mdp.ql.init_lr = 0.8;
     otherwise
         error('File name is not known (thrown in configure_model(.))');
 end

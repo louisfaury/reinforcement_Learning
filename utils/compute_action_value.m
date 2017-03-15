@@ -9,7 +9,7 @@ function action_value = compute_action_value(mdp_states,state_index,action_index
 
 value = 0;
 m = size(mdp_states(state_index).actions,2);
-hdim = 30;
+hdim = 40;
 
 for j=1:m
     switch (string(mdp_states(state_index).actions(j).name))
