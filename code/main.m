@@ -23,7 +23,8 @@ discount = 1;
 mdp = configure_mdp(model_name,stochasticy,discount);
 draw_mdp(mdp);
 tic
-%% policy iteration 
+
+%% policy iteration and other mdp solving algos
 % with bellman
 %[pi_star,mdp] = bellman_solve_mdp(mdp);
 % with Q-learning
