@@ -21,13 +21,34 @@
 	{
 		\section{Motivations}
 		{
+			\paragraph{} For many long and complex tasks, many existing machine learning algorithms; when initialized without any prior knowledge of their environment or of the task that they are suppose to complete are unable to lead (at least in acceptable computational times) to feasible solutions. Hence, much like we would do with a child in the process of learning a skill (dancing, kicking a ball,..), we provide the learning algorithm with demonstration, most often coming from a human teacher. However, because the teacher is older, or not an expert in the skill he is trying to teach, he might give the child a suboptimal way of performing the task. The child would use the prior information given by the teacher, until it becomes pretty confident about performing the given skill. It will also learn by itself, and maybe find that indeed, by slightly changing how he performs the tasks,  he is able to perform better than the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
 			
+			\paragraph{} This semester project aims at introducing a theoretical formulation of such a compliance-based behavior, in the Learning from demonstration (LfD) framework.  
+			
+			\paragraph{} Learning from demonstration is indeed a useful tool when it comes to robots learning complex tasks. A good way of helping them in their learning process is to provide them with demonstrations of the task. Such a demonstration coming from a human teacher (and therefore without the same abilities of the robot), some adaptation has to be made, as well as exploration by the robot to make sure the solution given by the teacher is not a suboptimal one. Another possibility would be the case of receiving a demonstration from a trained robot, or even a set of different agent with inhomogeneous level of training. Such variants will also be studied in this project. 
+			
+			\paragraph{} After a short reminder on Learning from demonstration (LfD) problematics and Reinforcement Learning (RL) techniques, we will introduce a compliant based exploration/exploitation tradeoff for policy search techniques, and assess its abilities before trying to generalize our approach for several mentors. 
+			 
 		}
 		\section{Background}
 		{
 			\subsection{Learning from demonstration}
 			{
-			
+				\paragraph{} As discussed before, Learning from demonstration (LfD) is a framework where a robot can learns from interacting with a human. It particularly focus on the case where a mentor (human) provides demonstration on how to perform a task. Such an approach is also known as Programming from demonstration (PbD) or imitation learning. 
+				
+				\paragraph{} LfD mostly lies on the principle that the learning robot can be taught new tasks by end-users, without having to be programmed again. We therefore are dealing with robot that are able to generalize from demonstration, be it only to understand what is the task that they must learn. They are many underlying problematics and opened questions on the subject, detailed in \cite{Billard2016}.
+				
+				\paragraph{} On approach of LfD combines with reinforcement learning techniques. A could argument for this is that LfD could easily speed-up the learning process by providing a finite or infinite set of good solutions. However, this assume some kind of reproducibility by the robot, as well as a similar enough context between demonstration and reproduction. \newline
+				Under such assumptions, RL techniques can use LfD to speed up their learning process and discover new control policies through a directed exploration of its action-state space. Indeed, demonstrations are used to guide the RL algorithm exploration, reducing the time and iterations needed for an agent to discover a new control policy, and eventually overcoming the teacher's apparent policy sub-optimalities. 
+				
+				\paragraph{} They are many ways of performing such a demonstration-based learning. We remind here a few of them, taken from \cite{argall2009survey}, all related to Imitation Reinforcement Learning (IRL) : 
+				\begin{itemize}
+					\item policy derivations techniques : directly approximate the robot's mapping from state to action by reproducing and generalizing the teacher's one. 
+					\item use demonstration data to learn a model from the world's dynamic (or transition probability model) to compute the optimal policy (see \cite{price2003accelerating}). 
+					\item use demonstration data and additional user intention to learn the rule that associate a set of pre and post-condtions which each action as well as a sparse transition model to plan for actions. 
+				\end{itemize}
+				
+				\paragraph{} The framework we described hereinbefore can easily be extended to more than one teacher. Moreover, such teachers can actually be other learning algorithms with different levels of training. Quickly, the problem drifts toward the underlying issue of performing transfer skill between agents. As this will also be tackled during this project, the next section reminds a few useful facts about the theory of transfer learning. 
 			}
 			\subsection{Transfer learning}
 			{
