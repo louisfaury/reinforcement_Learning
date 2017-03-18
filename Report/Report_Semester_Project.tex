@@ -422,61 +422,48 @@
 	{
 		\section{Problem selection}
 		{
-			\paragraph{} With our approach, we wish to tackle two topics : on one hand, we wish to display a imitation based learning framework that \emph{accelerate} the learning process. Also, we wish to have a shifting compliance behavior so that an agent can \emph{overtake a suboptimal teacher}. We therefore needed to come up with a model that both learns slowly (with the algorithms discussed hereinbefore) and can get stuck in local minima. 
+			\paragraph{} With our approach, we wish to tackle two topics : on one hand, we wish to display a imitation based learning framework that \emph{accelerate} the learning process. Also, we wish to have a shifting compliance based behavior so that an agent can \emph{overtake a suboptimal teacher}. To test the effectiveness of the solutions we would propose, we decided to provide ourself with a model that would stay fixed all along the experiments, in order to compare the different algorithms we could come up with. 
 			
-			\paragraph{} We chose the state space displayed in figure (\ref{fig::maze_display}). Every trajectory of the agent starts in the state colored with green. The agent first learn to reach for the first reward, but has to perform many exploratory moves in order to find the other reward, much bigger, and which systematic completion gives the optimal policy. Such a policy, first computed with dynamic programing, is displayed in figure (\ref{fig::maze_optimal_policy}). 
-			
-			\paragraph{} As displayed in figures (\ref{fig::maze_ql_lc}), (\ref{fig::maze_ql_ar}), (\ref{fig::maze_sarsa_lc}) and (\ref{fig::maze_sarsa_ar}), both algorithm with their fixed hyper-parameters learn slowly and can temporarily be stuck in local optima. This given problem therefore fits our expectations, and will now become our \textbf{baseline problem} for testing our different approaches. 
+			\paragraph{} We therefore needed to come up with an environment that, with the algorithms described before, cannot solve its MDP quickly, and can sometimes get stuck in local minima. We chose the state space displayed in figure (\ref{fig::maze_display}). In this environment, all black cells are obstacles. They give out high negative rewards ($r=-10$) and are terminal states. The only positive reward is at the middle of the grid ($r=10$), also a terminal state. Any trajectory of the learner starts at one of the corner of the grid (green cells), and every step spend on a non-terminal cell gives out a small negative reward ($r=-0.1$). The environment is stochastic, with the transition probability model : 
+			\begin{equation}
+				s' = \left\{ 
+					\begin{aligned}
+						&a(s) \text{ with proba } 0.95 \\
+						&s'' \neq a(s) \text{ otherwise, uniformly sampled}
+					\end{aligned}\right.
+			\end{equation}
+			 It is big enough for the algorithms to learn rather slowly, even if they are greatly enhanced by the use of eligibility traces. Also, for all tested algorithms (SARSA, Q-learning, SARSA($\lambda$) and Watkins Q($\lambda$)), because they do not perform infinite exploitation / exploration moves, renders slightly suboptimal policies.
 			
 			\begin{figure}[h!]
-				\begin{minipage}{0.45\linewidth}
+				\begin{minipage}{0.5\linewidth}
 					\includegraphics[width=\linewidth]{maze_grid}
 					\caption{The \emph{maze\_grid} state space}
 					\label{fig::maze_display}
 				\end{minipage}
 				\hfill
-				\begin{minipage}{0.45\linewidth}
+				\begin{minipage}{0.5\linewidth}
 					\includegraphics[width=\linewidth]{maze_optimal_policy}
-					\caption{Optimal policy for the \emph{maze\_grid}, computed with DP}
+					\caption{Optimal policy, computed with DP}
 					\label{fig::maze_optimal_policy}
 				\end{minipage}
 			\end{figure}
 				
+			
+						
+			\paragraph{} Figure (\ref{fig::comp_maze}) displays the convergence (expressed as average reward on minibatch) for Qlearning, Sarsa($\lambda$), Sarsa(0) and Watkins Q($\lambda$). By average reward on minibatch, we mean that at every iteration, the reward is average around a given number of trajectories, following the same \emph{exploratory} policy. This allows to reduce the stochasticity of trajectories while learning and give a smoother estimation of how well the algorithm is learning. As a way of comparing them to the optimal and random policies, we also plot the average rewards perceived by the latest along many trajectories. \newline
+For all the learning algorithms tested, we used optimistic action-value initialisation to promote exploration. This explains why many negative rewards are perceived in the beginning. 
 				
-			\begin{figure}[h!]
-				\begin{minipage}{0.45\linewidth}
-					\includegraphics[width=\linewidth]{ql_maze_learning_curve}
-					\caption{Learning curve for Q-learning on \emph{maze\_grid}}
-					\label{fig::maze_ql_lc}
-				\end{minipage}
-				\hfill
-				\begin{minipage}{0.45\linewidth}
-					\includegraphics[width=\linewidth]{qlearn_maze_averaged_return}
-					\caption{Averaged rewards over mini-batch for Q-learning on \emph{maze\_grid}}
-					\label{fig::maze_ql_ar}
-				\end{minipage}
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=\linewidth]{comp_maze}
+					\caption{Average rewards on minibatch for learned policies, optimal policy and random policy.}
+					\label{fig::comp_maze}
+				\end{center}
 			\end{figure}
-			
-			
-			\begin{figure}[h!]
-				\begin{minipage}{0.45\linewidth}
-					\includegraphics[width=\linewidth]{sarsa_maze_learning_curve}
-					\caption{Learning curve for SARSA on \emph{maze\_grid}}
-					\label{fig::maze_sarsa_lc}
-				\end{minipage}
-				\hfill
-				\begin{minipage}{0.45\linewidth}
-					\includegraphics[width=\linewidth]{sarsa_maze_averaged_return}
-					\caption{Averaged rewards over mini-batch for SARSA on \emph{maze\_grid}}
-					\label{fig::maze_sarsa_ar}
-				\end{minipage}
-			\end{figure}
-			
-			
-				
-			
-			\paragraph{} It is important to say that of course, hyper-parameters (initial temperature, optimistic initial Q-values, ..) for both problems can be tuned to accelerate learning. However, our point is here to address the fixed sub-optimal problem in order to prove our approach interest. 
 		}
+		
+		% TODO : show that learned policies are a bit suboptimal ? 
+		\paragraph{} As explained before, this environment is considered as a base line in all that follows, and will serve as a sandbox model where we will test our different approach for imitation learning based approach. 
 	}
 	
 	\chapter{Results}
