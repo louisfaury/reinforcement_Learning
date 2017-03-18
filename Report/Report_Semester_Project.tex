@@ -52,12 +52,29 @@
 			}
 			\subsection{Transfer learning}
 			{
-			
+				\paragraph{} Transfer learning deals with speeding a learning process thanks to another learning experience - for instance training an agent based on the previous training on another agent, performing a similar task. The literature of transfer learning in reinforcement learning is pretty large, and for a full description of the different problematics (homogeneous / inhomogeneous sets of actions, multi task learning, ..) we'll refer to \cite{taylor2009transfer}. 
+				
+				\paragraph{} As we said before, one of our goal is to assess our method as a transfer learning one, and up to a point, consider our teacher to be a trained (fully or not) agent, before considering many different agents as potential mentors. We would consider a really simple case of transfer learning, where all agents display the same state-action state, with the same abilities and constraints. 
+				
+				\paragraph{} Hence, we remind here some metrics to evaluate transfer learning methods that we would have to use to compare our different approaches : 
+				\begin{itemize}
+					\item \emph{Jump start} : the initial performance of an agent can be improved by transfer. 
+					\item \emph{Asymptotic performance} : how close is the asymptotic learned policy from the optimal policy ? 
+					\item \emph{Total or averaged reward} : averaged reward may be improved by transfer 
+					\item \emph{Transfer ratio} : Ratio of total reward accumulated by the transfer learner and the total of reward accumulated by a non-transfer learner. 
+					\item \emph{Time to threshold} : the time required by a transfer learning to reach a pre-specified level of skills in achieving its task. 
+				\end{itemize}
+				
+				\paragraph{} All those metrics actually compared different aspects of how well a RL algorithm learns. Comparing two RL methods is actually still an open question, and hence we'll need to address several of those metrics to decide on the wellness of our derived TL methods. 
 			}
 		}
 		\section{Proposed approach}
 		{
-
+			\paragraph{} As we started to explained before, we are going to start with a fairly simple model in order to address the problem of compliance in learning from a teacher. We hope that a simple enough state space and framework will allow us to better understand how compliance in learning by demonstration should be tackled, in a reinforcement learning framework.  We also hope we would be able to generalize to more complex situations once the understanding on a simple but generic model is mastered. 
+			
+			\paragraph{} After defining a simple two dimensional grid-world state space with a simple action set, we will quickly study how well the different classical RL policy search algorithms performs on such a space. 
+			
+			\paragraph{} Once this done, we will introduce a new exploration policy, based on the learned confidence the learner has in its teacher. The teacher does not provide the learner with trajectories, but with recommandation of actions point-wise in the state-action space they share (\emph{homogeneous settings}). We want the learner, based on a prior knowledge of the confidence it should give to its teacher (the confidence is understood locally : we can be very confident that the teacher is right for one point of the state space and really doubting the teacher's recommandation elsewhere) to gradually update (based on a \emph{compliance term}) this confidence to be able to decide to explore new trajectories once it has quickly learned a possibly suboptimal one from the teacher.
 		}
 	}
 	\newpage
