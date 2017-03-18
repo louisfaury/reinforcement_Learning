@@ -266,7 +266,59 @@
 			}
 			\subsection{Eligibility traces}
 			{
-			
+				\paragraph{} In TD(0) approach (described in the latest section), we update the value function in the direction of the \emph{one-step return} : 
+				\begin{equation}
+					\Delta V_t(s_t)^{(1)} = \alpha \left[ r_t + \gamma V_t(s_{t+1}) - V_(s-t)\right]
+				\end{equation}
+				The idea behind eligibility traces is to expand that update rule in order to steer the value fonction towards the \emph{n-step return} (or at least until a terminal state is reached) :
+				\begin{equation}
+					\begin{aligned}
+					\Delta V_t(s_t) ^{(n)} &= \alpha \left[ r_t + \gamma r_{t+1} + \hdots + \gamma^{n} V_t(s_{t+n})-V_t(s_t)\right]	\\
+									&= \alpha \left[R_t^{(n)} - V_t(s_t)\right]
+					\end{aligned}
+				\end{equation}
+				
+				\paragraph{} The backups can not only be done toward any n-step return, but toward any average of such returns, as long as the corresponding weights sum-up to one. In this way, the TD($\lambda$) algorithm can be understood as a particular way of averaging $n$-steps returns. With $\lambda<1$, the resulting backup is known as the \textcolor{red}{\emph{$\lambda$-return}} : 
+				\begin{equation}
+					R_t^\lambda = (1-\lambda) \sum_{n=1}^\infty \lambda^{n-1}R_t^{(n)}
+				\end{equation}
+				where the weights are fading with $n$. When the runs are episodic, we can write this return as : 
+				\begin{equation}
+					R_t^\lambda = (1-\lambda)\sum_{n=1}^{T-t-1} \lambda^{n-}R_t{(n)} + \lambda_{T-t-1}R_t^{(T)}
+				\end{equation}
+				
+				\coolbox{white}{\textcolor{blue}{Sarsa($\lambda$) algorithm}}
+					{
+						\begin{algorithm}[H]
+						\label{sarsalambda}
+	 					\SetAlgoLined
+						\LinesNumbered
+						\emph{\textsf{1. Initialize}} $Q(s,a)$ arbitrarily $\forall (s,a)\in\mathcal{S}\times\mathcal{A}(s)$ \\
+						\BlankLine
+						\BlankLine
+						\emph{\textsf{2. Repeat}} (for each episode) : \\
+						\Indp \Indp 
+							Initialize $s,\, a$ \\
+							Repeat for each step of the current episode :   \\
+							\Indp \Indp 
+								Take action $a$, observe $r, s'$. \\
+								Choose $a'\in\mathcal{A}(s')$ using soft policy derived from $Q$\\
+								$\delta \longleftarrow r + \gamma Q(s',a') - Q(s,a)$ \\
+								$e(s,a) \longleftarrow e(s,a) +1 $\\
+								For all $s,a$ : \\
+								\Indp \Indp 
+									$ Q(s,a) \longleftarrow Q(s,a) + \alpha \delta e(s,a) $ \\
+									$ e(s,a) \longleftarrow \gamma \lambda e(s,a) $\\
+								\Indm \Indm 
+								$s\leftarrow s'$, $a\leftarrow a'$\\						
+							\Indm \Indm 
+						until $s\in\mathcal{S}^+$.\\
+						\Indm \Indm 
+						\end{algorithm}
+					}
+
+
+				\paragraph{} Such a formulation of eligibility traces is known as the \emph{\textcolor{red}{forward view}} of TD($\lambda$), and shows how eligibility traces build the bridge between TD(0) methods and Monte-Carlo one. It is not implementable as is since it is non-causal. There exist a more mechanistic view, equivalent to the forward view (see \cite{Sutton98a}), known as the \emph{backward-view}. It gives birth to causal version of the TD($\lambda$) method. We give as an example the pseudo-code for the SARSA($\lambda$) algorithm above. Its Q-learning equivalent can be found in \cite{Sutton98a}.   
 			}
 		}
 	
