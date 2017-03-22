@@ -462,7 +462,7 @@
 		{
 			\paragraph{} With our approach, we wish to tackle two topics : on one hand, we wish to display a imitation based learning framework that \emph{accelerate} the learning process. Also, we wish to have a shifting compliance based behavior so that an agent can \emph{overtake a suboptimal teacher}. To test the effectiveness of the solutions we would propose, we decided to provide ourself with a model that would stay fixed all along the experiments, in order to compare the different algorithms we could come up with. 
 			
-			\paragraph{} We therefore needed to come up with an environment that, with the algorithms described before, cannot solve its MDP quickly, and can sometimes get stuck in local minima. We chose the state space displayed in figure (\ref{fig::maze_display}). In this environment, all black cells are obstacles. They give out high negative rewards ($r=-10$) and are terminal states. The only positive reward is at the middle of the grid ($r=10$), also a terminal state. Any trajectory of the learner starts at one of the corner of the grid (green cells), and every step spend on a non-terminal cell gives out a small negative reward ($r=-0.1$). The environment is stochastic, with the transition probability model : 
+			\paragraph{} We therefore needed to come up with an environment that, with the algorithms described before, cannot solve its MDP quickly, and can sometimes get stuck in local minima. We chose the state space displayed in figure (\ref{fig::maze_display}). In this environment, all black cells are obstacles. They give out highly negative rewards ($r=-10$) and are terminal states. The only positive reward is at the middle of the grid ($r=10$), also a terminal state. Any trajectory of the learner starts at one of the corner of the grid (green cells), and every step spent on a non-terminal cell gives out a small negative reward ($r=-0.1$). The environment is stochastic, with the transition probability model : 
 			\begin{equation}
 				s' = \left\{ 
 					\begin{aligned}
@@ -470,7 +470,7 @@
 						&s'' \neq a(s) \text{ otherwise, uniformly sampled}
 					\end{aligned}\right.
 			\end{equation}
-			 It is big enough for the algorithms to learn rather slowly, even if they are greatly enhanced by the use of eligibility traces. Also, for all tested algorithms (SARSA, Q-learning, SARSA($\lambda$) and Watkins Q($\lambda$)), because they do not perform infinite exploitation / exploration moves, renders slightly suboptimal policies.
+			 It is big enough for the usual algorithms to learn rather slowly, even if they are greatly enhanced by the use of eligibility traces. Also, all tested algorithms (SARSA, Q-learning, SARSA($\lambda$) and Watkins Q($\lambda$)), because they do not perform infinite exploitation / exploration moves, renders slightly suboptimal policies.
 			
 			\begin{figure}[h!]
 				\begin{minipage}{0.5\linewidth}
@@ -501,7 +501,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		}
 		
 		% TODO : show that learned policies are a bit suboptimal ? 
-		\paragraph{} As explained before, this environment is considered as a base line in all that follows, and will serve as a sandbox model where we will test our different approach for imitation learning based approach. 
+		\paragraph{} As explained before, this environment is considered as a base line in all that follows, and will serve as a sandbox model where we will test our different methods for an imitation learning based approach. 
 	}
 	
 	\chapter{Results}
