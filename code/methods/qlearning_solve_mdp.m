@@ -7,17 +7,18 @@ function [pi,mdp] = qlearning_solve_mdp(mdp)
 %% hyper parameters
 n = size(mdp.states,2);
 % mdp fixed by user
+max_search_iter         = mdp.max_search;
 max_iter                = mdp.ql.max_iter;
 temperature             = mdp.ql.init_temp;
 stop_criterion          = mdp.ql.stop_criterion;
 default_value_bound     = mdp.ql.default_value;
 alpha                   = mdp.ql.init_lr;
 % allocate
-deltas = zeros(max_iter,1);
-cum_reward_per_episode = zeros(max_iter,1);
-delta = 10;
-counts = ones(n,4); % counts for each state - learning rate adaptation 
-mini_batch_size = 10;
+deltas                  = zeros(max_iter,1);
+cum_reward_per_episode  = zeros(max_iter,1);
+delta                   = 10;
+counts                  = ones(n,4); % counts for each state - learning rate adaptation 
+mini_batch_size         = 10;
 
 %%  init qvalues
 for i=1:n
@@ -42,12 +43,11 @@ while (k<max_iter && delta>stop_criterion)
     cum_reward = 0;
     for j=1:mini_batch_size
         state_index = pick_random_state(mdp);
-        
-        while(~mdp.states(state_index).terminal)
+        lIter = 0;
+        while(~mdp.states(state_index).terminal && lIter < max_search_iter)
             % choosing next action, observing new state and reward 
             action_index = softmax_random_pick(mdp.states(state_index).actions,temperature);
-            next_state_index = follow_action(state_index,mdp.states(state_index).actions,action_index, mdp.transition_success_proba); 
-            reward = mdp.states(next_state_index).reward;
+            [next_state_index, reward] = follow_action(mdp, state_index, action_index); 
             cum_reward = cum_reward + reward;
             
             % update
@@ -62,6 +62,7 @@ while (k<max_iter && delta>stop_criterion)
             
             % update current step and action
             state_index = next_state_index;
+            lIter = lIter +1;
         end
     end
     deltas(k) = delta;

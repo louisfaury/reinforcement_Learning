@@ -9,6 +9,7 @@ function [pi,mdp] = sarsa_solve_mdp(mdp)
 %% <======================= hyper-parameters =======================>
 n = size(mdp.states,2);
 % mdp fixed by user
+max_search_iter         = mdp.max_search;
 max_iter                = mdp.sarsa.max_iter;
 temperature             = mdp.sarsa.init_temp;
 temperature_mult_factor = mdp.sarsa.temp_mult;
@@ -16,11 +17,11 @@ stop_criterion          = mdp.sarsa.stop_criterion;
 default_value           = mdp.sarsa.default_value;
 alpha                   = mdp.sarsa.init_lr;
 % allocate
-deltas = zeros(max_iter,1);
-cum_reward_per_episode = zeros(max_iter,1);
-delta = 10;
-counts = ones(n,4); % counts for each state - learning rate tuning 
-mini_batch_size = 15;
+deltas                  = zeros(max_iter,1);
+cum_reward_per_episode  = zeros(max_iter,1);
+delta                   = 10;
+counts                  = ones(n,4); % counts for each state - learning rate tuning 
+mini_batch_size         = 15;
 % <==============================================================>
 %
 %
@@ -49,10 +50,9 @@ while (k<max_iter && delta>stop_criterion)
     for j=1:mini_batch_size
         state_index = pick_random_state(mdp);
         action_index = softmax_random_pick(mdp.states(state_index).actions,temperature);
-        
-        while(~mdp.states(state_index).terminal)
-            next_state_index = follow_action(state_index,mdp.states(state_index).actions,action_index, mdp.transition_success_proba); 
-            reward = mdp.states(next_state_index).reward;
+        lIter = 0;
+        while(~mdp.states(state_index).terminal && lIter < max_search_iter)
+            [next_state_index, reward] = follow_action(mdp, state_index,action_index); 
             cum_reward = cum_reward + reward;
             next_action_index = softmax_random_pick(mdp.states(next_state_index).actions,temperature);
             
@@ -69,6 +69,7 @@ while (k<max_iter && delta>stop_criterion)
             % update current step and action
             action_index = next_action_index;
             state_index = next_state_index;
+            lIter = lIter +1;
         end
     end
     temperature = temperature*temperature_mult_factor;

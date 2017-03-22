@@ -26,7 +26,7 @@ end
 while (k<max_iter && delta>stop_criterion)
     delta = 0;
     for i=1:n
-        if (~mdp.states(i).terminal)
+        if (~mdp.states(i).terminal && ~mdp.states(i).obstacle)
             m = size(mdp.states(i).actions,2);
             value = -100;
             for j=1:m

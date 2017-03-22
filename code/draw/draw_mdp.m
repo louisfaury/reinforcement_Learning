@@ -20,7 +20,7 @@ for i=1:n
         end
         fontweight = 'bold';
     end
-    if (reward <= -1)
+    if (mdp.states(i).obstacle)
         face_color = [0.1,0.1,0.1];
         fontweight = 'bold';
     end

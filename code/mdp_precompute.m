@@ -19,6 +19,7 @@ for i=1:n
         states(m*(i-1)+j).actions = {};
         states(m*(i-1)+j).reward = -0.1;
         states(m*(i-1)+j).terminal = false;
+        states(m*(i-1)+j).obstacle = false;
         if (i~=1)
             action_no = action_no+1;
             states(m*(i-1)+j).actions(action_no).name = 'left';
@@ -46,14 +47,14 @@ save('./stored_mdps/free_grid_2d.mat','states');
 %% 2d- grid with obstacles
 for i=440:455
     states(i).reward = -5;
-    states(i).terminal = true;
+    states(i).obstacle = true;
 end
 save('./stored_mdps/obstacle_grid_2d.mat','states');
 
 
 %% Several obstacle grid 
 for i=440:455
-    states(i).reward = -0.1; states(i).terminal = false;
+    states(i).reward = -0.1; states(i).obstacle = false;
 end
 states(m*n).reward = -0.1; states(m*n).terminal = false;
 states((m*n-1)/2+1).reward = 10; states((m*n-1)/2+1).terminal = true; 
@@ -62,7 +63,7 @@ obs_start_points = [127,149,1029,1051];
 for k = obs_start_points
     for i=1:13
         for j=1:13
-            states(k + (j-1)+(i-1)*41).reward = -5; states(k + (j-1)+(i-1)*41).terminal = true;
+            states(k + (j-1)+(i-1)*41).reward = -5; states(k + (j-1)+(i-1)*41).obstacle = true;
         end
     end
 end

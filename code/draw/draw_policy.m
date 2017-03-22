@@ -14,7 +14,7 @@ for i=1:n
 end
 
 for i=1:n
-    if (~mdp_states(i).terminal)
+    if (~mdp_states(i).terminal && ~mdp_states(i).obstacle)
         switch (string(pi(i)))
             case 'up'
                 arrows(i,:) = [0 arrow_length];

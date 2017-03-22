@@ -8,12 +8,14 @@ function opt_ar = compute_average_return(mdp,greedy_pi)
 iter = 1000;
 opt_ar = zeros(iter,1);
 mini_batch_size = 5;
+max_search_iter = mdp.max_search;
 
 for k=1:iter
     ar = 0;
     for l=1:mini_batch_size
         state_index = pick_random_state(mdp);
-        while(~mdp.states(state_index).terminal)
+        lIter = 0;
+        while(~mdp.states(state_index).terminal && lIter < max_search_iter)
             if (nargin>1)
                 % finds  greedy policy action index
                 for j=1:size(mdp.states(state_index).actions,2)
@@ -25,9 +27,9 @@ for k=1:iter
                % computes a random action's index
                j = randi(size(mdp.states(state_index).actions,2));
             end
-            state_index = follow_action(state_index,mdp.states(state_index).actions,j,mdp.transition_success_proba);
-            reward = mdp.states(state_index).reward;
+            [state_index, reward] = follow_action(mdp, state_index,j);
             ar = ar + reward;
+            lIter = lIter +1;
         end
     end
     ar = ar / mini_batch_size;

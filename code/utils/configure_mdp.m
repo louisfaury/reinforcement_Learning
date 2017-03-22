@@ -35,7 +35,7 @@ switch model_name
         mdp.sarsa.default_value = 5;
         mdp.sarsa.init_lr = 0.7;
         % q-learning
-        mdp.ql.max_iter = 300;
+        mdp.ql.max_iter = 400;
         mdp.ql.init_temp = 0.5;
         mdp.ql.stop_criterion = 0.001;
         mdp.ql.optimistic_init = true;
@@ -44,22 +44,23 @@ switch model_name
     case 'maze_2d'
         mdp = load(strcat(model_name,'.mat'));
         mdp.force_start = [1,41,1681,1641];
+        mdp.max_search = 320;
         % sarsa
-        mdp.sarsa.max_iter = 600;
-        mdp.sarsa.init_temp = 3;
+        mdp.sarsa.max_iter = 800;
+        mdp.sarsa.init_temp = 4;
         mdp.sarsa.temp_mult = 0.99;
         mdp.sarsa.stop_criterion = 0.0001;
         mdp.sarsa.default_value = 3;
         mdp.sarsa.init_lr = 1;
         % q-learning
-        mdp.ql.max_iter = 600;
-        mdp.ql.init_temp = 4;
+        mdp.ql.max_iter = 800;
+        mdp.ql.init_temp = 2;
         mdp.ql.stop_criterion = 0.001;
         mdp.ql.optimistic_init = true;
-        mdp.ql.default_value = 0.5;
+        mdp.ql.default_value = 1;
         mdp.ql.init_lr = 0.8;
         % sarsa lambda
-        mdp.sarsa_lambda.max_iter = 300;
+        mdp.sarsa_lambda.max_iter = 200;
         mdp.sarsa_lambda.init_temp = 5;
         mdp.sarsa_lambda.temp_mult = 0.97;
         mdp.sarsa_lambda.stop_criterion = -0.1; % TODO : solve this issue
@@ -67,7 +68,7 @@ switch model_name
         mdp.sarsa_lambda.init_lr = 0.5;
         mdp.sarsa_lambda.lambda = 0.8;
         % Watkins Q(lambda)
-        mdp.ql_lambda.max_iter = 300;
+        mdp.ql_lambda.max_iter = 800;
         mdp.ql_lambda.init_temp = 2;
         mdp.ql_lambda.temp_mult = 0.95;
         mdp.ql_lambda.stop_criterion = -0.1; % TODO : solve this issue
@@ -92,5 +93,6 @@ else
     mdp.transition_success_proba = 1;
 end
 mdp.discount = discount_factor;
+mdp.dim = 41;
 
 end

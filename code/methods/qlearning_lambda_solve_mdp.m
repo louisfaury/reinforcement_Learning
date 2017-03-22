@@ -8,6 +8,7 @@ function [pi,mdp] = qlearning_lambda_solve_mdp(mdp)
 %% <======================= hyper-parameters =======================>
 n = size(mdp.states,2);
 % mdp fixed by user
+max_search_iter         = mdp.max_search;
 max_iter                = mdp.ql_lambda.max_iter;
 temperature             = mdp.ql_lambda.init_temp;
 temp_mult               = mdp.ql_lambda.temp_mult;
@@ -17,12 +18,12 @@ alpha                   = mdp.ql_lambda.init_lr;
 lambda                  = mdp.ql_lambda.lambda;
 eps                     = 5*1e-3;
 % allocate
-deltas = zeros(max_iter,1);
-cum_reward_per_episode = zeros(max_iter,1);
-delta = 10;
-counts = ones(n,4); % counts for each state - learning rate tuning 
-mini_batch_size = 15;
-eligibility_traces = zeros(n,4);
+deltas                  = zeros(max_iter,1);
+cum_reward_per_episode  = zeros(max_iter,1);
+delta                   = 10;
+counts                  = ones(n,4); % counts for each state - learning rate tuning 
+mini_batch_size         = 15;
+eligibility_traces      = zeros(n,4);
 % <======================================================>
 %
 %
@@ -51,9 +52,9 @@ while (k<max_iter && delta>stop_criterion)
         state_index = pick_random_state(mdp);
         action_index = softmax_random_pick(mdp.states(state_index).actions,temperature);
         eligibility_traces = eligibility_traces*0;
-        while(~mdp.states(state_index).terminal)
-            next_state_index = follow_action(state_index,mdp.states(state_index).actions,action_index, mdp.transition_success_proba); 
-            reward = mdp.states(next_state_index).reward;
+        lIter = 0;
+        while(~mdp.states(state_index).terminal && lIter < max_search_iter)
+            [next_state_index, reward] = follow_action(mdp, state_index, action_index); 
             cum_reward = cum_reward + reward;
             next_action_index = softmax_random_pick(mdp.states(next_state_index).actions,temperature);
             [~,next_max_action_index] = max([mdp.states(next_state_index).actions.value]);
@@ -84,12 +85,13 @@ while (k<max_iter && delta>stop_criterion)
             % update current step and action
             action_index = next_action_index;
             state_index = next_state_index;
+            lIter = lIter +1;
         end
     end
     temperature = temperature*temp_mult;
     deltas(k) = delta;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
-    k = k+1
+    k = k+1;
 end
 
 pi = generate_greedy_policy(mdp.states);  
