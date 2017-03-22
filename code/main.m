@@ -26,7 +26,7 @@ tic
 
 %% policy iteration and other mdp solving algos
 % with bellman
-[pi_star,mdp] = bellman_solve_mdp(mdp);
+%[pi_star,mdp] = bellman_solve_mdp(mdp);
 % with Q-learning
 %[pi_star,mdp] = qlearning_solve_mdp(mdp);
 % with SARSA
@@ -38,4 +38,9 @@ tic
 
 %% plots the optimal policy 
 toc
+load('misc/maze_bellman_policy','pi_star');
 draw_policy(pi_star,mdp.states);
+
+%% learning from a mentor's policy 
+pi_m = pi_star;
+ac_imitation_learning(pi_star, mdp)

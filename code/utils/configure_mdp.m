@@ -21,6 +21,9 @@ switch model_name
         mdp.ql.optimistic_init = true;
         mdp.ql.default_value = 2;
         mdp.ql.init_lr = 0.7;
+        % Actor critic imitation learning
+        mdp.init_alpha = 0.5;
+        mdp.init_beta = 0.05555;
     case 'obstacle_grid_2d'
         mdp = load(strcat(model_name,'.mat'));
         mdp.force_start = 0;
@@ -71,6 +74,14 @@ switch model_name
         mdp.ql_lambda.default_value = 2;
         mdp.ql_lambda.init_lr = 0.8;
         mdp.ql_lambda.lambda = 0.8;
+        % Actor critic imitation learning 
+        mdp.ac_il.init_alpha = 0.5;
+        mdp.ac_il.init_beta = 0.05555;
+        mdp.ac_il.default_value = 0;
+        mdp.ac_il.temperature = 0.5;
+        mdp.ac_il.stop_criterion = -0.1;
+        mdp.ac_il.max_iter = 300;
+        
     otherwise
         error('File name is not known (thrown in configure_model(.))');
 end
