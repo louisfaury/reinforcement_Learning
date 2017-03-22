@@ -42,13 +42,13 @@ p4 = plot(ql_lambda_ar(1:size(ql_lambda_ar,1)-1),'LineWidth',1.2,'Color',[0.3, 0
 p4.Color(4) = 0.1;
 p4p = plot(lpf(ql_lambda_ar(1:size(ql_lambda_ar,1)-1),0.3),'LineWidth',2,'Color',[0.3, 0.6, 1]);
 % Optimal policy
-p5 = plot(optimal_ar(1:size(optimal_ar,1)-1),'LineWidth',1.2,'Color',[0.3, 0.6, 1]);
+p5 = plot(optimal_ar(1:size(ql_lambda_ar,1)-1),'LineWidth',1.2,'Color',[0.3, 0.6, 1]);
 p5.Color(4) = 0.1;
-p5p = plot(lpf(optimal_ar(1:size(optimal_ar,1)-1),0.1),'--','LineWidth',2,'Color',[0.1, 0.1, 0.1]);
+p5p = plot(lpf(optimal_ar(1:size(ql_lambda_ar,1)-1),0.1),'--','LineWidth',2,'Color',[0.1, 0.1, 0.1]);
 % Random policy
-p6 = plot(random_ar(1:size(random_ar,1)-1),'LineWidth',1.2,'Color',[0.5, 0.5, 0.5]);
+p6 = plot(random_ar(1:size(ql_lambda_ar,1)-1),'LineWidth',1.2,'Color',[0.5, 0.5, 0.5]);
 p6.Color(4) = 0.1;
-p6p = plot(lpf(random_ar(1:size(random_ar,1)-1),0.05),'LineWidth',2,'Color',[0.5, 0.5, 0.5]);
+p6p = plot(lpf(random_ar(1:size(ql_lambda_ar,1)-1),0.05),'LineWidth',2,'Color',[0.5, 0.5, 0.5]);
 
 %% Plots
 xlabel('Number of iterations');
