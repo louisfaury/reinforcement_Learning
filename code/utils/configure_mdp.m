@@ -46,14 +46,14 @@ switch model_name
         mdp.force_start = [1,41,1681,1641];
         mdp.max_search = 320;
         % sarsa
-        mdp.sarsa.max_iter = 600;
+        mdp.sarsa.max_iter = 450;
         mdp.sarsa.init_temp = 4;
         mdp.sarsa.temp_mult = 0.99;
         mdp.sarsa.stop_criterion = 0.0001;
         mdp.sarsa.default_value = 3;
         mdp.sarsa.init_lr = 1;
         % q-learning
-        mdp.ql.max_iter = 600;
+        mdp.ql.max_iter = 450;
         mdp.ql.init_temp = 1;
         mdp.ql.stop_criterion = 0.001;
         mdp.ql.optimistic_init = true;
