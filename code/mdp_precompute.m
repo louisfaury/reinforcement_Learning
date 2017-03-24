@@ -59,10 +59,10 @@ end
 states(m*n).reward = -0.1; states(m*n).terminal = false;
 states((m*n-1)/2+1).reward = 10; states((m*n-1)/2+1).terminal = true; 
 
-obs_start_points = [127,149,1029,1051];
+obs_start_points = [253,271,991,1009];
 for k = obs_start_points
-    for i=1:13
-        for j=1:13
+    for i=1:11
+        for j=1:11
             states(k + (j-1)+(i-1)*41).reward = -5; states(k + (j-1)+(i-1)*41).obstacle = true;
         end
     end

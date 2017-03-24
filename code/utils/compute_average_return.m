@@ -5,7 +5,7 @@ function opt_ar = compute_average_return(mdp,greedy_pi)
 % @return : pi = optimal policy 
 %  <======================================================>
 
-iter = 1000;
+iter = 500;
 opt_ar = zeros(iter,1);
 mini_batch_size = 5;
 max_search_iter = mdp.max_search;

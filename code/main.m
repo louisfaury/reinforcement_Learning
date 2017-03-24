@@ -30,17 +30,14 @@ tic
 % with Q-learning
 %[pi_star,mdp] = qlearning_solve_mdp(mdp);
 % with SARSA
-%
-[pi_star,mdp] = sarsa_solve_mdp(mdp);
+%[pi_star,mdp] = sarsa_solve_mdp(mdp);
 % with SARSA(lambda) 
 %[pi_star,mdp] = sarsa_lambda_solve_mdp(mdp);
 % with Watkins Q(lambda) 
-%[pi_star,mdp] = qlearning_lambda_solve_mdp(mdp);
+[pi_star,mdp] = qlearning_lambda_solve_mdp(mdp);
 
 %% plots the optimal policy 
 toc
-%load('misc/maze_bellman_policy','pi_star'); %% TODO restore for new given
-%MDP
 draw_policy(pi_star,mdp.states);
 
 %% learning from a mentor's policy 
