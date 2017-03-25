@@ -21,17 +21,20 @@
 	{
 		\section{Motivations}
 		{
-			\paragraph{} For many long and complex tasks, many existing machine learning algorithms; when initialized without any prior knowledge of their environment or of the task that they are suppose to complete are unable to lead (at least in acceptable computational times) to feasible solutions. Hence, much like we would do with a child in the process of learning a skill (dancing, kicking a ball,..), we provide the learning algorithm with demonstration, most often coming from a human teacher. However, because the teacher is older, or not an expert in the skill he is trying to teach, he might give the child a suboptimal way of performing the task. The child would use the prior information given by the teacher, until it becomes pretty confident about performing the given skill. It will also learn by itself, and maybe find that indeed, by slightly changing how he performs the tasks,  he is able to perform better than the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
+			\paragraph{} For long and complex tasks, usual machine learning algorithms are often unable to come up with with feasible solutions, or at least fail to do so in acceptable computational times. A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
 			
-			\paragraph{} This semester project aims at introducing a theoretical formulation of such a compliance-based behavior, in the Learning from demonstration (LfD) framework.  
+			\paragraph{} Hence, we provide the learning algorithm with demonstrations, much like we would do with a child in the process of learning a skill (dancing, kicking a ball,..). We will use such an example in the following paragraph in order to highlight the different sources of difficulties such an approach might arise.\newline
+			Because the teacher doesn't have the same physical abilities than the child, or is not an expert in the skill he is trying to teach, he might give the child a suboptimal way of performing the task. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around the way he has learnt so far. He might find that, by slightly changing how he performs the tasks,  he is able to perform better than the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
 			
-			\paragraph{} Learning from demonstration is indeed a useful tool when it comes to robots learning complex tasks. A good way of helping them in their learning process is to provide them with demonstrations of the task. Such a demonstration coming from a human teacher (and therefore without the same abilities of the robot), some adaptation has to be made, as well as exploration by the robot to make sure the solution given by the teacher is not a suboptimal one. Another possibility would be the case of receiving a demonstration from a trained robot, or even a set of different agent with inhomogeneous level of training. Such variants will also be studied in this project. 
+			\paragraph{} This semester project aims at introducing a theoretical formulation of such a compliance-based behavior, and experimentally test its performance on simple problems and compare it to other usual algorithm. We will define our problem in a reinforcement learning framework, which allows a fairly good definition of our initial problem. 
 			
-			\paragraph{} After a short reminder on Learning from demonstration (LfD) problematics and Reinforcement Learning (RL) techniques, we will introduce a compliant based exploration/exploitation tradeoff for policy search techniques, and assess its abilities before trying to generalize our approach for several mentors. 
-			 
+			\paragraph{} The underlying goal behind this objective is to get better intuition about how interactive learning between human and robots can be achieved. Indeed, we would like to be able to teach a robot from demonstration not by only by providing it a large number of trajectories that he will then use as a motion generator, but by directly interacting with him. By showing a robotic arm, at different times of its learning procedure, concrete examples on how to avoid its closest obstacle and grab a given object, seems like a more natural way of teaching the robot a task, while still enabling him to correct some small sub-optimality we could have introduced to it. 
+			
+			\paragraph{} Our approach also allows use to tackle a somehow different problem, related to transfer learning. Indeed, the teacher might not be a human but another learner, only better trained than the current learner. In such a case, we would like our learner to quickly find if it can trust its mentor, and if not where it should focus its computations to overcome its mentor sub-optimality. Such questions will therefore be tackled in this report. 
 		}
 		\section{Background}
 		{
+			\paragraph{} We hereinafter introduce some notions from the Learning from Demonstration (LfD) framework, as well as some transfer learning metrics that will show useful later on. 
 			\subsection{Learning from demonstration}
 			{
 				\paragraph{} As discussed before, Learning from demonstration (LfD) is a framework where a robot can learns from interacting with a human. It particularly focus on the case where a mentor (human) provides demonstration on how to perform a task. Such an approach is also known as Programming from demonstration (PbD) or imitation learning. 
@@ -70,6 +73,8 @@
 		}
 		\section{Proposed approach}
 		{
+			% TODO : clearer : talk about why reinforcement learning makes sense 
+			% then how we are going to proceed 
 			\paragraph{} As we started to explained before, we are going to start with a fairly simple model in order to address the problem of compliance in learning from a teacher. We hope that a simple enough state space and framework will allow us to better understand how compliance in learning by demonstration should be tackled, in a reinforcement learning framework.  We also hope we would be able to generalize to more complex situations once the understanding on a simple but generic model is mastered. 
 			
 			\paragraph{} After defining a simple two dimensional grid-world state space with a simple action set, we will quickly study how well the different classical RL policy search algorithms performs on such a space. 
@@ -479,7 +484,7 @@
 					\label{fig::maze_display}
 				\end{minipage}
 				\hfill
-				\begin{minipage}{0.5\linewidth}
+				\begin{minipage}{0.45\linewidth}
 					\includegraphics[width=\linewidth]{maze_optimal_policy}
 					\caption{Optimal policy, computed with DP}
 					\label{fig::maze_optimal_policy}
