@@ -34,10 +34,11 @@ tic
 % with SARSA(lambda) 
 %[pi_star,mdp] = sarsa_lambda_solve_mdp(mdp);
 % with Watkins Q(lambda) 
-[pi_star,mdp] = qlearning_lambda_solve_mdp(mdp);
+%[pi_star,mdp] = qlearning_lambda_solve_mdp(mdp);
 
 %% plots the optimal policy 
 toc
+load('misc/subopt_policy_1','pi'); pi_star = pi;
 draw_policy(pi_star,mdp.states);
 
 %% learning from a mentor's policy 

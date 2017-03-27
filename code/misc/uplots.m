@@ -22,6 +22,8 @@ optimal_ar = load('optimal_ar');
 optimal_ar = optimal_ar.cum_reward_per_episode;
 random_ar = load('random_ar');
 random_ar = random_ar.cum_reward_per_episode;
+subopt_1_ar = load('subopt_1_ar');
+subopt_1_ar = subopt_1_ar.cum_reward_per_episode;
 size = min([size(optimal_ar,1),size(random_ar,1),size(sarsa_lambda_08_ar,1), size(ql_ar,1), size(ql_lambda_ar,1), size(sarsa_ar,1)]);
 
 figure('units','normalized','outerposition',[0 0 1 1]) 
@@ -50,6 +52,10 @@ p5p = plot(lpf(optimal_ar(1:size-1),0.1),'--','LineWidth',2,'Color',[0.1, 0.1, 0
 p6 = plot(random_ar(1:size-1),'LineWidth',1.2,'Color',[0.5, 0.5, 0.5]);
 p6.Color(4) = 0.1;
 p6p = plot(lpf(random_ar(1:size-1),0.05),'LineWidth',2,'Color',[0.5, 0.5, 0.5]);
+% Suboptimal policy
+p7 = plot(subopt_1_ar(1:size-1),'LineWidth',1.2,'Color',[0.5, 0.5, 0.5]);
+p7.Color(4) = 0.1;
+p7p = plot(lpf(subopt_1_ar(1:size-1),0.05),'LineWidth',2,'Color',[0.5, 0.5, 0.5]);
 
 %% Plots
 xlabel('Number of iterations');
