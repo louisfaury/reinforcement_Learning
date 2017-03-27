@@ -73,13 +73,21 @@
 		}
 		\section{Proposed approach}
 		{
-			% TODO : clearer : talk about why reinforcement learning makes sense 
-			% then how we are going to proceed 
-			\paragraph{} As we started to explained before, we are going to start with a fairly simple model in order to address the problem of compliance in learning from a teacher. We hope that a simple enough state space and framework will allow us to better understand how compliance in learning by demonstration should be tackled, in a reinforcement learning framework.  We also hope we would be able to generalize to more complex situations once the understanding on a simple but generic model is mastered. 
+			\paragraph{} A reinforcement learning approach makes a lot of sense in our situation. The next chapter of this report is dedicated to derive some background on this framework, therefore we will hereinafter only describe our proposed approach of imitation learning with a reinforcement learning formulation. 
 			
-			\paragraph{} After defining a simple two dimensional grid-world state space with a simple action set, we will quickly study how well the different classical RL policy search algorithms performs on such a space. 
+			\paragraph{} In the most general case, we will consider the teacher's demonstrations to be a bijection between the state space $\mathcal{S}$ of the robot and its action set $\mathcal{A}(s)$, $\forall s\in\mathcal{S}$, denoted $\pi_m$ : 
+			\begin{equation}
+				\begin{aligned}
+					\pi_m \, :  \, \mathcal{S} &\to \mathcal{A}\\
+						     s &\to a_m(s) 
+				\end{aligned}
+			\end{equation}
+			where $a_m(s)$ is the \emph{recommended action} of the mentor at state $s$. Some other specifications could be brought later on - like considering that the mentor's recommandations don't cover the whole state space, or introducing \emph{inhomogeneous settings}. Given those informations, we want to come up with a learning algorithm that comes up with its own mapping $\pi$, by observing $\pi_m$ and eventually becoming better (we will see later how we define that notion) that its mentor at the demonstrated task. 
 			
-			\paragraph{} Once this done, we will introduce a new exploration policy, based on the learned confidence the learner has in its teacher. The teacher does not provide the learner with trajectories, but with recommandation of actions point-wise in the state-action space they share (\emph{homogeneous settings}). We want the learner, based on a prior knowledge of the confidence it should give to its teacher (the confidence is understood locally : we can be very confident that the teacher is right for one point of the state space and really doubting the teacher's recommandation elsewhere) to gradually update (based on a \emph{compliance term}) this confidence to be able to decide to explore new trajectories once it has quickly learned a possibly suboptimal one from the teacher.
+
+			\paragraph{} Practically speaking, we are going to start with a fairly simple environment and explicit task in order to address the problem of compliance in learning from a teacher. We hope that a simple enough state space will allow us to better understand how compliance in learning by demonstration should be tackled with a reinforcement learning formulation.  We also hope we would be able to generalize to more complex situations once the understanding on a simple but generic model is mastered. 
+			
+			\paragraph{} Hence, after defining a simple two dimensional grid-world state space with a simple action set, we will quickly study how well the different classical reinforcement learning policy search algorithms performs on such a space. Once this done, we will introduce a new exploration policy, based on the learned confidence the learner has in its teacher and compare its efficiency with the latter algorithms. We will also focus on the relation between the learner and the prior information on its tasks it gains through its mentors recommandation. Especially, we will study how well a learner can overcome its mentor own sub-optimality. 
 		}
 	}
 	\newpage
@@ -503,10 +511,122 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\label{fig::comp_maze}
 				\end{center}
 			\end{figure}
+		
+			\paragraph{} As explained before, this environment is considered as a base line in all that follows, and will serve as a sandbox model where we will test our different methods for an imitation learning based approach. 
 		}
 		
-		% TODO : show that learned policies are a bit suboptimal ? 
-		\paragraph{} As explained before, this environment is considered as a base line in all that follows, and will serve as a sandbox model where we will test our different methods for an imitation learning based approach. 
+	\section{Proposed approaches}
+	{	
+	
+		%% TODO : write more about intuition as well as naive approaches
+		\paragraph{} The two methods described below both have the same end goal : speed up the learning of an agent by using mentor recommandations, while overcoming eventual mentor sub-optimality.  They try to achieve that by computing \emph{exploration policies} softly related to $\pi_m$. By simplifying a lot, we can say the resulting algorithm first learn the state-value function for $\pi_m$ and then tunes its exploration policy according to wether he believes that policy to be sub-optimal, hence learning the optimal policy quicker. 
+		
+		\subsection{Actor-critic approach}
+		{
+			\paragraph{}  Let us define, for all $s\in\mathcal{S}$, $\nu(s) \sim B(p(s))$ a Bernoulli random variable where the parameter $p(s)$ is given a Beta prior : $p(s)\sim \beta(\alpha(s),\beta(s))$ and represents the trust we have in a mentor's recommandation at state $s$. 
+			
+			\paragraph{} At each state $s$ of its exploration trajectory, the agent is confronted with a first decision : either listen to the teacher (and follow its recommended action) or discard its recommandation and follow some other available action. This decision is sampled over the random variable $\nu$. \newline
+			We will therefore perform a $\color{red}p$\textcolor{red}{\emph{-greedy policy}} with respect to the teacher recommandation : 
+			\begin{equation}
+				\forall s\in\mathcal{S}, \quad \pi_\nu(s) = 
+					\left\{ 
+					\begin{aligned}
+						&a_m \text{ with probability } p \\
+						& a\neq a_m \text{ with probability } (1-p)
+					\end{aligned}
+					\right. 
+			\end{equation}
+			
+			\vspace{10pt}
+			\noindent \textbf{Remarks}\\ 
+			\vspace{3pt}
+			
+			\hfill
+			\begin{minipage}{0.95\linewidth}
+				\begin{leftbar}
+						\paragraph{} \noindent $\triangleright$ The confidence we have in the teacher influence our exploration policy. The more confident we are with the mentor, the more we will perform its recommended action. On the other hand, if we think the mentor is wrong, we will perform more exploratory moves. \\
+						\paragraph{} \noindent $\triangleright$ The prior on $p$ reflects our initial trust in our teacher. \\
+						\paragraph{} \noindent $\triangleright$ \emph{Question} : how should we pick $p$ ? Sample it from the Beta law, or just take its expected value ($\E{p} = \alpha (\alpha + \beta)^{-1}$) ? \\
+						\paragraph{} \noindent $\triangleright$ When the learner decides to discard the mentor's recommandation, it selects its action with Gibbs distribution (softmax) based on its current estimate of the remaining actions Q-values. 
+				\end{leftbar}
+			\end{minipage}
+		
+			\paragraph{} We want to, based on this exploration policy, to learn the optimal policy Q-values. We also want to learn the point-wise confidence we should have in our mentor. For any $5$-tuple $(s,a,r,s',a')$, we can compute the TD value : 
+			\begin{equation}
+				\delta_t = r + \gamma Q(s',a') - Q(s_t,a_m)
+			\end{equation}
+			which directly compares an estimated expected return of action $a$ with the current estimate of the expected return of the mentor action. Another possibility is to compute : 
+			\begin{equation}
+				\delta_t = \delta_t = r + \gamma Q(s',a') - \max_{a\in\mathcal{A}(s)}{\left\{ Q(s,a)\right\}}
+			\end{equation}
+			which should be more general as it compares the expected return for action $a$ with the best expected return possible. 
+		
+			\paragraph{} We then apply the following update rule to $p$ : 
+			\begin{equation}
+				\begin{aligned}
+					\alpha &\leftarrow \alpha +  \mathds{1}_{a=a_m}\delta_t (1-\eps_t)\\
+					\beta &\leftarrow \beta +   \mathds{1}_{a\neq a_m}\delta_t (1-\eps_t)
+				\end{aligned}
+			\end{equation}
+			The intuition behind this update rule is simple : if we see that the expected return for the mentor action decreases, then we decrease $\alpha$ which results in a shift of $p$ toward a smaller confidence (and accordingly for the $\beta$ term update). \newline 
+			The therm $\eps_t$ is our learning rate that can be understood as a compliance term. It starts near $1$ and decreases toward $0$ as we explore our state space. It might not be that useful because the existence of the prior should avoid overfitting to some exploration noise (especially in the beginning of the process) in most cases. 
+		
+			\paragraph{} The Q-values for the initial MDP are updated with SARSA algorithm, as it is usually done. Only the exploration policy is different (for instance, it will be in the usual case derived directly from the learned action function). 
+		}
+	
+		\subsection{Action value approach}
+		{
+			\paragraph{} We consider here a somewhat similar approach, where our listen vs discard exploration policy is computed according to the current estimated values of the actions \emph{'listen'} and \emph{'discard'}. Let us introduce the action spaces : 
+			\begin{equation}
+				\forall s\in\mathcal{S}, \, \mathcal{A}_c(s) = \left\{ 'listen', \, 'discard'\right\}
+			\end{equation}
+			to which we assign the action values $Q_c(\cdot,l)$ and  $Q_c(\cdot,d)$ (where $l$ denotes the action of listening and $d$ the action of discarding the teacher recommendation). 
+			
+			\paragraph{} The exploration is done by computing a soft policy derived from $\{Q_c(s,l), Q_c(s,d)\}$ for all $s\in\mathcal{S}$. We do this using a Gibbs softmax distribution, which yields : 
+			\begin{equation}
+				\forall s \in\mathcal{S}, \quad \pi_c(s) = 
+					\left\{
+						\begin{aligned}
+							&'l' \text{ with probability } p=\sigma\big(Q_c(s,l) - Q_c(s,d) \big) \\
+							& 'd'  \text{ with probability } 1-p
+						\end{aligned}
+					\right.
+			\end{equation}
+			where $\sigma(\cdot)$ is the logistic sigmoid. 
+			
+			\paragraph{} The update rule for the initial MDP is performed as usual, using TD updates : $\forall{(s,a)}\in\mathcal{S}\times\mathcal{A}(s)$
+			\begin{equation}
+				Q(s,a) \leftarrow (1-\alpha)Q(s,a) + \alpha \left[ r + \gamma Q(s',a')\right]
+			\end{equation}
+			After each of those update, we also make the following update : 
+			\begin{equation}
+				\left\{
+				\begin{aligned}
+					&Q_c(s,l) = Q(s,a_m) \\
+					&Q_c(s,d) = \max_{a\neq a_m} Q(s,a) 
+				\end{aligned}
+				\right.
+			\end{equation}
+		
+			\vspace{10pt}
+			\noindent \textbf{Remarks}\\ 
+			\vspace{3pt}
+		
+			\hfill
+			\begin{minipage}{0.95\linewidth}
+				\begin{leftbar}
+						\paragraph{} \noindent $\triangleright$ The use of the $\max\{\cdot\}$ operator is not really reflective of the policy that is used to pick an action when the learner decides not to listen to its mentor. However, since this policy is supposed to be greedy in limit, we hope this wouldn't affect the result as $t\to\infty$.. \\
+						\paragraph{} \noindent $\triangleright$ \textcolor{red}{Idea} : looks a lot like hierarchical MDP .. maybe have a closer look to that theory ? 
+				\end{leftbar}
+			\end{minipage}
+		
+			\paragraph{} We can introduce some prior confidence in the teacher by setting, $\forall s\in\mathcal{S}$ : 
+			\begin{equation}
+				Q^0_c(s,l) - Q^0_c(s,d) = \log\{\frac{p}{1-p}\}
+			\end{equation}
+			where $p$ is the retained probability of initially choosing to listen to the teacher. 
+			}
+		}	
 	}
 	
 	\chapter{Results}
