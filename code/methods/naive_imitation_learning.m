@@ -24,7 +24,7 @@ deltas                  = zeros(max_iter,1);
 cum_reward_per_episode  = zeros(max_iter,1);
 delta                   = 10;
 counts                  = ones(n,4); % counts for each state - learning rate tuning 
-mini_batch_size         = 10;
+mini_batch_size         = 15;
 
 
 %% init 
@@ -74,7 +74,8 @@ while (k<max_iter && delta>stop_criterion)
     temperature = temperature*temperature_mult_factor;
     deltas(k) = delta;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
-    k = k+1;
+    k = k+1
+    p = 0.995*p;
 end
 
 pi = generate_greedy_policy(mdp.states,counts);

@@ -16,13 +16,13 @@ if (~ismissing(string(pi_m)))
     if (rand<p)
         action_index = mentor_index;
     else
-        if exclude
+        if (exclude==true)
         action_set_cp = action_set;
         action_set_cp(mentor_index) = [];
         action_index_cell = strfind({action_set.name},action_set_cp(softmax_random_pick(action_set_cp, temperature)).name);
         action_index = find(not(cellfun('isempty', action_index_cell)));
         else
-            softmax_random_pick(action_set, temperature)
+            action_index = softmax_random_pick(action_set, temperature);
         end
     end
 else
