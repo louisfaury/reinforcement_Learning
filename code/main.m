@@ -22,9 +22,9 @@ discount = 1;
 %% configure mdp and draw state and action space
 mdp = configure_mdp(model_name,stochasticy,discount);
 draw_mdp(mdp);
-tic
 
 %% policy iteration and other mdp solving algos
+tic
 % with bellman
 %[pi_star,mdp] = bellman_solve_mdp(mdp);
 % with Q-learning
@@ -35,12 +35,14 @@ tic
 %[pi_star,mdp] = sarsa_lambda_solve_mdp(mdp);
 % with Watkins Q(lambda) 
 %[pi_star,mdp] = qlearning_lambda_solve_mdp(mdp);
-
-%% plots the optimal policy 
 toc
-load('misc/subopt_policy_1','pi'); pi_star = pi;
-draw_policy(pi_star,mdp.states);
+%% plots the optimal policy 
+%draw_policy(pi_star,mdp.states);
+ 
+%% imitation reinforcement learning methods
+  load('misc/opt_policy','pi'); pi_m = pi;
+  [pi_star,mdp] = naive_imitation_learning(pi_m, mdp);
+% TODO : proper plots for learner and 
 
-%% learning from a mentor's policy 
-%pi_m = pi_star;
-%ac_imitation_learning(pi_star, mdp) %% TODO finish 
+
+

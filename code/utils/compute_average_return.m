@@ -1,11 +1,10 @@
-function opt_ar = compute_average_return(mdp,greedy_pi)
+function opt_ar = compute_average_return(mdp,greedy_pi,iter)
 %% <======================= HEADER =======================>
 % @brief : This function generates average returns over minibatches for a greedy policy passed by user. If not, computes for random policy 
 % @param : mdp = Markov Decision Process to be solved. 
 % @return : pi = optimal policy 
 %  <======================================================>
 
-iter = 500;
 opt_ar = zeros(iter,1);
 mini_batch_size = 5;
 max_search_iter = mdp.max_search;

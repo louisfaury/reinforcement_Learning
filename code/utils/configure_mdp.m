@@ -75,10 +75,18 @@ switch model_name
         mdp.ql_lambda.default_value = 2;
         mdp.ql_lambda.init_lr = 0.8;
         mdp.ql_lambda.lambda = 0.8;
+        % Naive imitation learning 
+        mdp.naive_il.max_iter = 300;
+        mdp.naive_il.init_temp = 4;
+        mdp.naive_il.p = 0.9;
+        mdp.naive_il.temp_mult = 0.98;
+        mdp.naive_il.stop_criterion = -0.1;
+        mdp.naive_il.default_value = 0;
+        mdp.naive_il.init_lr = 1;
         % Actor critic imitation learning 
-        mdp.ac_il.init_alpha = 0.5;
+        mdp.ac_il.init_alpha = 1;
         mdp.ac_il.init_beta = 0.05555;
-        mdp.ac_il.default_value = 0;
+        mdp.ac_il.default_value = -20;
         mdp.ac_il.temperature = 0.5;
         mdp.ac_il.stop_criterion = -0.1;
         mdp.ac_il.max_iter = 300;
