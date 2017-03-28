@@ -74,8 +74,8 @@ while (k<max_iter && delta>stop_criterion)
     temperature = temperature*temperature_mult_factor;
     deltas(k) = delta;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
-    k = k+1
-    p = 0.995*p;
+    k = k+1;
+    %p = 0.995*p;
 end
 
 pi = generate_greedy_policy(mdp.states,counts);

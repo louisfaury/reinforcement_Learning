@@ -8,6 +8,7 @@
 clear all;
 close all;
 clc;
+adpath(genpath('data/'));
 
 %% Average reward per episode for recorded learning processes
 sarsa_lambda_08_ar = load('sarsa_lambda_08_ar.mat');
