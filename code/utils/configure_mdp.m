@@ -77,9 +77,9 @@ switch model_name
         mdp.ql_lambda.lambda = 0.8;
         % Naive imitation learning 
         mdp.naive_il.max_iter = 500;
-        mdp.naive_il.init_temp = 0.5;
-        mdp.naive_il.p = 0.9;
-        mdp.naive_il.temp_mult = 0.99;
+        mdp.naive_il.init_temp = 4;
+        mdp.naive_il.p = 0.7;
+        mdp.naive_il.temp_mult = 0.95;
         mdp.naive_il.stop_criterion = -0.1;
         mdp.naive_il.default_value = 0;
         mdp.naive_il.init_lr = 1;

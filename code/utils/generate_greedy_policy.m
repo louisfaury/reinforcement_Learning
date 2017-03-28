@@ -11,7 +11,7 @@ for i=1:n
     value = -100;
     for j=1:m
         action_value = mdp_states(i).actions(j).value;
-        if (action_value > value && counts(i,j)>10)
+        if (action_value > value && counts(i,j)>2)
             res = string(mdp_states(i).actions(j).name);
             value = action_value;
         end

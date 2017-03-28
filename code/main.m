@@ -30,7 +30,8 @@ tic
 % with Q-learning
 %[pi_star,mdp] = qlearning_solve_mdp(mdp);
 % with SARSA
-%[pi_star,mdp] = sarsa_solve_mdp(mdp);
+%
+[pi_star,mdp] = sarsa_solve_mdp(mdp);
 % with SARSA(lambda) 
 %[pi_star,mdp] = sarsa_lambda_solve_mdp(mdp);
 % with Watkins Q(lambda) 
@@ -40,9 +41,8 @@ toc
 %draw_policy(pi_star,mdp.states);
  
 %% imitation reinforcement learning methods
-  load('misc/policy/subopt_policy_1','pi'); pi_m = pi;
+  load('misc/policy/subopt_policy_3','pi'); pi_m = pi;
   [pi_star,mdp] = naive_imitation_learning(pi_m, mdp);
-% TODO : proper plots for learner and mentor with lpf 
 
 
 
