@@ -1,14 +1,14 @@
-%% useful_plots.m 
+%% refplots.m 
 %%% ================================================ %%% 
 %%% =========== Semester project at LASA ==========  %%%
 %%% ============ Reinforcement Learning ============ %%% 
-%%% ================= Main Script ================== %%% 
+%%% ================= Ref. Plots =================== %%% 
 %%% ================================================ %%%
 
 clear all;
 close all;
 clc;
-adpath(genpath('data/'));
+addpath(genpath('data/'));
 
 %% Average reward per episode for recorded learning processes
 sarsa_lambda_08_ar = load('sarsa_lambda_08_ar.mat');
@@ -53,10 +53,6 @@ p5p = plot(lpf(optimal_ar(1:size-1),0.1),'--','LineWidth',2,'Color',[0.1, 0.1, 0
 p6 = plot(random_ar(1:size-1),'LineWidth',1.2,'Color',[0.5, 0.5, 0.5]);
 p6.Color(4) = 0.1;
 p6p = plot(lpf(random_ar(1:size-1),0.05),'LineWidth',2,'Color',[0.5, 0.5, 0.5]);
-% Suboptimal policy
-%p7 = plot(subopt_1_ar(1:size-1),'LineWidth',1.2,'Color',[0.5, 0.5, 0.5]);
-%p7.Color(4) = 0.1;
-%p7p = plot(lpf(subopt_1_ar(1:size-1),0.05),'LineWidth',2,'Color',[0.5, 0.5, 0.5]);
 
 %% Plots
 xlabel('Number of iterations');

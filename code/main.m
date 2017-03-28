@@ -40,7 +40,7 @@ toc
 %draw_policy(pi_star,mdp.states);
  
 %% imitation reinforcement learning methods
-  load('misc/opt_policy','pi'); pi_m = pi;
+  load('misc/policy/subopt_policy_1','pi'); pi_m = pi;
   [pi_star,mdp] = naive_imitation_learning(pi_m, mdp);
 % TODO : proper plots for learner and mentor with lpf 
 
