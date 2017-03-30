@@ -71,11 +71,14 @@ while (k<max_iter && delta>stop_criterion)
             lIter = lIter +1;
         end
     end
-    temperature = temperature*temperature_mult_factor;
+    if (p<0.5)
+        temperature = temperature*temperature_mult_factor;
+        disp(k);
+    end
     deltas(k) = delta;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
     k = k+1;
-    p = 0.995*p;
+    p = 0.997*p;
 end
 
 pi = generate_greedy_policy(mdp.states,counts);
@@ -95,7 +98,7 @@ legend('Learning curve for policy value iteration');
 % plot the rewards per episode averaged per minibatch
 subplot(1,2,2);
 plot(cum_reward_per_episode(1:k-1),'b','LineWidth',2); hold on;
-mentor_cum_reward_per_episode = compute_average_return(mdp,pi_m,k-1); plot(1:k-1,mentor_cum_reward_per_episode,'g','LineWidth',2);
+%mentor_cum_reward_per_episode = compute_average_return(mdp,pi_m,k-1); plot(1:k-1,mentor_cum_reward_per_episode,'g','LineWidth',2);
 xlabel('Number of iterations');
 ylabel('Average reward');
 legend('Average reward per episode per minibatch','Greedy mentor average reward per episode per minibatch','Location','southeast');
