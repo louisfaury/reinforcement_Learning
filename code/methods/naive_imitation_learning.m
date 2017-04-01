@@ -47,13 +47,13 @@ while (k<max_iter && delta>stop_criterion)
     cum_reward = 0;
     for j=1:mini_batch_size
         state_index = pick_random_state(mdp);
-        action_index = comply_or_defy(pi_m(state_index),mdp.states(state_index).actions,temperature,p);
+        action_index = comply_or_defy_bern(pi_m(state_index),mdp.states(state_index).actions,temperature,p);
         
         lIter = 0;
         while(~mdp.states(state_index).terminal && lIter < max_search_iter)
             [next_state_index, reward] = follow_action(mdp, state_index,action_index);
             cum_reward = cum_reward + reward;
-            next_action_index = comply_or_defy(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,p);
+            next_action_index = comply_or_defy_bern(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,p);
             
             % update
             qvalue = mdp.states(state_index).actions(action_index).value;

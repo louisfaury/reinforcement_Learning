@@ -1,5 +1,5 @@
-function action_index = comply_or_defy(pi_m, action_set, temperature, p, exclude)
-% @brief : pick random action in state's action set
+function action_index = comply_or_defy_bern(pi_m, action_set, temperature, p, exclude)
+% @brief : pick random action in state's action set based on a Bernouilli random variable
 % @param :  - pi_m : mentor action
 %           - state_action = action set of the current state
 %           - temperature = temperature coeff. for softmax
