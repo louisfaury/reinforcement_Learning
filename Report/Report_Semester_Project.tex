@@ -515,10 +515,112 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\paragraph{} As explained before, this environment is considered as a base line in all that follows, and will serve as a sandbox model where we will test our different methods for an imitation learning based approach. 
 		}
 		
-	\section{Proposed approaches}
+	\section{First naive approaches}
+	{
+		\subsection{Constant compliance}
+		{
+			\paragraph{} In order to grasp as well as possible some intuition behind a compliance-based learning, we decided to first implement a really simple method, which consist in following the teacher's recommandation with a constant probability $p$ (close from $1$), defined globally (the same for all the states). More formally, the \emph{action selection} process is defined as follows. For all $s\in\mathcal{S}$ 
+			\begin{equation}
+				a = \left\{
+				\begin{aligned}
+					&a_m \, \text{with probability }p  \text{ independent of } s\\
+					& a \in \mathcal{A}(s) \text{ (softmax action picking based on current Qvalues)}
+				\end{aligned}\right.
+			\end{equation}
+			
+			\paragraph{} The learning is done with a succession of action selection based on a five tuple $s,a,r,s',a'$ (the SARSA framework) and the usual TD(0) updates : $\forall s\in\mathcal{S}, a\in\mathcal{A}(s)$
+			\begin{equation}
+				Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + Q(s',a') - Q(s,a) \right]
+			\end{equation}
+			
+			\paragraph{} Therefore, the learner \emph{complies} with the teacher with probability $p$, and decide to choose its own action (that \textbf{could include} $\pmb{a_m}$) with probability $1-p$. Only the action selection (hence the \emph{exploratory policy}) is impacted by the presence of the mentor. 
+			
+			\paragraph{} The intuition behind this approach is rather simple : we direct the exploration of the learner with the recommandations from the teacher, while still enabling it to search around them, based on its current Q-values. The softmax based exploration is regulated by a temperature factor, making it greedy in limit. 
+			
+			\paragraph{} The figures (\ref{fig::comp_opt_verynaive}) and (\ref{fig::comp_subopt220_verynaive}) display the learning obtained (cumulated rewards averaged over mini-batches) when fed with, respectively, the optimal policy for the MDP and a slightly suboptimal one. 
+			
+			\begin{figure}[h!]
+				\begin{minipage}{0.5\linewidth}
+					\begin{center}
+						\includegraphics[width=0.9\linewidth]{very_naive_opt}
+						\caption{Constant compliance learning, $p=0.9$, with the optimal mentor}
+						\label{fig::comp_opt_verynaive}
+					\end{center}
+				\end{minipage}
+				\begin{minipage}{0.5\linewidth}
+					\begin{center}
+						\includegraphics[width=0.9\linewidth]{very_naive_200}
+						\caption{Constant compliance learning, $p=0.9$, with a slightly suboptimal mentor}
+						\label{fig::comp_subopt220_verynaive}
+					\end{center}
+				\end{minipage}
+			\end{figure}
+	
+			\paragraph{} Figure (\ref{fig::comp_opt_verynaive}) shows that from its exploration, the learner is able to quickly learn his way thanks to the optimal mentor. As expected, it eventually follows the mentor's action, wether it complies or not, since the recommended action holds the best action-values. On the other hand, figure (\ref{fig::comp_subopt220_verynaive}) : because of the high confidence the learner initially have in its mentor, its is never able to reach optimal performance, and the policy its renders actually mimic its mentor suboptimal one. Still, one could expect the learned policy to be slightly better than its suboptimal teacher's one, even if not optimal. However, achieving this comes with a lot of effort in the tuning of $p$ and of the softmax distribution temperature decrease coefficient. 
+	
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[width=0.7\linewidth]{subopt_policy_block}
+					\caption{An exemple of suboptimal mentor policy that doesn't always lead to the positive reward}
+					\label{subopt_policy_block}
+				\end{center}
+			\end{figure}
+			
+			\paragraph{} This remark actually pinpoints a major downside of this method, that is the need of fine tuning of the parameter $p$. But obviously, there is even a bigger downside, that would after become a major game killer and is related to how we generate suboptimal policies from learner. Indeed, mentor policies are taken by generating greedy policies (argmax over the Q-values) of a learner that hasn't completed its learning. Therefore, some mentors can be suboptimal enough to only show a good direction of exploitation, but not be able to reach the target. On a learning from demonstration point of view, such a phenomenon could happen if the human teacher only show the robot part of the task it has to do. Figure (\ref{subopt_policy_block}) displays such a policy, where the mentor's policy creates loops and does not always leads to the positive reward.  \newline. 
+			Applying the latest method with such a teacher is fatal for the learning, as the learner discovers that following the mentor's action yields largely negative rewards, but is not able to bypass them as it keeps a constant confidence in its teacher. This leads the learner to build up low Q-values in the directions of the teacher, and trying to follow an opposite path from the mentor. This is highly counter-productive since the mentor still gives the right exploration direction. 
+		
+		\subsection{Constantly decreasing compliance }
+		{
+			\paragraph{} One of the downside of the constant compliance approach is that the exploratory behavior is always biased by the mentor's recommandation. This breaks the need of this policy to be \emph{greedy in limit} (which is a specification of the SARSA algorithm). In the case of a sub-obptimal mentor, this means that the optimal behavior could never be reached. 
+			
+			\paragraph{} We now decide to comply with SARSA's exigence to be greedy in limit. Therefore, $p$ is \emph{constantly decreased along the learning procedure} : 
+			\begin{equation}
+				p_{t+1} = \beta p_{t}
+			\end{equation}
+			with $\beta < 1$. As before, the temperature of the Gibb's softmax sampling also goes to $0$ as the learning goes on. 
+			
+			\paragraph{} The action-selection is therefore biased by the mentor's recommandation in the beginning of the learning only, and slowly decides to take its own choices, based on its current Q-values estimates. This approach sounds more promising as the learner is more likely to quickly discover the location of high rewards (following the teacher policy with $p$ close to 1), and will then makes it own exploration along those trajectory, to end up in a setting where the teacher's actions are now longer considered. 
+		
+					\begin{figure}[h!]
+				\begin{minipage}{0.5\linewidth}
+					\begin{center}
+						\includegraphics[width=0.9\linewidth]{comp_naive_compliance_120}
+						\caption{Constantly decreasing compliance learning, $\beta = 0.99$}
+						\label{fig::comp_naive_compliance_120}
+					\end{center}
+				\end{minipage}
+				\begin{minipage}{0.5\linewidth}
+					\begin{center}
+						\includegraphics[width=0.9\linewidth]{comp_naive_compliance_50}
+						\caption{Constantly decreasing compliance learning, $\beta = 0.97$}
+						\label{fig::comp_naive_compliance_50}
+					\end{center}
+				\end{minipage}
+			\end{figure}
+			
+			\paragraph{} Figures (\ref{fig::comp_naive_compliance_120}) and (\ref{fig::comp_naive_compliance_50}) display the result on two sub-optimal policies, that were derived from the Q-values learned at a given moment (denoted through a red square) in a learning process. They show that with this approach, while the learner is compliant with the teacher, it steadily increases its accumulated reward thanks to its exploratory actions, where he discard the teacher's recommandation. However, it then comes to a plateau (or even an undershoot) when the guidance by the teacher becomes too weak as $p$ reaches a critical level. The learner then mostly relies on its exploratory actions (which volatility are guided by its learning processus' temperature) to explore the space where the teacher's action never took it before. Once it has somehow learnt the action value function related to this part of its state space, and as its temperature goes down, the learner's accumulated reward goes up until it reaches the level of the optimal policy. 
+			
+			\paragraph{} With this technique, the learner is therefore able to learn the optimal policy even if following its teacher recommandation never takes it to the target. It is interesting to see, in such case, what policy the learner actually learns. In figure (\ref{fig::learnt_from_mentor}), we display the policy learnt from the mentor's policy showed in figure (\ref{subopt_policy_block}). One can notice that the learner actually learns to avoid place where the mentor was wrong or created loops, and forks to part of the state space where the teacher was more accurate. 
+			
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[width=0.7\linewidth]{learnt_from_mentor}
+					\caption{Policy learnt from a suboptimal mentor}
+					\label{fig::learnt_from_mentor}
+				\end{center}
+			\end{figure}
+
+
+		}		
+		
+		\paragraph{} If this approach seems to work relatively well, there are still some critical downsides to it. First of all, a lot of tuning is required in order to find the hyper-parameters ($p_0$, $\beta$, temperature evolution, ..) that lead to a fast learning. Also, there is an undershoot in the learning that seems to slow it down, due to the exploring phase that happens when $p$ becomes too low.  Such exploration could be avoided or reduced if the learner is able to figure out quickly that indeed, the mentor was right in its recommandation.
+		
+		%% TODO : talk a bit about learning from slightly suboptimal ? 
+	}
+	
+	\section{Adaptive compliance approach}
 	{	
 	
-		%% TODO : write more about intuition as well as naive approaches
 		\paragraph{} The two methods described below both have the same end goal : speed up the learning of an agent by using mentor recommandations, while overcoming eventual mentor sub-optimality.  They try to achieve that by computing \emph{exploration policies} softly related to $\pi_m$. By simplifying a lot, we can say the resulting algorithm first learn the state-value function for $\pi_m$ and then tunes its exploration policy according to wether he believes that policy to be sub-optimal, hence learning the optimal policy quicker. 
 		
 		\subsection{Actor-critic approach}

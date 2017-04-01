@@ -78,7 +78,7 @@ switch model_name
         % Naive imitation learning 
         mdp.naive_il.max_iter = 400;
         mdp.naive_il.init_temp = 2;
-        mdp.naive_il.p = 0.9;
+        mdp.naive_il.p = 0.8;
         mdp.naive_il.temp_mult = 0.95;
         mdp.naive_il.stop_criterion = -0.1;
         mdp.naive_il.default_value = 0;
