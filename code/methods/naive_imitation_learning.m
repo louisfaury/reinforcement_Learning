@@ -73,7 +73,6 @@ while (k<max_iter && delta>stop_criterion)
     end
     if (p<0.5)
         temperature = temperature*temperature_mult_factor;
-        disp(k);
     end
     deltas(k) = delta;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
