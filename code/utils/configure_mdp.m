@@ -84,12 +84,15 @@ switch model_name
         mdp.naive_il.default_value = 0;
         mdp.naive_il.init_lr = 1;
         % Actor critic imitation learning 
-        mdp.ac_il.init_alpha = 1;
+        mdp.ac_il.init_alpha = 0.5;
         mdp.ac_il.init_beta = 0.05555;
-        mdp.ac_il.default_value = -20;
-        mdp.ac_il.temperature = 0.5;
+        mdp.ac_il.default_value = 0;
+        mdp.ac_il.init_temp = 0.5;
+        mdp.ac_il.stop_criterion = -0.1;
+        mdp.ac_il.temp_mult = 0.99;
         mdp.ac_il.stop_criterion = -0.1;
         mdp.ac_il.max_iter = 300;
+        mdp.ac_il.init_lr = 1;
         
     otherwise
         error('File name is not known (thrown in configure_model(.))');

@@ -41,7 +41,7 @@ toc
  
 %% imitation reinforcement learning methods
   load('misc/policy/subopt_policy_1.mat','pi'); pi_m = pi;
-  [pi_star,mdp] = naive_imitation_learning(pi_m, mdp);
+  [pi_star,mdp] = ac_imitation_learning(pi_m, mdp);
 
 
 
