@@ -30,5 +30,6 @@ if (~ismissing(string(pi_m)))
         end
     end
 else
+    mentor_index = 1;
     action_index = 1; % default
 end

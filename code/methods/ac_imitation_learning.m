@@ -23,7 +23,7 @@ cum_reward_per_episode  = zeros(max_iter,1);
 delta                   = 10;
 counts                  = ones(n,4);    % counts for each state - learning rate tuning 
 mini_batch_size         = 15;
-eps                     = 0.1;          % learning rate for compliance learning
+eps                     = 0.01;          % learning rate for compliance learning
 
 %% init
 for i=1:n
@@ -61,16 +61,22 @@ while (k<max_iter && delta>stop_criterion)
             % compliance update 
             n_qvalue = mdp.states(next_state_index).actions(next_action_index).value;
             dd = n_qvalue + reward - mdp.states(state_index).actions(mentor_action_index).value;
-            % dd = n_qvalue + reward - max[mdp.states(state_index).actions];
+            %dd = n_qvalue + reward - max([mdp.states(state_index).actions.value]);
             if (action_index==mentor_action_index)
-                mdp.states(state_index).alpha = alpha + eps*dd;
+                mdp.states(state_index).alpha = alpha + eps*max(dd,0);
+                mdp.states(state_index).beta = beta + eps*max(-dd,0);
+                %mdp.states(state_index).alpha = alpha + max(sign(dd),0);
+                %mdp.states(state_index).beta = beta + max(-sign(dd),0);
             else
-                mdp.states(state_index).beta = beta + eps*dd;
+                mdp.states(state_index).beta = beta + eps*max(dd,0);
+                mdp.states(state_index).alpha = alpha + eps*max(-dd,0);
+                %mdp.states(state_index).beta = beta + max(sign(dd),0);
+                %mdp.states(state_index).alpha = alpha + max(-sign(dd),0);
             end
 
             % mdp update
             qvalue = mdp.states(state_index).actions(action_index).value;
-            lrate = init_lr/(counts(state_index,action_index)^(0.51));
+            lrate = init_lr/(counts(state_index,action_index)^(0.55));
             u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
             counts(state_index,action_index) = counts(state_index,action_index)+1;
             delta = max(delta,abs(u_qvalue-qvalue));
@@ -86,7 +92,9 @@ while (k<max_iter && delta>stop_criterion)
         end
     end
     deltas(k) = delta;
+    temperature = temperature*temperature_mult_factor;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
+    eps = eps*1.5;
     k = k+1
 end
 

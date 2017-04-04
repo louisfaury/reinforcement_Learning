@@ -6,7 +6,7 @@ function opt_ar = compute_average_return(mdp,greedy_pi,iter)
 %  <======================================================>
 
 opt_ar = zeros(iter,1);
-mini_batch_size = 5;
+mini_batch_size = 10;
 max_search_iter = mdp.max_search;
 
 for k=1:iter
