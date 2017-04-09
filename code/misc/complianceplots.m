@@ -13,9 +13,9 @@ addpath(genpath('data/'));
 %% loads data 
 %load('opt_compliance');
 %load('subopt1_compliance');
-load('subopt2_compliance');
+%load('subopt2_compliance');
 %load('subopt3_compliance');
-%load('subopt3_learnt_compliance');
+load('subopt2_learnt_compliance');
 load('optimal_ar');
 load('sarsa_mentor_ar.mat');
 optimal_ar = cum_reward_per_episode;

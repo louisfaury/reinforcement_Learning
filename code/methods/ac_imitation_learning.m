@@ -23,7 +23,7 @@ cum_reward_per_episode  = zeros(max_iter,1);
 delta                   = 10;
 counts                  = ones(n,4);    % counts for each state - learning rate tuning 
 mini_batch_size         = 15;
-eps                     = 0.01;          % learning rate for compliance learning
+eps = 0.05;
 
 %% init
 for i=1:n
@@ -61,20 +61,12 @@ while (k<max_iter && delta>stop_criterion)
             if (k>1) % avoiding minibatch weird effects for init
                 % compliance update
                 n_qvalue = mdp.states(next_state_index).actions(next_action_index).value;
-                dd = n_qvalue + reward - mdp.states(state_index).actions(mentor_action_index).value;
-                %dd = n_qvalue + reward - max([mdp.states(state_index).actions.value]);
-                if (k>50)
-                    if (action_index==mentor_action_index)
-                        %mdp.states(state_index).alpha = alpha + eps*max(dd,0);
-                        %mdp.states(state_index).beta = beta + eps*max(-dd,0);
-                        mdp.states(state_index).alpha = alpha + eps*max(sign(dd),0);
-                        mdp.states(state_index).beta = beta + eps*max(-sign(dd),0);
-                    else
-                        %mdp.states(state_index).beta = beta + eps*max(dd,0);
-                        %mdp.states(state_index).alpha = alpha + eps*max(-dd,0);
-                        mdp.states(state_index).beta = beta + eps*max(sign(dd),0);
-                        mdp.states(state_index).alpha = alpha + eps*max(-sign(dd),0);
-                    end
+                ddm = reward + mdp.discount*n_qvalue- mdp.states(state_index).actions(mentor_action_index).value;
+                %ddm = reward + mdp.discount*n_qvalue - max([mdp.states(state_index).actions.value]);
+                if (action_index==mentor_action_index)
+                    mdp.states(state_index).alpha = max(0, alpha + 0.2*(beta/(alpha+beta))*sign(ddm));
+                else
+                    mdp.states(state_index).beta = max(0, beta + 0.2*(alpha/(alpha+beta))*sign(ddm));
                 end
                 
                 % mdp update
@@ -95,9 +87,9 @@ while (k<max_iter && delta>stop_criterion)
         end
     end
     deltas(k) = delta;
+    eps = min(100,1.1*eps);
     temperature = temperature*temperature_mult_factor;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
-    %eps = eps*1.5;
     k = k+1
 end
 
@@ -121,4 +113,4 @@ ylabel('Average reward');
 legend('Average reward per episode per minibatch','Greedy mentor average reward per episode per minibatch','Location','southeast');
 title('SARSA IRL solving of the MDP - Averaged rewards per minibatch');
 
-end
+ end
