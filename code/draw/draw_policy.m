@@ -29,6 +29,6 @@ for i=1:n
 end
 
 quiver(X(:,1),X(:,2),arrows(:,1),arrows(:,2),0,'LineWidth',1.5,'Color',[0,0,0.5])
-legend('Optimal policy','Location','north')
+%legend('Optimal policy','Location','north')
 
 end
