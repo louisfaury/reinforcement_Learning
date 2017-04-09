@@ -84,8 +84,8 @@ switch model_name
         mdp.naive_il.default_value = 0;
         mdp.naive_il.init_lr = 1;
         % Actor critic imitation learning 
-        mdp.ac_il.init_alpha = 9;
-        mdp.ac_il.init_beta = 1;
+        mdp.ac_il.init_alpha = 14;
+        mdp.ac_il.init_beta = 6;
         mdp.ac_il.default_value = -10;
         mdp.ac_il.init_temp = 1;
         mdp.ac_il.stop_criterion = -0.1;

@@ -64,9 +64,9 @@ while (k<max_iter && delta>stop_criterion)
                 ddm = reward + mdp.discount*n_qvalue- mdp.states(state_index).actions(mentor_action_index).value;
                 %ddm = reward + mdp.discount*n_qvalue - max([mdp.states(state_index).actions.value]);
                 if (action_index==mentor_action_index)
-                    mdp.states(state_index).alpha = max(0, alpha + 0.2*(beta/(alpha+beta))*sign(ddm));
+                    mdp.states(state_index).alpha = max(0, alpha + 3*(beta/(alpha+beta))*sign(ddm));
                 else
-                    mdp.states(state_index).beta = max(0, beta + 0.2*(alpha/(alpha+beta))*sign(ddm));
+                    mdp.states(state_index).beta = max(0, beta + 3*(alpha/(alpha+beta))*sign(ddm));
                 end
                 
                 % mdp update
