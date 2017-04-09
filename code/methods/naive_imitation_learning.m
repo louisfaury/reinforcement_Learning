@@ -56,14 +56,16 @@ while (k<max_iter && delta>stop_criterion)
             next_action_index = comply_or_defy_bern(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,p);
             
             % update
-            qvalue = mdp.states(state_index).actions(action_index).value;
-            n_qvalue = mdp.states(next_state_index).actions(next_action_index).value;
-            lrate = alpha/(counts(state_index,action_index)^(0.51));
-            u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
-            counts(state_index,action_index) = counts(state_index,action_index)+1;
-            delta = max(delta,abs(u_qvalue-qvalue));
-            qvalue = u_qvalue;
-            mdp.states(state_index).actions(action_index).value = qvalue;
+            if (k>1) % avoid minibatch undesired visual effects 
+                qvalue = mdp.states(state_index).actions(action_index).value;
+                n_qvalue = mdp.states(next_state_index).actions(next_action_index).value;
+                lrate = alpha/(counts(state_index,action_index)^(0.51));
+                u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
+                counts(state_index,action_index) = counts(state_index,action_index)+1;
+                delta = max(delta,abs(u_qvalue-qvalue));
+                qvalue = u_qvalue;
+                mdp.states(state_index).actions(action_index).value = qvalue;
+            end
             
             % update current step and action
             action_index = next_action_index;
@@ -76,7 +78,7 @@ while (k<max_iter && delta>stop_criterion)
     end
     deltas(k) = delta;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
-    k = k+1
+    k = k+1;
     p = 0.99*p;
 end
 

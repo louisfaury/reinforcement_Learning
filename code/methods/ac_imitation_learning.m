@@ -58,31 +58,34 @@ while (k<max_iter && delta>stop_criterion)
             next_alpha = mdp.states(next_state_index).alpha; next_beta = mdp.states(next_state_index).beta;
             [next_action_index,next_mentor_action_index] = comply_or_defy_beta(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,next_alpha,next_beta);
             
-            % compliance update 
-            n_qvalue = mdp.states(next_state_index).actions(next_action_index).value;
-            dd = n_qvalue + reward - mdp.states(state_index).actions(mentor_action_index).value;
-            %dd = n_qvalue + reward - max([mdp.states(state_index).actions.value]);
-            if (action_index==mentor_action_index)
-                mdp.states(state_index).alpha = alpha + eps*max(dd,0);
-                mdp.states(state_index).beta = beta + eps*max(-dd,0);
-                %mdp.states(state_index).alpha = alpha + max(sign(dd),0);
-                %mdp.states(state_index).beta = beta + max(-sign(dd),0);
-            else
-                mdp.states(state_index).beta = beta + eps*max(dd,0);
-                mdp.states(state_index).alpha = alpha + eps*max(-dd,0);
-                %mdp.states(state_index).beta = beta + max(sign(dd),0);
-                %mdp.states(state_index).alpha = alpha + max(-sign(dd),0);
+            if (k>1) % avoiding minibatch weird effects for init
+                % compliance update
+                n_qvalue = mdp.states(next_state_index).actions(next_action_index).value;
+                dd = n_qvalue + reward - mdp.states(state_index).actions(mentor_action_index).value;
+                %dd = n_qvalue + reward - max([mdp.states(state_index).actions.value]);
+                if (k>50)
+                    if (action_index==mentor_action_index)
+                        %mdp.states(state_index).alpha = alpha + eps*max(dd,0);
+                        %mdp.states(state_index).beta = beta + eps*max(-dd,0);
+                        mdp.states(state_index).alpha = alpha + eps*max(sign(dd),0);
+                        mdp.states(state_index).beta = beta + eps*max(-sign(dd),0);
+                    else
+                        %mdp.states(state_index).beta = beta + eps*max(dd,0);
+                        %mdp.states(state_index).alpha = alpha + eps*max(-dd,0);
+                        mdp.states(state_index).beta = beta + eps*max(sign(dd),0);
+                        mdp.states(state_index).alpha = alpha + eps*max(-sign(dd),0);
+                    end
+                end
+                
+                % mdp update
+                qvalue = mdp.states(state_index).actions(action_index).value;
+                lrate = init_lr/(counts(state_index,action_index)^(0.55));
+                u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
+                counts(state_index,action_index) = counts(state_index,action_index)+1;
+                delta = max(delta,abs(u_qvalue-qvalue));
+                qvalue = u_qvalue;
+                mdp.states(state_index).actions(action_index).value = qvalue;
             end
-
-            % mdp update
-            qvalue = mdp.states(state_index).actions(action_index).value;
-            lrate = init_lr/(counts(state_index,action_index)^(0.55));
-            u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
-            counts(state_index,action_index) = counts(state_index,action_index)+1;
-            delta = max(delta,abs(u_qvalue-qvalue));
-            qvalue = u_qvalue;
-            mdp.states(state_index).actions(action_index).value = qvalue;
-            
             % update current step and action
             action_index = next_action_index;
             state_index  = next_state_index;
@@ -94,7 +97,7 @@ while (k<max_iter && delta>stop_criterion)
     deltas(k) = delta;
     temperature = temperature*temperature_mult_factor;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
-    eps = eps*1.5;
+    %eps = eps*1.5;
     k = k+1
 end
 
