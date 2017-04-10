@@ -1,4 +1,4 @@
-function [action_index,mentor_index] = comply_or_defy_sig(pi_m, action_set, temperature, listen_value, discard_value, temp, exclude)
+function [action_index,mentor_index] = comply_or_defy_sig(pi_m, action_set, temperature, listen_value, discard_value, t, exclude)
 % @brief : pick random action in state's action set based on a Bernouilli
 % of parameter computed thanks to action-value difference 
 % @param :  - pi_m : mentor action
@@ -18,7 +18,7 @@ if (~ismissing(string(pi_m)))
     mentor_index_cell = strfind({action_set.name},string(pi_m));
     mentor_index = find(not(cellfun('isempty', mentor_index_cell)));
     
-    p = sig((listen_value - discard_value)/temp); %% taken in mean, maybe sample ? 
+    p = sig((listen_value - discard_value)/t); 
     if (rand<p)
         action_index = mentor_index;
     else

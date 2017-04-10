@@ -1,3 +1,9 @@
+
+
+
+
+
+
 function [pi,mdp] = av_imitation_learning(pi_m, mdp)
 %% <======================= HEADER =======================>
 % @brief : This function implements the imitation based policy learning,
@@ -17,6 +23,8 @@ temperature_mult_factor = mdp.av_il.temp_mult;
 stop_criterion          = mdp.av_il.stop_criterion;
 default_value           = mdp.av_il.default_value;
 init_lr                 = mdp.av_il.init_lr;
+ld_lr                   = mdp.av_il.ld_lr; 
+t0                      = mdp.av_il.t0;
 % allocate
 deltas                  = zeros(max_iter,1);
 cum_reward_per_episode  = zeros(max_iter,1);
@@ -26,8 +34,8 @@ mini_batch_size         = 15;
 
 %% init
 for i=1:n
-    mdp.states(i).qd_value = mdp.av_il.qd_init_value;                   % inits alpha(s)
-    mdp.states(i).ql_value = mdp.av_il.ql_init_value;                     % inits beta(s)
+    mdp.states(i).qd_value = mdp.av_il.qd_init_value;   % inits value of discarding
+    mdp.states(i).ql_value = mdp.av_il.ql_init_value;   % inits value of listening
     
     m = size(mdp.states(i).actions,2);
     for j=1:m
@@ -47,28 +55,21 @@ while (k<max_iter && delta>stop_criterion)
     cum_reward = 0;
     for j=1:mini_batch_size
         state_index = pick_random_state(mdp);
-        alpha = mdp.states(state_index).alpha; beta  = mdp.states(state_index).beta;
-        [action_index,mentor_action_index] = comply_or_defy_beta(pi_m(state_index),mdp.states(state_index).actions,temperature,alpha,beta);
+        ql = mdp.states(state_index).ql_value; qd= mdp.states(state_index).qd_value;
+        count = sum(counts(state_index,:))-3;
+        [action_index,mentor_action_index] = comply_or_defy_sig(pi_m(state_index),mdp.states(state_index).actions,temperature,ql,qd,t0/count,true);
        
         lIter = 0;
         while(~mdp.states(state_index).terminal && lIter < max_search_iter)
             [next_state_index, reward] = follow_action(mdp, state_index,action_index);
             cum_reward = cum_reward + reward;
-            next_alpha = mdp.states(next_state_index).alpha; next_beta = mdp.states(next_state_index).beta;
-            [next_action_index,next_mentor_action_index] = comply_or_defy_beta(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,next_alpha,next_beta);
+            next_ql = mdp.states(next_state_index).ql_value; next_qd = mdp.states(next_state_index).qd_value;
+            count = sum(counts(state_index,:))-3;
+            [next_action_index,next_mentor_action_index] = comply_or_defy_sig(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,next_ql,next_qd,t0/count,true);
             
-            if (k>1) % avoiding minibatch weird effects for init
-                % compliance update
-                n_qvalue = mdp.states(next_state_index).actions(next_action_index).value;
-                ddm = reward + mdp.discount*n_qvalue- mdp.states(state_index).actions(mentor_action_index).value;
-                %ddm = reward + mdp.discount*n_qvalue - max([mdp.states(state_index).actions.value]);
-                if (action_index==mentor_action_index)
-                    mdp.states(state_index).alpha = max(0, alpha + 0.6*(beta/(alpha+beta))*sign(ddm));
-                else
-                    mdp.states(state_index).beta = max(0, beta + 0.6*(alpha/(alpha+beta))*sign(ddm));
-                end
-                
+            if (k>1) % avoiding minibatch weird effects for init                
                 % mdp update
+                n_qvalue = mdp.states(next_state_index).actions(next_action_index).value;
                 qvalue = mdp.states(state_index).actions(action_index).value;
                 lrate = init_lr/(counts(state_index,action_index)^(0.55));
                 u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
@@ -76,12 +77,20 @@ while (k<max_iter && delta>stop_criterion)
                 delta = max(delta,abs(u_qvalue-qvalue));
                 qvalue = u_qvalue;
                 mdp.states(state_index).actions(action_index).value = qvalue;
+                
+                % A('l','d') update 
+                if (action_index == mentor_action_index)
+                   mdp.states(state_index).ql_value =  (1-ld_lr)*ql + ld_lr*qvalue;
+                else
+                    action_set_size = size(mdp.states(state_index).actions,2);
+                    mdp.states(state_index).qd_value = (1-ld_lr)*qd + ld_lr*max([mdp.states(state_index).actions(1:action_set_size~=mentor_action_index).value]);
+                end
             end
             % update current step and action
             action_index = next_action_index;
             state_index  = next_state_index;
             mentor_action_index = next_mentor_action_index;
-            alpha = next_alpha; beta = next_beta;
+            ql = next_ql; qd = next_qd;
             lIter = lIter +1;
         end
     end
