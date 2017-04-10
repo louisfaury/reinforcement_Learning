@@ -11,12 +11,12 @@ function [pi,mdp] = av_imitation_learning(pi_m, mdp)
 n                       = size(mdp.states,2);
 % hp
 max_search_iter         = mdp.max_search;
-max_iter                = mdp.ac_il.max_iter;
-temperature             = mdp.ac_il.init_temp;
-temperature_mult_factor = mdp.ac_il.temp_mult;
-stop_criterion          = mdp.ac_il.stop_criterion;
-default_value           = mdp.ac_il.default_value;
-init_lr                 = mdp.ac_il.init_lr;
+max_iter                = mdp.av_il.max_iter;
+temperature             = mdp.av_il.init_temp;
+temperature_mult_factor = mdp.av_il.temp_mult;
+stop_criterion          = mdp.av_il.stop_criterion;
+default_value           = mdp.av_il.default_value;
+init_lr                 = mdp.av_il.init_lr;
 % allocate
 deltas                  = zeros(max_iter,1);
 cum_reward_per_episode  = zeros(max_iter,1);
@@ -26,8 +26,8 @@ mini_batch_size         = 15;
 
 %% init
 for i=1:n
-    mdp.states(i).alpha = mdp.ac_il.init_alpha;                   % inits alpha(s)
-    mdp.states(i).beta = mdp.ac_il.init_beta;                     % inits beta(s)
+    mdp.states(i).qd_value = mdp.av_il.qd_init_value;                   % inits alpha(s)
+    mdp.states(i).ql_value = mdp.av_il.ql_init_value;                     % inits beta(s)
     
     m = size(mdp.states(i).actions,2);
     for j=1:m

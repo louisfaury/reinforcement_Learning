@@ -23,7 +23,6 @@ cum_reward_per_episode  = zeros(max_iter,1);
 delta                   = 10;
 counts                  = ones(n,4);    % counts for each state - learning rate tuning 
 mini_batch_size         = 15;
-eps = 0.05;
 
 %% init
 for i=1:n
@@ -64,9 +63,9 @@ while (k<max_iter && delta>stop_criterion)
                 ddm = reward + mdp.discount*n_qvalue- mdp.states(state_index).actions(mentor_action_index).value;
                 %ddm = reward + mdp.discount*n_qvalue - max([mdp.states(state_index).actions.value]);
                 if (action_index==mentor_action_index)
-                    mdp.states(state_index).alpha = max(0, alpha + 3*(beta/(alpha+beta))*sign(ddm));
+                    mdp.states(state_index).alpha = max(0, alpha + (beta/(alpha+beta))*sign(ddm));
                 else
-                    mdp.states(state_index).beta = max(0, beta + 3*(alpha/(alpha+beta))*sign(ddm));
+                    mdp.states(state_index).beta = max(0, beta + (alpha/(alpha+beta))*sign(ddm));
                 end
                 
                 % mdp update
@@ -87,8 +86,9 @@ while (k<max_iter && delta>stop_criterion)
         end
     end
     deltas(k) = delta;
-    eps = min(100,1.1*eps);
-    temperature = temperature*temperature_mult_factor;
+    if (k>50)
+        temperature = temperature*temperature_mult_factor;
+    end
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
     k = k+1
 end
