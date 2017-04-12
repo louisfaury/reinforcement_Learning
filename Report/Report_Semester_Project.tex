@@ -469,7 +469,8 @@
 		}
 	}
 	
-	\chapter[Compliant RL]{Compliant-based reinforcement learning}
+	\chapter{Compliant-based reinforcement learning}
+	\chaptermark{Compliant RL}
 	{
 		\section{Problem selection}
 		{
@@ -581,7 +582,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			
 			\paragraph{} The action-selection is therefore biased by the mentor's recommandation in the beginning of the learning only, and slowly decides to take its own choices, based on its current Q-values estimates. This approach sounds more promising as the learner is more likely to quickly discover the location of high rewards (following the teacher policy with $p$ close to 1), and will then makes it own exploration along those trajectory, to end up in a setting where the teacher's actions are now longer considered. 
 		
-					\begin{figure}[h!]
+			\begin{figure}[h!]
 				\begin{minipage}{0.5\linewidth}
 					\begin{center}
 						\includegraphics[width=0.95\linewidth]{comp_naive_compliance_120}
@@ -623,15 +624,15 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		
 		\subsection{Actor-critic approach}
 		{
-			\paragraph{}  Let us define the \emph{compliance } term $p$ locally at every state of the state space. For each $s\in\mathcal{S}$, $p(s)$ is given a Beta prior : $p(s)\sim \beta(\alpha(s),\beta(s))$ and represents the trust we have in a mentor's recommandation at state $s$. The initial values $\alpha_0$ and $\beta_0$ define the initial prior belief we have over $p$ (for instance, $\alpha=0.5$ and $\beta = 0.055$ define the prior belief that the teacher is most probably right). 
+			\paragraph{}  Let us define the \emph{compliance } term $p$ locally at every state of the state space. For each $s\in\mathcal{S}$, $p(s)$ is given a Beta prior : $p(s)\sim \beta(\alpha(s),\beta(s))$ and represents the trust we have in a mentor's recommandation at state $s$. The initial values $\alpha_0$ and $\beta_0$ define the initial prior belief we have over $p$ (for instance, $\alpha=0.5$ and $\beta = 0.055$ define a prior belief that the teacher is most probably right). 
 			
 			\paragraph{} As in before, we perform a $\color{red}p$\textcolor{red}{\emph{-greedy policy}} with respect to the teacher recommandation : 
 			\begin{equation}
 				\forall s\in\mathcal{S}, \quad \pi_p(s) = 
 					\left\{ 
 					\begin{aligned}
-						&a_m \text{ with probability } p \\
-						& a\in\mathcal{A}(s) \text{ with probability } (1-p)
+						&a_m \text{ with probability } p(s) \\
+						& a\in\mathcal{A}(s) \text{ with probability } (1-p(s))
 					\end{aligned}
 					\right. 
 			\end{equation}
@@ -644,6 +645,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		
 			\paragraph{} We then apply the following update rule to $p(s)$ : 
 			\begin{equation}
+				\label{eq::update_rule}
 				\begin{aligned}
 					\alpha_t(s) &\leftarrow \alpha_t(s) +  \mathds{1}_{a=a_m}\delta_t \eps_t\\
 					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m}\delta_t \eps_t
@@ -682,12 +684,12 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\begin{equation}
 				\left\{
 				\begin{aligned}
-					&Q_c(s,l) = Q(s,a_m) \\
-					&Q_c(s,d) = \max_{a\neq a_m} Q(s,a) 
+					&Q_c(s,l) \leftarrow  \beta Q_c(s,l) + (1-\beta)Q(s,a_m) \\
+					&Q_c(s,d) = \beta Q_c(s,d) + (1-\beta)\max_{a\neq a_m} Q(s,a) 
 				\end{aligned}
 				\right.
 			\end{equation}
-		
+			with $\beta >0$ the update rule's learning rate. 
 			\paragraph{} We can introduce some prior confidence in the teacher by setting, $\forall s\in\mathcal{S}$ : 
 			\begin{equation}
 				Q^0_c(s,l) - Q^0_c(s,d) = \log\{\frac{p}{1-p}\}
@@ -703,9 +705,86 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	
 		\section{Actor-critic approach}
 		{
+			\paragraph{} We hereinafter give some practical considerations for the actor-critic approach of compliance-based reinforcement learning, and discuss the experimental results we obtained. 
 			\subsection{Practical considerations}
 			{
-
+				\paragraph{} One of the main specification of the SARSA learning paradigm is that the exploration policy must be \emph{greedy in limit} so that a fixed point can emerge (hopefully the set of Q-values related to the optimal policy). In an actor-critic approach, the usual way to bring the \emph{critic} term in a stationary regime is to modify its learning rate to take the probability of taking an action into account (see \cite{Sutton98a}). \newline
+				This is the approach we chose in order to pick the learning rate $\eps_t$ of the update rule (\ref{eq::update_rule}), which now becomes : 
+			\begin{equation}
+				\begin{aligned}
+					\alpha_t(s) &\leftarrow \alpha_t(s) +  \mathds{1}_{a=a_m}\gamma \delta_t p(s)\\
+					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m}\gamma \delta_t (1-p(s))
+				\end{aligned}
+			\end{equation}
+			with $\gamma >0$. This update rule can still be simplified, by approximating $p$ by its mean value, which gives the update rule that we applied in practice : 
+			\boxedeq{red}
+			{
+				\begin{aligned}
+					\alpha_t(s) &\leftarrow \alpha_t(s) +  \mathds{1}_{a=a_m} \frac{\gamma \alpha_t(s)}{\alpha_t(s) + \beta_t(s) }\delta_t \\
+					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m} \frac{\gamma \beta_t(s) }{\alpha_t(s) + \beta_t(s) } \delta_t
+				\end{aligned}
+			}
+			This ensures us that we will direct the update toward a fixed point, and end up with a greedy policy (in limit). 
+			
+			\paragraph{} In this method, $p$ is given a Beta prior distribution. To perform the action selection, we would therefore need to sample $p(s)$ from its current distribution, and then sample a Bernoulli random variable of parameter $p(s)$. Assuming that the Beta distribution is sharply peaked around its mean (which we will guarantee by choosing an appropriate prior and learning rate $\gamma$). Then $p(s)$ can be approximated by its mean value $\E{p(s)} = \displaystyle\frac{\alpha(s)}{\alpha(s) + \beta(s)}$. We therefore only need to sample a Bernoulli random variable of parameter $\E{p(s)}$ at every state to complete the action selection process. 
+			
+			\paragraph{} The tuning that needs to be done is therefore left to $\gamma$, the prior and the temperature. In this framework, tuning is made much simpler and one only has to check that the updates are of the same order of magnitude with the prior (in order for the posterior distribution to adapt to observations, but also to retain the memory of the prior). 
+			}
+			\subsection{Results}
+			{
+				\paragraph{} Figures (\ref{fig::ac_il_subopt_120}) and (\ref{fig::ac_il_subopt_50}) show the learning curves for an agent using the actor-critic compliant-based method, with two different suboptimal teachers. As before, both of them were generated by observing the Q-values of a "normal" learner (without mentor) and by creating the greedy policy with respect to them.  
+				
+				\begin{figure}[h!]
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{ac_il_subopt_120}
+							\caption{Actor-critic learnt compliance learning curve for }
+							\label{fig::ac_il_subopt_120}
+						\end{center}
+					\end{minipage}
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{ac_il_subopt_50}
+							\caption{Actor-critic learnt compliance learning curve}
+							\label{fig::ac_il_subopt_50}
+						\end{center}
+					\end{minipage}
+				\end{figure}
+				
+			\paragraph{} The first remark we can make is that by learning the confidence, we were able  to avoid the undershoot that we observed for the constantly decreasing compliance (see figures (\ref{fig::comp_naive_compliance_120}) and (\ref{fig::comp_naive_compliance_50})). This results in a faster learning and more natural learning curve. The different methods will be further compared in (\ref{sec_method_comp}). 
+			}
+			\subsection{Discussion}
+			{
+				\paragraph{} It would be interesting to see what is the \emph{posterior distribution} of the $p(s)$ , $s\in\mathcal{S}$ We expect our final policy to be greedy, and hence the posterior distribution of the compliance term to be sharply peaked around $0$ or $1$, with proportion given by how good the mentor is.. Figures (\ref{fig::post_mean_120}) and (\ref{fig::post_mean_50}) display the histogram of the repartition of the mean of $p(s)$, $s\in\mathcal{S}$ (again, we approximate the Beta distribution by its mean to have an understandable visualization), for two different mentors (figure (\ref{fig::post_mean_120}) uses the mentor of (\ref{fig::ac_il_subopt_120}) and figure (\ref{fig::post_mean_50}) the mentor of (\ref{fig::ac_il_subopt_50})) . As expected, most of the means are either close to $0$ and $1$, and they are more means close to 0 (poor confidence) when using the second mentor that is far worse than the first. 
+				
+				\begin{figure}[h!]
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{post_mean_120}
+							\caption{Histogram representation of the posterior means for a suboptimal teacher}
+							\label{fig::post_mean_120}
+						\end{center}
+					\end{minipage}
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{post_mean_50}
+							\caption{Histogram representation of the posterior means for a even more suboptimal teacher}
+							\label{fig::post_mean_50}
+						\end{center}
+					\end{minipage}
+				\end{figure}
+				
+				\paragraph{} Also, to better understand how this algorithm work, being able to visualize the areas where the learner rejects or listen to its mentor. We expect the learner to discard the mentor's recommandation where those are wrong, and to trust its mentor where it is right. 
+				
+				TODO : compliance MAPS 
+			}
+		}
+		\section{Action value approach}
+		{
+		
+			\subsection{Practical considerations}
+			{
+				\paragraph{} The implementation of this 
 			}
 			\subsection{Results}
 			{
@@ -716,20 +795,9 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 
 			}
 		}
-		\section{Action value approach}
+		\section{Method comparaison}
 		{
-			\subsection{Practical considerations}
-			{
-
-			}
-			\subsection{Results}
-			{
-
-			}
-			\subsection{Discussion}
-			{
-
-			}
+			\label{sec_method_comp}
 		}
 	}
 	

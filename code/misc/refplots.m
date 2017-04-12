@@ -54,6 +54,11 @@ p6 = plot(random_ar(1:size-1),'LineWidth',1.2,'Color',[0.5, 0.5, 0.5]);
 p6.Color(4) = 0.1;
 p6p = plot(lpf(random_ar(1:size-1),0.05),'LineWidth',2,'Color',[0.5, 0.5, 0.5]);
 
+%load('subopt2_ac_compliance.mat');
+%plot(lpf(learner_ar,0.1),'LineWidth',2);
+%load('subopt3_ac_compliance.mat');
+%plot(lpf(learner_ar,0.1),'LineWidth',2);
+
 %% Plots
 xlabel('Number of iterations');
 ylabel('Average reward');

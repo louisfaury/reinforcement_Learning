@@ -40,8 +40,8 @@ toc
 %draw_policy(pi_star,mdp.states);
  
 %% imitation reinforcement learning methods
-  load('misc/policy/subopt_policy_3.mat','pi'); pi_m = pi;
-  [pi_star,mdp] = av_imitation_learning(pi_m, mdp);
+  load('misc/policy/subopt_policy_2.mat','pi'); pi_m = pi;
+  [pi_star,mdp] = ac_imitation_learning(pi_m, mdp);
   %draw_color_map(mdp); % TODO 
 
 
