@@ -1,9 +1,3 @@
-
-
-
-
-
-
 function [pi,mdp] = av_imitation_learning(pi_m, mdp)
 %% <======================= HEADER =======================>
 % @brief : This function implements the imitation based policy learning,

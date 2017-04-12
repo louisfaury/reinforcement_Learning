@@ -50,14 +50,14 @@ while (k<max_iter && delta>stop_criterion)
     for j=1:mini_batch_size
         state_index = pick_random_state(mdp);
         alpha = mdp.states(state_index).alpha; beta  = mdp.states(state_index).beta;
-        [action_index,mentor_action_index] = comply_or_defy_beta(pi_m(state_index),mdp.states(state_index).actions,temperature,alpha,beta);
+        [action_index,mentor_action_index] = comply_or_defy_beta(pi_m(state_index),mdp.states(state_index).actions,temperature,alpha,beta,true);
        
         lIter = 0;
         while(~mdp.states(state_index).terminal && lIter < max_search_iter)
             [next_state_index, reward] = follow_action(mdp, state_index,action_index);
             cum_reward = cum_reward + reward;
             next_alpha = mdp.states(next_state_index).alpha; next_beta = mdp.states(next_state_index).beta;
-            [next_action_index,next_mentor_action_index] = comply_or_defy_beta(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,next_alpha,next_beta);
+            [next_action_index,next_mentor_action_index] = comply_or_defy_beta(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,next_alpha,next_beta,true);
             
             if (k>1) % avoiding minibatch weird effects for init
                 % compliance update

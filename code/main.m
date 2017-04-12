@@ -41,8 +41,8 @@ toc
  
 %% imitation reinforcement learning methods
   load('misc/policy/opt_policy.mat','pi'); pi_m = pi;
-  [pi_star,mdp] = av_imitation_learning(pi_m, mdp);
-  %draw_color_map(mdp); % TODO 
+  [pi_star,mdp] = ac_imitation_learning(pi_m, mdp);
+  draw_compliance_cmap(pi,mdp.states)
 
 
 
