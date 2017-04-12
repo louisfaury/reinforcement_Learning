@@ -61,7 +61,7 @@ xlabel('Number of iterations');
 ylabel('Average reward');
 
 %% ========================== 
-%%  Suboptimal policy (120)
+%%  Suboptimal policy (50)
 %% ========================== 
 figure;
 %load
@@ -84,7 +84,7 @@ p3 = plot(learner_av_ar,'LineWidth',2.2,'Color',[0.2,0.1,0.4]); hold on;
 p4 = plot(lpf(mentor_rar,0.1),'Color',[0.05,0.3,0.8],'LineWidth',2);
 p5 = plot(mean(optimal_ar)*ones(n,1),'-.','LineWidth',3,'Color','black');
 p6 = plot(mentor_learning_ar(1:n),'LineWidth',2,'Color',[0.4,0.8,1]);
-p7 = plot(120, mentor_learning_ar(120), 'sr','MarkerFaceColor','red','MarkerSize',10);
+p7 = plot(50, mentor_learning_ar(50), 'sr','MarkerFaceColor','red','MarkerSize',10);
 h = legend([p1,p2,p3,p4,p5,p6,p7],'Naive learner','AC learner','AV learner','Mentor','Optimal policy mean reward','Initial learning curve','Mentor policy before greedization','Location','SouthEast');
 set(h,'FontSize',12);
 xlabel('Number of iterations');
