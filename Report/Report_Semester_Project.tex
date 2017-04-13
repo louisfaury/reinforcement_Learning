@@ -775,9 +775,26 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} Also, to better understand how this algorithm work, being able to visualize the areas where the learner rejects or listen to its mentor. We expect the learner to discard the mentor's recommandation where those are wrong, and to trust its mentor where it is right. 
+				\paragraph{} Also, to better understand how this algorithm work, being able to visualize the areas where the learner rejects or listen to its mentor. We expect the learner to discard the mentor's recommandation where those are wrong, and to trust its mentor where it is right. Figures (\ref{fig::heatmap_confidence_120}) and (\ref{fig::heatmap_confidence_50}) display, for two different mentors (the same two ones as we just used), the mentor's policy and the heat-map of the confidence the learner as acquired with respect to its teacher's recommandation at the end of the learning. 
 				
-				TODO : compliance MAPS 
+				 				\begin{figure}[h!]
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{heatmap_confidence_120}
+							\caption{Learnt confidence : green arrows show near 1 posterior mean, red arrows near 0}
+							\label{fig::heatmap_confidence_120}
+						\end{center}
+					\end{minipage}
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{heatmap_confidence_50}
+							\caption{Learnt confidence : green arrows show near 1 posterior mean, red arrows near 0}
+							\label{fig::heatmap_confidence_50}
+						\end{center}
+					\end{minipage}
+				\end{figure}
+				
+				\paragraph{} The first observation one can make is that most of the suboptimal mentor actions are indeed well classified by the learner (red arrows). Also, most of the actions leading to such actions are also classified as poor recommandation, because they have a tendency of leading to deadlocks, or suboptimal actions. On the other hand, some optimal actions are also classified as bad recommandations, as due to the greedisation, the learner will somehow prefer another equivalently optimal action. 
 			}
 		}
 		\section{Action value approach}
