@@ -777,7 +777,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				
 				\paragraph{} Also, to better understand how this algorithm work, being able to visualize the areas where the learner rejects or listen to its mentor. We expect the learner to discard the mentor's recommandation where those are wrong, and to trust its mentor where it is right. Figures (\ref{fig::heatmap_confidence_120}) and (\ref{fig::heatmap_confidence_50}) display, for two different mentors (the same two ones as we just used), the mentor's policy and the heat-map of the confidence the learner as acquired with respect to its teacher's recommandation at the end of the learning. 
 				
-				 				\begin{figure}[h!]
+				 \begin{figure}[h!]
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.95\linewidth]{heatmap_confidence_120}
@@ -827,11 +827,49 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} As for the actor-critic method, we are able to reduce or even suppress the undershoot the constantly decreasing compliant approach displayed, and to obtain fast convergence. 
+				\paragraph{} As for the actor-critic method, we are able to reduce or even suppress the undershoot the constantly decreasing compliant approach displayed, and to obtain fast convergence. 				
 			}
 			\subsection{Discussion}
 			{
-				\paragraph{} 
+				\paragraph{} Similar plots of posterior result as for the actor-critic can now be drawn. Figures (\ref{fig::post_des_120}) and (\ref{fig::post_des_50}) display the histograms distributions for the action 'listen' and 'discard' (computed by the sigmoid value at end temperature). Figures (\ref{fig::heatmap_des_120}) and (\ref{fig::heatmap_des_50}) show the learnt decision over the action-state space. 
+				
+				
+				\begin{figure}[h!]
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{pos_des_120}
+							\caption{Histogram representation of the posterior decisions for a suboptimal teacher}
+							\label{fig::post_des_120}
+						\end{center}
+					\end{minipage}
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{pos_des_50}
+							\caption{Histogram representation of the posterior decisions for a even more suboptimal teacher}
+							\label{fig::post_des_50}
+						\end{center}
+					\end{minipage}
+				\end{figure}
+				
+				
+				\begin{figure}[h!]
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{heatmap_decision_120}
+							\caption{Learnt decisions : green arrows show listening, red arrows discarding}
+							\label{fig::heatmap_des_120}
+						\end{center}
+					\end{minipage}
+					\begin{minipage}{0.5\linewidth}
+						\begin{center}
+							\includegraphics[width=0.95\linewidth]{heatmap_decision_50}
+							\caption{Learnt decisions : green arrows show listening, red arrows discarding}
+							\label{fig::heatmap_des_50}
+						\end{center}
+					\end{minipage}
+				\end{figure}
+			
+			\paragraph{} Again, one can see that most wrong recommandations are well-classified. However, this method as a tendency to consider as wrong action all trajectories in the mentor's policy leading to a sub-optimality. This as for consequence that the learner will try to always to go round the mentor's suboptimal recommandation, and sometime by making some detours. 
 			}
 		}
 		\section{Method comparaison}
