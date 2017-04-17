@@ -103,7 +103,7 @@
 				\begin{aligned}
 					&\mathcal{P}_{ss'}^a = \underbrace{\mathbb{P}(s_{t+1}=s' \, \vert \, s_t=s,\, a_t =a )}_{dynamics}
 \quad  & \mathcal{S} \text{ : state space}\\
-					&\mathcal{R}_{ss'}^a = \underbrace{\E{r_t \, \vert \, s_{t+1}=s', \,s_t=s,\, a_t =a )}}_{immediate reward} \quad & \mathcal{A(\mathcal{S})} \text{ : action space}
+					&\mathcal{R}_{ss'}^a = \underbrace{\E{r_t \, \vert \, s_{t+1}=s', \,s_t=s,\, a_t =a )}}_{immediate\, reward} \quad & \mathcal{A(\mathcal{S})} \text{ : action space}
 				\end{aligned}
 			\end{equation}
 		}
@@ -127,19 +127,40 @@
 			\end{itemize}
 		
 		}
+		\frame[t]
+		{
+			$\small\blacksquare$ \textbf{Solving RL} :
+			Two baseline methods : 
+			\begin{itemize}
+				\item Model-based ($\mathcal{P}_{ss'}^a$ and $\mathcal{R}_{ss'}^a$ are known : dynamic programming (value iteration algorithm, $\hdots$)
+				\item Model-free : \textcolor{red}{exploitation vs exploration} paradigm for computing the optimal policies Q-values : 
+				\begin{equation}
+					\left\{ Q(s,a) \right\}_{s\in\mathcal{S}, a \in\mathcal{A}(s)}
+				\end{equation}
+				\begin{itemize}
+					\item<sub@1> Bootstrap from initial value 
+					\item<sub@1> Update in direction of the sampled expected return 
+					\begin{equation}
+						Q(s,a) \leftarrow (1-\alpha)Q(s,a) + \alpha \E{R_t\vert s,a}
+					\end{equation}
+				\end{itemize}
+				\item Many different variations : SARSA, Q-learning, R-learning, eligibiliy traces,$\hdots$
+			\end{itemize}
+
+		}
 	}
 		\subsection{Transfer learning}
 	{
 		\frame[t]
 		{
-			
+			TODO : introduce transfer learning metrics that would be use to compare methods 
 		}
 	}
 }
 
 \section{Approach}
 {
-	\subsection{A sandbox state space}
+	\subsection{Sandbox state space}
 	{
 		\frame[t]
 		{
@@ -153,7 +174,7 @@
 	
 		}
 	}
-	\subsection{Compliance based update rule}
+	\subsection{Compliance-based learning}
 	{
 		\frame[t]
 		{
@@ -167,6 +188,11 @@
 	
 		}
 	}
+}
+
+\section{Future work}
+{
+
 }
 
 
