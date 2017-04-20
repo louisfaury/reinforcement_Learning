@@ -207,14 +207,147 @@
 	{
 		\frame[t]
 		{
-	
+			\vspace{30pt}
+			$\blacksquare$ Compliance learning 
+			\vspace{10pt}
+			
+			$\color{red}\rightarrow$ We only have access to the teacher's actions over $\mathcal{A}(\mathcal{S})$. \\
+			\vspace{10pt}
+			$\color{red}\rightarrow$ Intuitively : 
+				\begin{itemize}
+					\item<sub@1> Follow the teacher 
+					\item<sub@1> Gain some knowledge about the environment and the task 
+					\item<sub@1> Take our own actions 
+				\end{itemize} 
+			\vspace{15pt}
+			
+			$\color{red}\rightarrow$ The teacher should only influence our \textbf{action selection} 
+			
+		}
+		
+		\frame[t]
+		{
+			\begin{itemize}
+			\item Global compliance term $p\in[0,1]$
+				\item $p$-greedy action selection w.r.t the teacher's action : $\forall s \in\mathcal{S}$
+				\begin{equation}
+					\pi(s) = \left\{
+					\begin{aligned}
+						&a_m \, \text{with probability }p  \text{ independent of } s\\
+						& a \in \mathcal{A}(s) \text{ (Gibbs softmax)}
+					\end{aligned}\right.
+				\end{equation}
+			\end{itemize}
+			$\blacksquare$ \textcolor{red}{Naive approach} : 
+			\begin{itemize}
+				\item \textbf{Constantly decreasing compliance} : 
+				\begin{equation}
+				\left|
+					\begin{aligned}
+						&p_0 \in [0,1]\\
+						&p_{t+1} = \beta p_t, \quad \beta < 1
+					\end{aligned}\right.
+				\end{equation}
+				\item Along with SARSA update : 
+				\begin{equation}
+					Q(s,a) \leftarrow Q(s,a) + \alpha(r + \gamma Q(s',a') - Q(s,a))
+				\end{equation}
+			\end{itemize}
+		}
+		
+		\frame[t]
+		{
+			$\blacksquare$ Constantly decreasing compliance : 
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[width=\linewidth]{naive_comp}
+					\caption{Average reward for two naive compliance learners}
+				\end{center}
+			\end{figure}
+		}
+		
+		\frame[t]
+		{
+			\vspace{15pt}
+			$\blacksquare$ Constantly decreasing compliance : 
+			\begin{center}
+				\begin{tabular}{c|c}
+					$\color{green}\boldsymbol{+}$ & $\color{red}\boldsymbol{-}$ \\
+					\hline
+					Easy to implement 			& Undershoot \\
+					Fast convergence (200 vs 500) & \textbf{Precise tuning}
+				\end{tabular}
+			\end{center}
+			\vspace{20pt}
+			Tuning between the dynamics of $p$ and of the Gibbs sampling temperature is hard ! 
+			
+			\vspace{15pt}
+			Could we \emph{learn} $p$ instead of using a fixed dynamic ? 
+		}
+		
+		\frame[t]
+		{
+			\vspace{20pt}
+			$\blacksquare$ Learning the compliance term\\ 
+			\vspace{10pt}
+			$\forall s\in\mathcal{S}$, define $p(s)$ - compliance term that impact the action selection : 
+			\begin{equation}
+				\pi(s) = \left\{
+				\begin{aligned}
+					&a_m \, \text{with probability }p(s)\\
+					& a \in \mathcal{A}(s)\backslash a_m  \text{ with probabiliy 1-p(s)}
+				\end{aligned}\right.
+			\end{equation}
+			
+			\vspace{20pt}
+			\textbf{Goal} : learn $p(s),\, \forall s \in\mathcal{S}$ $\rightarrow$ measure how right the teacher seems to be 
+		}
+		\frame[t]
+		{
+			\vspace{20pt}
+			$\blacksquare$ Learning the compliance term\\ 
+			\vspace{10pt}
+			$\color{red}\blacktriangleright$	\textbf{Actor-critic approach} : 
+			\begin{itemize}
+				\item $\forall s\in\mathcal{S}$, provide $p(s)$ with a Beta prior : 
+					\begin{equation}
+						p(s) \sim B (\alpha(s), \beta(s))
+					\end{equation}
+				\item Given a (s,a,r,s',a') 5-tuple, compute the critic TD value : 
+				\begin{equation}
+					\delta_t = r + \gamma Q(s',a') - Q(s,a_m)				
+				\end{equation}
+				\item Compute posterior distribution over $p(s)$ :
+				\begin{equation}
+				\label{eq::update_rule}
+				\begin{aligned}
+					\alpha_t(s) &\leftarrow \alpha_t(s) +  \mathds{1}_{a=a_m}\delta_t \eps_t\\
+					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m}\delta_t\eps_t
+				\end{aligned}
+			\end{equation}
+			\end{itemize}
+		}
+		
+		\frame[t]
+		{
+			$\color{red}\blacktriangleright$	\textbf{Actor-critic approach} : 
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[width=\linewidth]{ac_comp}
+					\caption{Average reward for two naive compliance learners}
+				\end{center}
+			\end{figure}
+			\begin{itemize}
+				\item Faster convergence 
+				\item No undershoot + tuning is intuitive  
+			\end{itemize}
 		}
 	}
 	\subsection{Results}
 	{
 		\frame[t]
 		{
-	
+			
 		}
 	}
 }
