@@ -13,7 +13,7 @@
 \institute[Semester Project at LASA]{Semester Project at LASA}
 \titlegraphic{\includegraphics[width=0.7\linewidth]{titlepage_pic}}
 \newenvironment{subenv}{\only{\setbeamercolor{local structure}{fg=red}}}{}
-
+\graphicspath{{../report/Images/}}
 \titlepage
 
 %1
@@ -153,7 +153,21 @@
 	{
 		\frame[t]
 		{
-			TODO : introduce transfer learning metrics that would be use to compare methods 
+			\vspace{30pt}
+			$\blacksquare$ \textcolor{red}{Transfer learning} : speeding a learning process thanks to another learning experience. 
+			
+			\begin{itemize}
+				\item Provide the learner with a mentor that is another learner 
+				\item In \emph{homogeneous settings}  \footfullcite{price2003accelerating}
+				\item Study how convergence is affected 
+			\end{itemize}
+			
+			and eventually generalize to 
+			\vspace{10pt}
+			\begin{itemize}
+				\item multiple teacher
+				\item inhomogeneous settings 
+			\end{itemize}
 		}
 	}
 }
@@ -164,14 +178,29 @@
 	{
 		\frame[t]
 		{
-	
+			$\blacksquare$ Generic and simple state space : 
+			\vspace{-5pt}
+			\begin{center}
+				\includegraphics[width=0.65\linewidth]{maze_grid}
+			\end{center}
 		}
-	}
-	\subsection{RL results}
-	{
+		
 		\frame[t]
 		{
-	
+			$\blacksquare$ Optimal Policy (value iteration) : 
+			\vspace{-5pt}
+			\begin{center}
+				\includegraphics[width=0.65\linewidth]{maze_optimal_policy}
+			\end{center}
+		}
+		
+		\frame[t]
+		{
+			$\blacksquare$ Learning the optimal policy : 
+			\vspace{-5pt}
+			\begin{center}
+				\includegraphics[width=\linewidth]{comp_maze}
+			\end{center}
 		}
 	}
 	\subsection{Compliance-based learning}
