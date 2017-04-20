@@ -334,7 +334,7 @@
 			\begin{figure}[h!]
 				\begin{center}
 					\includegraphics[width=\linewidth]{ac_comp}
-					\caption{Average reward for two naive compliance learners}
+					\caption{Average reward for two actor-critic compliance learners}
 				\end{center}
 			\end{figure}
 			\begin{itemize}
@@ -342,19 +342,100 @@
 				\item No undershoot + tuning is intuitive  
 			\end{itemize}
 		}
+		
+		\frame[t]
+		{
+			$\color{red}\blacktriangleright$	\textbf{Actor-critic approach} : 
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[width=0.6\linewidth]{heatmap_confidence_120}
+					\caption{Posterior mean of $p$}
+				\end{center}
+			\end{figure}
+		}
+		
+		\frame[t]
+		{
+			\vspace{20pt}
+			$\blacksquare$ Learning the compliance term\\ 
+			\vspace{10pt}
+			$\color{red}\blacktriangleright$	\textbf{Action-value approach} : 
+			\begin{itemize}
+				\item Adds a hierarchical MDP : 
+				\begin{equation}
+					\forall s\in\mathcal{S}, \, \mathcal{A}_c(s) = \left\{ 'listen', \, 'discard'\right\}
+				\end{equation}
+				\item Define exploration based on $\{Q_c(s,l), Q_c(s,d)\}$ : 
+				\begin{equation}
+				\forall s \in\mathcal{S}, \quad \pi_c(s) = 
+					\left\{
+						\begin{aligned}
+							&'l' \text{ with probability } p=\sigma\left(\frac{Q_c(s,l) - Q_c(s,d)}{\tau} \right) \\
+							& 'd'  \text{ with probability } 1-p
+						\end{aligned}
+					\right.
+			\end{equation}
+
+			\end{itemize}
+		}
+		
+		\frame[t]
+		{
+			\vspace{10pt}
+			$\color{red}\blacktriangleright$	\textbf{Action-value approach} : 
+			\vspace{10pt}
+			\begin{itemize}
+				\item Perform SARSA update 
+				\item Update : 
+				\begin{equation}
+					\left\{
+					\begin{aligned}
+						&Q_c(s,l) \leftarrow  \beta Q_c(s,l) + (1-\beta)Q(s,a_m) \\
+						&Q_c(s,d) = \beta Q_c(s,d) + (1-\beta)\max_{a\neq a_m} Q(s,a) 
+					\end{aligned}
+					\right.
+				\end{equation}
+				\item Introduce prior knowledge by setting 
+				\begin{equation}
+					Q^0_c(s,l) - Q^0_c(s,d) = \log\{\frac{p}{1-p}\}
+				\end{equation}
+			\end{itemize}
+		}
+		\frame[t]
+		{
+			$\color{red}\blacktriangleright$	\textbf{Action-value approach} : 
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[width=\linewidth]{av_comp}
+					\caption{Average reward for two action-value compliance learners}
+				\end{center}
+			\end{figure}
+
+		}
+		\frame[t]
+		{
+			$\color{red}\blacktriangleright$	\textbf{Action-value approach} : 
+			\begin{figure}[h!]
+				\begin{center}
+					\includegraphics[width=0.6\linewidth]{heatmap_decision_50}
+					\caption{Posterior decisions}
+				\end{center}
+			\end{figure}
+		}
 	}
-	\subsection{Results}
+	\subsection{Method comparaison}
 	{
 		\frame[t]
 		{
-			
+			% TODO : metrics plots for different methods 
 		}
 	}
 }
 
 \section{Future work}
 {
-
+	% TODO : add future work (further estimator, learning the priors ?)
+	% TODO : application on transfer learning ? 
 }
 
 
