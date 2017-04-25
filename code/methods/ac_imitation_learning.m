@@ -50,14 +50,14 @@ while (k<max_iter && delta>stop_criterion)
     for j=1:mini_batch_size
         state_index = pick_random_state(mdp);
         alpha = mdp.states(state_index).alpha; beta  = mdp.states(state_index).beta;
-        [action_index,mentor_action_index] = comply_or_defy_beta(pi_m(state_index),mdp.states(state_index).actions,temperature,alpha,beta);
+        [action_index,mentor_action_index] = comply_or_defy_beta(pi_m(state_index),mdp.states(state_index).actions,temperature,alpha,beta,true);
        
         lIter = 0;
         while(~mdp.states(state_index).terminal && lIter < max_search_iter)
             [next_state_index, reward] = follow_action(mdp, state_index,action_index);
             cum_reward = cum_reward + reward;
             next_alpha = mdp.states(next_state_index).alpha; next_beta = mdp.states(next_state_index).beta;
-            [next_action_index,next_mentor_action_index] = comply_or_defy_beta(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,next_alpha,next_beta);
+            [next_action_index,next_mentor_action_index] = comply_or_defy_beta(pi_m(next_state_index),mdp.states(next_state_index).actions,temperature,next_alpha,next_beta,true);
             
             if (k>1) % avoiding minibatch weird effects for init
                 % compliance update
@@ -72,7 +72,7 @@ while (k<max_iter && delta>stop_criterion)
                 
                 % mdp update
                 qvalue = mdp.states(state_index).actions(action_index).value;
-                lrate = init_lr/(counts(state_index,action_index)^(0.55));
+                lrate = init_lr/(counts(state_index,action_index)^(0.505));
                 u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
                 counts(state_index,action_index) = counts(state_index,action_index)+1;
                 delta = max(delta,abs(u_qvalue-qvalue));

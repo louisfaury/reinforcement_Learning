@@ -41,6 +41,7 @@ for i =1:fold
     load(strcat(str_av_3,num2str(i)));      arr_av_3(:,i)       = learner_ar;
 end
 
+load('
 %% First metric : iter to threshold (averaged cumulative reward)
 opt_threshold = 5.3;
 threshold_2 = 4.5;
