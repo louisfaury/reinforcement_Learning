@@ -40,8 +40,11 @@ for i =1:fold
     load(strcat(str_ac_3,num2str(i)));      arr_ac_3(:,i)       = learner_ar;
     load(strcat(str_av_3,num2str(i)));      arr_av_3(:,i)       = learner_ar;
 end
+load('sarsa_lambda_ar'); sarsa_lambda_ar = cum_reward_per_episode;
+load('ql_lambda_ar'); ql_lambda_ar = cum_reward_per_episode;
+load('sarsa_ar'); sarsa_ar = cum_reward_per_episode;
+load('ql_ar'); ql_ar = cum_reward_per_episode;
 
-load('
 %% First metric : iter to threshold (averaged cumulative reward)
 opt_threshold = 5.3;
 threshold_2 = 4.5;
@@ -60,6 +63,15 @@ for i=1:fold
    ac_3_index_arr(i,1)      = size(find(arr_ac_3(:,i)<=threshold_2),1);
    av_3_index_arr(i,1)      = size(find(arr_av_3(:,i)<=threshold_2),1);
 end
+sarsa_lambda_index_1  = size(find(sarsa_lambda_ar(1:400)<=opt_threshold),1);
+ql_lambda_index_1     = size(find(ql_lambda_ar(1:400)<=opt_threshold),1);
+sarsa_lambda_index_2  = size(find(sarsa_lambda_ar(1:400)<=threshold_2),1);
+ql_lambda_index_2     = size(find(ql_lambda_ar(1:400)<=threshold_2),1);
+sarsa_index_1         = size(find(sarsa_ar(:)<=opt_threshold),1);
+ql_index_1            = size(find(ql_ar(:)<=opt_threshold),1);
+sarsa_index_2         = size(find(sarsa_ar(:)<=threshold_2),1);
+ql_index_2            = size(find(ql_ar(:)<=threshold_2),1);
+
 naive_opt_index     = mean(naive_opt_index_arr); naive_1_index       = mean(naive_1_index_arr); naive_2_index    = mean(naive_2_index_arr); naive_3_index    = mean(naive_3_index_arr);
 naive_opt_index_var = std(naive_opt_index_arr);  naive_1_index_var   = std(naive_1_index_arr); naive_2_index_var = std(naive_2_index_arr);  naive_3_index_var = std(naive_3_index_arr);
 ac_opt_index        = mean(ac_opt_index_arr);    ac_1_index          = mean(ac_1_index_arr); ac_2_index = mean(ac_2_index_arr); ac_3_index = mean(ac_3_index_arr);
@@ -102,10 +114,10 @@ plot([0.1 1.1 2.1 3.1],[ac_opt_index, ac_1_index, ac_2_index, ac_3_index],'r-');
 plot([-0.1 0.9 1.9 2.9],[av_opt_index, av_1_index, av_2_index, av_3_index],'g-');
 
 h = legend([a,b,c],'Naive','Actor-Critic','Action-Value');
-grid minor;
 axis([-0.5 3.5 10 240]);
 xticks([0 1 2 3])
 xticklabels({'Optimal (T=5.5)','Suboptimal 1 (T=5.5)','Suboptimal 2 (T=4.5)','Suboptimal 3 (T=4.5)'})
+grid minor;
 ylabel('Iterations to threshold')
 title('Time to threshold 10-fold statistics');
 
@@ -180,3 +192,45 @@ grid minor;
 xticklabels({'Optimal','Suboptimal 1','Suboptimal 2','Suboptimal 3'})
 ylabel('Total reward')
 title('Total reward 10-fold statistics');
+
+% With common methods
+figure; hold on ;
+%d = bar([naive_opt_index,ac_opt_index,av_opt_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1; 
+%     naive_1_index,ac_1_index,av_1_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1;
+%     naive_2_index,ac_2_index,av_2_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2;
+%     naive_3_index,ac_3_index,av_3_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2]);
+a = plot([1 2 3 4],[naive_opt_index,naive_1_index,naive_2_index,naive_3_index],'-.s','LineWidth',1);
+b = plot([1 2 3 4],[ac_opt_index,ac_1_index,ac_2_index,ac_3_index],'-.s','LineWidth',1);
+c = plot([1 2 3 4],[av_opt_index,av_1_index,av_2_index,av_3_index],'-.s','LineWidth',1);
+d = plot([1 2 3 4],[sarsa_index_1,sarsa_index_1,sarsa_index_2,sarsa_index_2],'-.s','LineWidth',1);
+e = plot([1 2 3 4],[sarsa_lambda_index_1,sarsa_lambda_index_1,sarsa_lambda_index_2,sarsa_lambda_index_2],'-.s','LineWidth',1);
+f = plot([1 2 3 4],[ql_index_1,ql_index_1,ql_index_2,ql_index_2],'-.s','LineWidth',1);
+g = plot([1 2 3 4],[ql_lambda_index_1,ql_lambda_index_1,ql_lambda_index_2,ql_lambda_index_2],'-.s','LineWidth',1);
+
+h = legend([a b c d e f g],{'Naive','Actor-Critic','Action-value','Sarsa','Sarsa $\lambda$','QL','QL $\lambda$'});
+set(h,'interpreter','latex','FontSize',14);
+xticks([1 2 3 4])
+xticklabels({'Optimal (T=5.5)','Suboptimal 1 (T=5.5)','Suboptimal 2 (T=4.5)','Suboptimal 3 (T=4.5)'})
+grid minor;
+ylabel('Iterations to threshold')
+title('Time to threshold 10-fold means');
+figure; hold on ;
+%d = bar([naive_opt_index,ac_opt_index,av_opt_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1; 
+%     naive_1_index,ac_1_index,av_1_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1;
+%     naive_2_index,ac_2_index,av_2_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2;
+%     naive_3_index,ac_3_index,av_3_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2]);
+a = plot([1 2 3 4],[naive_opt_index,naive_1_index,naive_2_index,naive_3_index],'-.s','LineWidth',1);
+b = plot([1 2 3 4],[ac_opt_index,ac_1_index,ac_2_index,ac_3_index],'-.s','LineWidth',1);
+c = plot([1 2 3 4],[av_opt_index,av_1_index,av_2_index,av_3_index],'-.s','LineWidth',1);
+d = plot([1 2 3 4],[sarsa_index_1,sarsa_index_1,sarsa_index_2,sarsa_index_2],'-.s','LineWidth',1);
+e = plot([1 2 3 4],[sarsa_lambda_index_1,sarsa_lambda_index_1,sarsa_lambda_index_2,sarsa_lambda_index_2],'-.s','LineWidth',1);
+f = plot([1 2 3 4],[ql_index_1,ql_index_1,ql_index_2,ql_index_2],'-.s','LineWidth',1);
+g = plot([1 2 3 4],[ql_lambda_index_1,ql_lambda_index_1,ql_lambda_index_2,ql_lambda_index_2],'-.s','LineWidth',1);
+
+h = legend([a b c d e f g],{'Naive','Actor-Critic','Action-value','Sarsa','Sarsa $\lambda$','QL','QL $\lambda$'});
+set(h,'interpreter','latex','FontSize',14);
+xticks([1 2 3 4])
+xticklabels({'Optimal (T=5.5)','Suboptimal 1 (T=5.5)','Suboptimal 2 (T=4.5)','Suboptimal 3 (T=4.5)'})
+grid minor;
+ylabel('Iterations to threshold')
+title('Time to threshold 10-fold means');

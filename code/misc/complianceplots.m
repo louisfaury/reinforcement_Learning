@@ -8,7 +8,7 @@
 clear all;
 close all;
 clc;
-addpath(genpath('data/'));
+addpath(genpath('misc/data/'));
 
 %% ========================== 
 %%     Optimal policy 
