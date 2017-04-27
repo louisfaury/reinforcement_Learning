@@ -294,18 +294,15 @@
 		\frame[t]
 		{
 			$\blacksquare$ Constantly decreasing compliance : 
+			\vspace{-10pt}
 			\begin{figure}[h!]
 				\begin{center}
 					\includegraphics[width=\linewidth]{naive_comp}
 					\caption{Average reward for two naive compliance learners}
 				\end{center}
 			\end{figure}
-		}
-		
-		\frame[t]
-		{
-			\vspace{15pt}
-			$\blacksquare$ Constantly decreasing compliance : 
+			
+			\small
 			\begin{center}
 				\begin{tabular}{c|c}
 					$\color{green}\boldsymbol{+}$ & $\color{red}\boldsymbol{-}$ \\
@@ -314,11 +311,7 @@
 					Fast convergence (200 vs 500) & \textbf{Precise tuning}
 				\end{tabular}
 			\end{center}
-			\vspace{20pt}
-			Tuning between the dynamics of $p$ and of the Gibbs sampling temperature is hard ! 
-			
-			\vspace{15pt}
-			Could we \emph{learn} $p$ instead of using a fixed dynamic ? 
+
 		}
 		
 		\frame[t]
@@ -340,18 +333,16 @@
 		}
 		\frame[t]
 		{
-			\vspace{20pt}
-			$\blacksquare$ Learning the compliance term\\ 
-			\vspace{10pt}
-			$\color{red}\blacktriangleright$	\textbf{Actor-critic approach} : 
+			$\color{red}\blacktriangleright$	\textbf{Implicit $\beta$-compliance} : 
+			\vspace{5pt}
 			\begin{itemize}
-				\item $\forall s\in\mathcal{S}$, provide $p(s)$ with a Beta prior : 
+				\item $\forall s\in\mathcal{S}$, provide $p(s)$ with a Beta prior ($\alpha >> \beta$) 
 					\begin{equation}
 						p(s) \sim B (\alpha(s), \beta(s))
 					\end{equation}
 				\item Given a (s,a,r,s',a') 5-tuple, compute the critic TD value : 
 				\begin{equation}
-					\delta_t = r + \gamma Q(s',a') - Q(s,a_m)				
+					\delta_t = r + \gamma Q(s',a') - Q(s,a_m) \quad \color{red} \rightarrow\text{\small{\textcolor{red}{how good is the teacher ?}} }	\color{black}	
 				\end{equation}
 				\item Compute posterior distribution over $p(s)$ :
 				\begin{equation}
@@ -366,7 +357,7 @@
 		
 		\frame[t]
 		{
-			$\color{red}\blacktriangleright$	\textbf{Actor-critic approach} : 
+			$\color{red}\blacktriangleright$	\textbf{Implicit $\beta$-compliance} :  
 			\begin{figure}[h!]
 				\begin{center}
 					\includegraphics[width=\linewidth]{ac_comp}
@@ -381,7 +372,7 @@
 		
 		\frame[t]
 		{
-			$\color{red}\blacktriangleright$	\textbf{Actor-critic approach} : 
+			$\color{red}\blacktriangleright$ \textbf{Implicit $\beta$-compliance} : 
 			\begin{figure}[h!]
 				\begin{center}
 					\includegraphics[width=0.6\linewidth]{heatmap_confidence_120}
@@ -392,10 +383,7 @@
 		
 		\frame[t]
 		{
-			\vspace{20pt}
-			$\blacksquare$ Learning the compliance term\\ 
-			\vspace{10pt}
-			$\color{red}\blacktriangleright$	\textbf{Action-value approach} : 
+			$\color{red}\blacktriangleright$	\textbf{Explicit compliance} : 
 			\begin{itemize}
 				\item Adds a hierarchical MDP : 
 				\begin{equation}
@@ -406,22 +394,12 @@
 				\forall s \in\mathcal{S}, \quad \pi_c(s) = 
 					\left\{
 						\begin{aligned}
-							&'l' \text{ with probability } p=\sigma\left(\frac{Q_c(s,l) - Q_c(s,d)}{\tau} \right) \\
-							& 'd'  \text{ with probability } 1-p
+							&'l' \text{ with probability } p(s)=\sigma\left(\frac{Q_c(s,l) - Q_c(s,d)}{\tau} \right) \\
+							& 'd'  \text{ with probability } 1-p(s)
 						\end{aligned}
 					\right.
 			\end{equation}
-
-			\end{itemize}
-		}
-		
-		\frame[t]
-		{
-			\vspace{10pt}
-			$\color{red}\blacktriangleright$	\textbf{Action-value approach} : 
-			\vspace{10pt}
-			\begin{itemize}
-				\item Perform SARSA update 
+			\item Perform SARSA update 
 				\item Update : 
 				\begin{equation}
 					\left\{
@@ -431,12 +409,10 @@
 					\end{aligned}
 					\right.
 				\end{equation}
-				\item Introduce prior knowledge by setting 
-				\begin{equation}
-					Q^0_c(s,l) - Q^0_c(s,d) = \log\{\frac{p}{1-p}\}
-				\end{equation}
+
 			\end{itemize}
 		}
+		
 		\frame[t]
 		{
 			$\color{red}\blacktriangleright$	\textbf{Action-value approach} : 
