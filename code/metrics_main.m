@@ -11,6 +11,13 @@ clear all;
 addpath(genpath('misc/mc_data'));
 addpath(genpath('misc'));
 
+%% some important csts
+rand_ar = -69.1052;
+opt_ar = 5.8386;
+load('subopt1_av_compliance'); mentor_1_per = (mean(mentor_ar)-7 - rand_ar)/(opt_ar-rand_ar);
+load('subopt2_ac_compliance'); mentor_2_per = (mean(mentor_ar) - rand_ar)/(opt_ar-rand_ar);
+load('subopt3_av_compliance'); mentor_3_per = (mean(mentor_ar) - rand_ar)/(opt_ar-rand_ar);
+
 %% load  
 fold = 5;
 str_naive_opt   = 'naive_comp_opt_';
@@ -113,28 +120,30 @@ plot([0 1 2 3],[naive_opt_index, naive_1_index, naive_2_index, naive_3_index],'b
 plot([0.1 1.1 2.1 3.1],[ac_opt_index, ac_1_index, ac_2_index, ac_3_index],'r-');
 plot([-0.1 0.9 1.9 2.9],[av_opt_index, av_1_index, av_2_index, av_3_index],'g-');
 
-h = legend([a,b,c],'Naive','Actor-Critic','Action-Value');
+h = legend([a,b,c],'Vanishing','Implicit $\beta$','Explicit');
+set(h,'interpreter','latex')
 axis([-0.5 3.5 10 240]);
 xticks([0 1 2 3])
-xticklabels({'Optimal (T=5.5)','Suboptimal 1 (T=5.5)','Suboptimal 2 (T=4.5)','Suboptimal 3 (T=4.5)'})
+xticklabels({'100%',strcat(num2str(round(100*mentor_1_per)),'%'),strcat(num2str(round(100*mentor_2_per)),'%'),strcat(num2str(round(100*mentor_3_per)),'%')})
+xlabel('Mentor optimality','FontSize',14)
 grid minor;
-ylabel('Iterations to threshold')
+ylabel('Iterations to threshold','FontSize',14)
 title('Time to threshold 10-fold statistics');
 
 
 %% Second metric : Total reward (averaged cumulative reward)
-naive_opt_cr_arr = sum(arr_naive_opt);
-ac_opt_cr_arr    = sum(arr_ac_opt);
-av_opt_cr_arr    = sum(arr_av_opt);
-naive_1_cr_arr   = sum(arr_naive_1);
-ac_1_cr_arr      = sum(arr_ac_1);
-av_1_cr_arr      = sum(arr_av_1);
-naive_2_cr_arr   = sum(arr_naive_2);
-ac_2_cr_arr      = sum(arr_ac_2);
-av_2_cr_arr      = sum(arr_av_2);
-naive_3_cr_arr   = sum(arr_naive_3);
-ac_3_cr_arr      = sum(arr_ac_3);
-av_3_cr_arr      = sum(arr_av_3);
+naive_opt_cr_arr = sum(arr_naive_opt(1:naive_opt_index,:))/(opt_ar*naive_opt_index);
+ac_opt_cr_arr    = sum(arr_ac_opt(1:ac_opt_index,:))/(opt_ar*ac_opt_index);
+av_opt_cr_arr    = sum(arr_av_opt(1:av_opt_index,:))/(opt_ar*av_opt_index);
+naive_1_cr_arr   = sum(arr_naive_1(1:naive_1_index,:))/(opt_ar*naive_1_index);
+ac_1_cr_arr      = sum(arr_ac_1(1:ac_1_index,:))/(opt_ar*ac_1_index);
+av_1_cr_arr      = sum(arr_av_1(1:av_1_index,:))/(opt_ar*av_1_index);
+naive_2_cr_arr   = sum(arr_naive_2(1:naive_2_index,:))/(opt_ar*naive_2_index);
+ac_2_cr_arr      = sum(arr_ac_2(1:ac_2_index,:))/(opt_ar*ac_2_index);
+av_2_cr_arr      = sum(arr_av_2(1:av_2_index,:))/(opt_ar*av_2_index);
+naive_3_cr_arr   = sum(arr_naive_3(1:naive_3_index,:))/(opt_ar*naive_3_index);
+ac_3_cr_arr      = sum(arr_ac_3(1:ac_3_index,:))/(opt_ar*ac_3_index);
+av_3_cr_arr      = sum(arr_av_3(1:av_3_index,:))/(opt_ar*av_3_index);
 
 % statistics
 naive_opt_cr_mean = mean(naive_opt_cr_arr); naive_opt_cr_var = std(naive_opt_cr_arr);
@@ -185,15 +194,18 @@ plot([0 1 2 3],[naive_opt_cr_mean, naive_1_cr_mean, naive_2_cr_mean, naive_3_cr_
 plot([0.1 1.1 2.1 3.1],[ac_opt_cr_mean, ac_1_cr_mean, ac_2_cr_mean, ac_3_cr_mean],'r-');
 plot([-0.1 0.9 1.9 2.9],[av_opt_cr_mean, av_1_cr_mean, av_2_cr_mean, av_3_cr_mean],'g-');
 
-h = legend([a,b,c],'Naive','Actor-Critic','Action-Value');
-axis([-0.5 3.5 200 2400]);
+h = legend([a,b,c],'Vanishing','Implicit $\beta$','Explicit');
+set(h,'interpreter','latex')
+axis([-0.5 3.5 -1 1]);
 xticks([0 1 2 3]);
 grid minor;
-xticklabels({'Optimal','Suboptimal 1','Suboptimal 2','Suboptimal 3'})
-ylabel('Total reward')
-title('Total reward 10-fold statistics');
+xticklabels({'100%',strcat(num2str(round(100*mentor_1_per)),'%'),strcat(num2str(round(100*mentor_2_per)),'%'),strcat(num2str(round(100*mentor_3_per)),'%')})
+xlabel('Mentor optimality','FontSize',14)
+ylabel('Total Reward to Convergence Ratio','FontSize',14)
+title('Total Reward to Convergence Ratio 10-fold statistics');
 
-% With common methods
+
+%% With common methods
 figure; hold on ;
 %d = bar([naive_opt_index,ac_opt_index,av_opt_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1; 
 %     naive_1_index,ac_1_index,av_1_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1;
