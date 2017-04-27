@@ -441,13 +441,14 @@
 		\frame[t]
 		{
 			$\color{red}\blacktriangleright$	\textbf{Method comparaison} : learning curves 
-			\vspace{10pt}
-			\begin{figure}
-				 \begin{center}
-					\includegraphics[width=\linewidth]{ar_comp}
-					\caption{Average returns for the different imitation learning methods}
-				\end{center}
-			\end{figure}
+			\vspace{-10pt}
+			\begin{center}
+				 \begin{tikzpicture}
+				 	 \node (img1) {\includegraphics[width=0.8\linewidth]{fullcomp_subopt_120}};
+ 					 \pause
+					  \node (img2) at (img1){\includegraphics[width=0.8\linewidth]{fullcomp_subopt_50}};
+				\end{tikzpicture}
+			\end{center}
 		}
 		
 		\frame[t]
@@ -456,7 +457,7 @@
 			\vspace{10pt}
 			\begin{figure}
 				 \begin{center}
-					\includegraphics[width=\linewidth]{metrics_comp}
+					\includegraphics[width=1\linewidth]{metrics_comp}
 					\caption{Metrics comparaison for imitation learning methods}
 				\end{center}
 			\end{figure}
