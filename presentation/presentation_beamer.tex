@@ -2,13 +2,14 @@
 
 %% ----------------------------------------------------- PACKAGES ----------------------------------------------------- %%
 \usepackage{coolPrez}
+\usepackage{tikz}
 \bibliography{bibfile.bib}
 %% ---------------------------------------------------- DOCUMENT ---------------------------------------------------- %%
 
 \begin{document}
 
 %% TITLE PAGE
-\title[Learning from noisy demonstrations : a exploration/exploitation tradeoff]{Learning from noisy demonstrations : compliance-based tradeoff}
+\title[Learning from largely suboptimal teachers - a compliance approach]{Learning from largely suboptimal teachers and the role of compliance}
 \author[]{Louis Faury\\ \vspace{5pt} \small{\textcolor{gray}{Advisors} : Mahdi Khoramshahi \& Andrew Sutcliffe}}
 \institute[Semester Project at LASA]{Semester Project at LASA}
 \titlegraphic{\includegraphics[width=0.7\linewidth]{titlepage_pic}}
@@ -27,19 +28,22 @@
 {
 	\frame[t]
 	{
-		\vspace{20pt}
+		\vspace{10pt}
+		$\blacksquare$ An example : 
+		\vspace{10pt}
 		\begin{itemize}
-			\item For long and complex tasks : common machine learning algorithm are usually very slow to converge 
-			\item Accelerate learning via prior knowledge of the environment or task : provide a \textcolor{red}{\textbf{demonstration}} of the task 
-			\item Framework of \emph{learning from demonstration} (LfD) \footfullcite{Billard2016}
+			\setlength\itemsep{1.5em}
+			\item A human teacher is showing the robot to reach for an object 
+			\item The teacher is not a robotic expert, and guides the robot along a trajectory near the edge of the robot's workspace, or very close to some obstacles 
+			\item Should the robot discard the demonstration ? 
+			\item There is still some valuable information in the demonstration (pose of the object, general direction of motion, ..)
 		\end{itemize}
-		\vspace{25pt}
-		\hspace{15pt} $\longrightarrow$ Ex. : robotic arm grabbing a cup \\
-		\hspace{55pt} : maze solver 
+
 	}
+	
 	\frame[t]
 	{
-		\vspace{10pt}
+		\vspace{20pt}
 		\begin{itemize}
 			\item How to take the teacher's demonstration into account?
 				\begin{itemize}
@@ -48,7 +52,7 @@
 					\item<sub@1> \textbf{Use the teacher demonstration as an exploration baseline}
 				\end{itemize}				
 		\end{itemize}
-		\vspace{15pt}
+		\vspace{20pt}
 		\begin{itemize}
 			\item Child learning to dance : first follow its dance teacher moves, before trying out new ones once he feels he has exploited the teacher's recommandation 
 		\end{itemize}
@@ -63,20 +67,18 @@
 				\item Introduce a theoretical framework for compliance-based learning 
 				\item Grasp ideas and intuition about how such an approach can 
 				\begin{itemize}
-					\item<sub@1> Speed up the learning 
-					\item<sub@1> Overcome some possible mentor's sub-optimality.  
+					\item<sub@1> Overcome a mentor's (large) sub-optimality. 								\item<sub@1> Speed up the learning   
 					\item<sub@1> Generalize to \emph{transfer learning}
 				\end{itemize}
 			\end{itemize}
 			in a \textbf{reinforcement learning framework}. 
 			
 		\vspace{20pt}
-		$\small\blacksquare$ \textbf{Approach} :
+		$\small\blacksquare$ \textbf{Method} :
 			\begin{itemize}
-				\item Create a simple but generic environment and task 
+				\item Create a simple but generic Markov Decision Process 
 				\item Solve it using classical RL method 
-				\item Implement compliant-based learning method 
-				\item Compare them with classical methods, evaluate their pros and cons 
+				\item Implement compliant-based learning methods
 			\end{itemize}
 	}
 }
@@ -118,7 +120,7 @@
 						Q^\pi(s,a) &= \E[\pi]{\sum_i \gamma^i r_{t+i+1}\, \vert s_t = s , a_t =a }\\
 					\end{aligned}
 				\end{equation}
-			\item All algorithm computing optimal policies rely on various mix of a \textcolor{red}{\emph{Generalized Policy Iteration}} : 
+			\item All algorithm computing optimal policies rely on various mix of a \textcolor{red}{\emph{Generalized Policy Iteration}}\footfullcite{Sutton98a} : 
 				\begin{enumerate}
 					\item[1.] Evaluate the current policy (DP,..)
 					\item[2.] Improve the current policy (greedization) 
@@ -149,6 +151,23 @@
 
 		}
 	}
+	\subsection{Imitation learning}
+	{
+		\frame[t]
+		{
+			$\blacksquare$ Imitation learning : 
+			
+			\vspace{20pt}
+			\begin{itemize}
+				\item For long and complex tasks : common machine learning algorithm are usually very slow to converge 
+				\item Accelerate learning via prior knowledge of the environment or task : provide a \textcolor{red}{\textbf{demonstration}} of the task 
+				\item Framework of \emph{learning from demonstration} (LfD) \footfullcite{Billard2016}
+			\end{itemize}
+			\vspace{25pt}
+			\hspace{15pt} $\longrightarrow$ Ex. : robotic arm grabbing a cup \\
+			\hspace{55pt} : maze solver 
+		}
+
 		\subsection{Transfer learning}
 	{
 		\frame[t]
@@ -172,9 +191,9 @@
 	}
 }
 
-\section{Approach}
+\section{Results}
 {
-	\subsection{Sandbox state space}
+	\subsection{Markov Decision Process}
 	{
 		\frame[t]
 		{
@@ -196,10 +215,24 @@
 		
 		\frame[t]
 		{
-			$\blacksquare$ Learning the optimal policy : 
+			$\blacksquare$ Learning the optimal policy
 			\vspace{-5pt}
 			\begin{center}
-				\includegraphics[width=\linewidth]{comp_maze}
+				\includegraphics[width=\linewidth]{fullcompt_with_leg}
+			\end{center}
+		}
+		\frame[t]
+		{
+			$\blacksquare$ Generating a suboptimal mentor 
+			\vspace{-5pt}
+			\begin{center}
+				\begin{tikzpicture}
+				 	 \node (img1) {\includegraphics[width=\linewidth]{gen_mentor_1}};
+ 					 \pause
+					  \node (img2) at (img1){\includegraphics[width=\linewidth]{gen_mentor_2}};
+					  \pause
+ 					 \node (img3) at (img1){\includegraphics[width=\linewidth]{gen_mentor_3}};
+				\end{tikzpicture}
 			\end{center}
 		}
 	}
@@ -207,11 +240,9 @@
 	{
 		\frame[t]
 		{
-			\vspace{30pt}
-			$\blacksquare$ Compliance learning 
 			\vspace{10pt}
+			$\blacksquare$ Compliance learning 
 			
-			$\color{red}\rightarrow$ We only have access to the teacher's actions over $\mathcal{A}(\mathcal{S})$. \\
 			\vspace{10pt}
 			$\color{red}\rightarrow$ Intuitively : 
 				\begin{itemize}
@@ -221,15 +252,11 @@
 				\end{itemize} 
 			\vspace{15pt}
 			
-			$\color{red}\rightarrow$ The teacher should only influence our \textbf{action selection} 
+			$\color{red}\rightarrow$ The teacher should only influence our action selection: 
 			
-		}
-		
-		\frame[t]
-		{
 			\begin{itemize}
-			\item Global compliance term $p\in[0,1]$
-				\item $p$-greedy action selection w.r.t the teacher's action : $\forall s \in\mathcal{S}$
+			\item Global \textbf{compliance term} : $p\in[0,1]$
+				\item $p$-greedy action selection w.r.t the mentor's action $a_m$ : $\forall s \in\mathcal{S}$
 				\begin{equation}
 					\pi(s) = \left\{
 					\begin{aligned}
@@ -238,7 +265,13 @@
 					\end{aligned}\right.
 				\end{equation}
 			\end{itemize}
-			$\blacksquare$ \textcolor{red}{Naive approach} : 
+
+		}
+		
+		\frame[t]
+		{
+			$\blacksquare$ \textcolor{red}{Vanishing compliance} : 
+			\vspace{20pt}
 			\begin{itemize}
 				\item \textbf{Constantly decreasing compliance} : 
 				\begin{equation}
@@ -253,6 +286,9 @@
 					Q(s,a) \leftarrow Q(s,a) + \alpha(r + \gamma Q(s',a') - Q(s,a))
 				\end{equation}
 			\end{itemize}
+			\vspace{20pt}
+			
+			$\color{red}\blacktriangleright$ Start with $p_0\simeq 1$ (high confidence) and slowly decide to take your own decisions. 
 		}
 		
 		\frame[t]
