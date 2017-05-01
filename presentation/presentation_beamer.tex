@@ -28,17 +28,13 @@
 {
 	\frame[t]
 	{
-		\vspace{10pt}
 		$\blacksquare$ An example : 
+		\begin{center}
+			\includegraphics[width=0.7\linewidth]{rob_dem}
+		\end{center}
 		\vspace{10pt}
-		\begin{itemize}
-			\setlength\itemsep{1.5em}
-			\item A human teacher is showing the robot to reach for an object 
-			\item The teacher is not a robotic expert, and guides the robot along a trajectory near the edge of the robot's workspace, or very close to some obstacles 
-			\item Should the robot discard the demonstration ? 
-			\item There is still some valuable information in the demonstration (pose of the object, general direction of motion, ..)
-		\end{itemize}
-
+		
+		\small \emph{Credits} : Sylvain Calinon
 	}
 	
 	\frame[t]
@@ -49,12 +45,12 @@
 				\begin{itemize}
 					\item<sub@1> Exactly reproduce the teacher's actions 
 					\item<sub@1> Use demonstration data to build a representation of the environment's dynamics
-					\item<sub@1> \textbf{Use the teacher demonstration as an exploration baseline}
+					\item<sub@1> \textbf{Use the teacher's demonstration as an exploration baseline}
 				\end{itemize}				
 		\end{itemize}
 		\vspace{20pt}
 		\begin{itemize}
-			\item Child learning to dance : first follows its dance teacher's moves, before trying out new ones once he feels he has exploited the teacher's recommandations 
+			\item Child learning to dance : first follows its teacher's moves, before trying out new ones once he feels he has exploited the teacher's recommandations.
 		\end{itemize}
 		\hspace{50pt} $\color{red}\Rightarrow$ notion of \textcolor{red}{\textbf{compliance}} w.r.t the teacher. 
 	}
@@ -91,12 +87,12 @@
 		{
 			$\small\blacksquare$ \textbf{RL} :
 			\begin{itemize}
-				\item Framework in which an agent (or a learner) learns its actions from interaction with its environment
+				\item Framework in which an agent (or a learner) learns its actions from interacting with its environment
 				\item The environment generates scalar values called rewards, that the agent is seeking to maximize over time.
 			\end{itemize}
 			\vspace{10pt}
 			
-			Under a Markovian asumption for the dynamics and reward system, the reinforcement learning problem can be formulated as a \emph{Markov Decision Process} : 
+			Under a Markovian asumption, formulated as a \emph{Markov Decision Process} : 
 			\begin{equation}
 				(\mathcal{S}, \mathcal{A}(\mathcal{S}), \mathcal{P}_{ss'}^a , \mathcal{R}_{ss'}^a)
 			\end{equation}
@@ -113,14 +109,14 @@
 		{
 			$\small\blacksquare$ \textbf{RL} :
 			\begin{itemize}
-				\item Define state value and action value function under a policy (probabilistic decision rule) $\pi \, : \, \mathcal{S} \to \mathcal{A}$ : 
+				\item Define state value and action value functions under a policy (probabilistic decision rule) $\pi \, : \, \mathcal{S} \to \mathcal{A}$ : 
 				\begin{equation}
 					\begin{aligned}
 						V^\pi(s) &= \E[\pi]{\sum_i \gamma^i r_{t+i+1}\, \vert s_t = s }\\
 						Q^\pi(s,a) &= \E[\pi]{\sum_i \gamma^i r_{t+i+1}\, \vert s_t = s , a_t =a }\\
 					\end{aligned}
 				\end{equation}
-			\item All algorithm computing optimal policies rely on various mix of a \textcolor{red}{\emph{Generalized Policy Iteration}}\footfullcite{Sutton98a} : 
+			\item Algorithms computing optimal policies rely on various mix of a \textcolor{red}{\emph{Generalized Policy Iteration}}\footfullcite{Sutton98a} : 
 				\begin{enumerate}
 					\item[1.] Evaluate the current policy (DP,..)
 					\item[2.] Improve the current policy (greedization) 
@@ -184,7 +180,7 @@
 			and eventually generalize to 
 			\vspace{10pt}
 			\begin{itemize}
-				\item multiple teacher
+				\item multiple teachers
 				\item inhomogeneous settings 
 			\end{itemize}
 		}
@@ -294,24 +290,13 @@
 		\frame[t]
 		{
 			$\blacksquare$ Constantly decreasing compliance : 
-			\vspace{-10pt}
+			\vspace{10pt}
 			\begin{figure}[h!]
 				\begin{center}
 					\includegraphics[width=\linewidth]{naive_comp}
 					\caption{Average reward for two naive compliance learners}
 				\end{center}
 			\end{figure}
-			
-			\small
-			\begin{center}
-				\begin{tabular}{c|c}
-					$\color{green}\boldsymbol{+}$ & $\color{red}\boldsymbol{-}$ \\
-					\hline
-					Easy to implement 			& Undershoot \\
-					Fast convergence (200 vs 500) & \textbf{Precise tuning}
-				\end{tabular}
-			\end{center}
-
 		}
 		
 		\frame[t]
@@ -344,7 +329,7 @@
 				\begin{equation}
 					\delta_t = r + \gamma Q(s',a') - Q(s,a_m) \quad \color{red} \rightarrow\text{\small{\textcolor{red}{how good is the teacher ?}} }	\color{black}	
 				\end{equation}
-				\item Compute posterior distribution over $p(s)$ :
+				\item Compute \textbf{posterior distribution} over $p(s)$ :
 				\begin{equation}
 				\label{eq::update_rule}
 				\begin{aligned}
@@ -454,13 +439,16 @@
 		\frame[t]
 		{
 			$\color{red}\blacktriangleright$	\textbf{Method comparaison} : f-fold metrics statistics 
-			\vspace{10pt}
-			\begin{figure}
-				 \begin{center}
-					\includegraphics[width=1\linewidth]{metrics_comp}
-					\caption{Metrics comparaison for imitation learning methods}
-				\end{center}
-			\end{figure}
+			\vspace{20pt}
+			\begin{center}
+				 \begin{figure}
+				 	\begin{minipage}{\linewidth}
+				 	 	\includegraphics[width=0.5\linewidth]{tt_metric}
+ 					 \pause
+					  \includegraphics[width=0.49\linewidth]{tr_metric}
+					\end{minipage}
+				\end{figure}
+			\end{center}
 		}
 	}
 }
