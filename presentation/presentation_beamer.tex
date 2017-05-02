@@ -441,16 +441,14 @@
 		\frame[t]
 		{
 			$\color{red}\blacktriangleright$	\textbf{Method comparaison} : f-fold metrics statistics 
-			\vspace{20pt}
 			\begin{center}
-				 \begin{figure}
-				 	\begin{minipage}{\linewidth}
-				 	 	\includegraphics[width=0.5\linewidth]{tt_metric}
+				 \begin{tikzpicture}
+				 	 \node (img1) {\includegraphics[width=0.7\linewidth]{tt_metric}};
  					 \pause
-					  \includegraphics[width=0.5\linewidth]{tr_metric}
-					\end{minipage}
-				\end{figure}
+					  \node (img2) at (img1){\includegraphics[width=0.7\linewidth]{tr_metric}};
+				\end{tikzpicture}
 			\end{center}
+
 		}
 	}
 }
