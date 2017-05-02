@@ -88,37 +88,37 @@ av_opt_index_var    = std(av_opt_index_arr);     av_1_index_var      = std(av_1_
 
 hold on;
 % opt
-plot(0,naive_opt_index,'s','MarkerFaceColor','r','MarkerSize',10);
-errorbar(0,naive_opt_index,naive_opt_index_var,'LineWidth',2,'Color','r');
-plot(0.1,ac_opt_index,'s','MarkerFaceColor','b','MarkerSize',10);
-errorbar(0.1,ac_opt_index,ac_opt_index_var,'LineWidth',2,'Color','b');
-plot(-0.1,av_opt_index,'s','MarkerFaceColor','g','MarkerSize',10);
-errorbar(-0.1,av_opt_index,av_opt_index_var,'LineWidth',2,'Color','g');
+plot(0,naive_opt_index,'s','MarkerFaceColor',[1,0.3,0.1],'MarkerSize',10);
+errorbar(0,naive_opt_index,naive_opt_index_var,'LineWidth',2,'Color',[1,0.3,0.1]);
+plot(0.1,ac_opt_index,'s','MarkerFaceColor',[0.2,0.4,1],'MarkerSize',10);
+errorbar(0.1,ac_opt_index,ac_opt_index_var,'LineWidth',2,'Color',[0.2,0.4,1]);
+plot(-0.1,av_opt_index,'s','MarkerFaceColor',[0.2,0.8,0.4],'MarkerSize',10);
+errorbar(-0.1,av_opt_index,av_opt_index_var,'LineWidth',2,'Color',[0.2,0.8,0.4]);
 %  subopt 1
-plot(1,naive_1_index,'s','MarkerFaceColor','r','MarkerSize',10);
-errorbar(1,naive_1_index,naive_1_index_var,'LineWidth',2,'Color','r');
-plot(1.1,ac_1_index,'s','MarkerFaceColor','b','MarkerSize',10);
-errorbar(1.1,ac_1_index,ac_1_index_var,'LineWidth',2,'Color','b');
-plot(0.9,av_1_index,'s','MarkerFaceColor','g','MarkerSize',10);
-errorbar(0.9,av_1_index,av_1_index_var,'LineWidth',2,'Color','g');
+plot(1,naive_1_index,'s','MarkerFaceColor',[1,0.3,0.1],'MarkerSize',10);
+errorbar(1,naive_1_index,naive_1_index_var,'LineWidth',2,'Color',[1,0.3,0.1]);
+plot(1.1,ac_1_index,'s','MarkerFaceColor',[0.2,0.4,1],'MarkerSize',10);
+errorbar(1.1,ac_1_index,ac_1_index_var,'LineWidth',2,'Color',[0.2,0.4,1]);
+plot(0.9,av_1_index,'s','MarkerFaceColor',[0.2,0.8,0.4],'MarkerSize',10);
+errorbar(0.9,av_1_index,av_1_index_var,'LineWidth',2,'Color',[0.2,0.8,0.4]);
 %  subopt 2
-plot(2,naive_2_index,'s','MarkerFaceColor','r','MarkerSize',10);
-errorbar(2,naive_2_index,naive_2_index_var,'LineWidth',2,'Color','r');
-plot(2.1,ac_2_index,'s','MarkerFaceColor','b','MarkerSize',10);
-errorbar(2.1,ac_2_index,av_2_index_var,'LineWidth',2,'Color','b');
-plot(1.9,av_2_index,'s','MarkerFaceColor','g','MarkerSize',10);
-errorbar(1.9,av_2_index,av_2_index_var,'LineWidth',2,'Color','g');
+plot(2,naive_2_index,'s','MarkerFaceColor',[1,0.3,0.1],'MarkerSize',10);
+errorbar(2,naive_2_index,naive_2_index_var,'LineWidth',2,'Color',[1,0.3,0.1]);
+plot(2.1,ac_2_index,'s','MarkerFaceColor',[0.2,0.4,1],'MarkerSize',10);
+errorbar(2.1,ac_2_index,av_2_index_var,'LineWidth',2,'Color',[0.2,0.4,1]);
+plot(1.9,av_2_index,'s','MarkerFaceColor',[0.2,0.8,0.4],'MarkerSize',10);
+errorbar(1.9,av_2_index,av_2_index_var,'LineWidth',2,'Color',[0.2,0.8,0.4]);
 %  subopt 3
-a = plot(3,naive_3_index,'s','MarkerFaceColor','r','MarkerSize',10);
-errorbar(3,naive_3_index,naive_3_index_var,'LineWidth',2,'Color','r');
-b= plot(3.1,ac_3_index,'s','MarkerFaceColor','b','MarkerSize',10);
-errorbar(3.1,ac_3_index,ac_3_index_var,'LineWidth',2,'Color','b');
+a = plot(3,naive_3_index,'s','MarkerFaceColor',[1,0.3,0.1],'MarkerSize',10);
+errorbar(3,naive_3_index,naive_3_index_var,'LineWidth',2,'Color',[1,0.3,0.1]);
+b= plot(3.1,ac_3_index,'s','MarkerFaceColor',[0.2,0.4,1],'MarkerSize',10);
+errorbar(3.1,ac_3_index,ac_3_index_var,'LineWidth',2,'Color',[0.2,0.4,1]);
 c = plot(2.9,av_3_index,'s','MarkerFaceColor','g','MarkerSize',10);
 errorbar(2.9,av_3_index,av_3_index_var,'LineWidth',2,'Color','g');
 % evolution plot
-plot([0 1 2 3],[naive_opt_index, naive_1_index, naive_2_index, naive_3_index],'r-');
-plot([0.1 1.1 2.1 3.1],[ac_opt_index, ac_1_index, ac_2_index, ac_3_index],'b-');
-plot([-0.1 0.9 1.9 2.9],[av_opt_index, av_1_index, av_2_index, av_3_index],'g-');
+plot([0 1 2 3],[naive_opt_index, naive_1_index, naive_2_index, naive_3_index],'Color',[1,0.3,0.1]);
+plot([0.1 1.1 2.1 3.1],[ac_opt_index, ac_1_index, ac_2_index, ac_3_index],'Color',[0.2,0.4,1]);
+plot([-0.1 0.9 1.9 2.9],[av_opt_index, av_1_index, av_2_index, av_3_index],'Color',[0.2,0.8,0.4]);
 
 h = legend([a,b,c],'Vanishing','Implicit $\beta$','Explicit');
 set(h,'interpreter','latex')
@@ -162,37 +162,37 @@ av_3_cr_mean = mean(av_3_cr_arr); av_3_cr_var = std(av_3_cr_arr);
 
 figure; hold on;
 % opt
-plot(0,naive_opt_cr_mean,'s','MarkerFaceColor','r','MarkerSize',10);
-errorbar(0,naive_opt_cr_mean,naive_opt_cr_var,'LineWidth',2,'Color','r');
-plot(0.1,ac_opt_cr_mean,'s','MarkerFaceColor','b','MarkerSize',10);
-errorbar(0.1,ac_opt_cr_mean,ac_opt_cr_var,'LineWidth',2,'Color','b');
-plot(-0.1,av_opt_cr_mean,'s','MarkerFaceColor','g','MarkerSize',10);
-errorbar(-0.1,av_opt_cr_mean,av_opt_cr_var,'LineWidth',2,'Color','g');
+plot(0,naive_opt_cr_mean,'s','MarkerFaceColor',[1,0.3,0.1],'MarkerSize',10);
+errorbar(0,naive_opt_cr_mean,naive_opt_cr_var,'LineWidth',2,'Color',[1,0.3,0.1]);
+plot(0.1,ac_opt_cr_mean,'s','MarkerFaceColor',[0.2,0.4,1],'MarkerSize',10);
+errorbar(0.1,ac_opt_cr_mean,ac_opt_cr_var,'LineWidth',2,'Color',[0.2,0.4,1]);
+plot(-0.1,av_opt_cr_mean,'s','MarkerFaceColor',[0.2,0.8,0.4],'MarkerSize',10);
+errorbar(-0.1,av_opt_cr_mean,av_opt_cr_var,'LineWidth',2,'Color',[0.2,0.8,0.4]);
 % subopt 1
-plot(1,naive_1_cr_mean,'s','MarkerFaceColor','r','MarkerSize',10);
-errorbar(1,naive_1_cr_mean,naive_1_cr_var,'LineWidth',2,'Color','r');
-plot(1.1,ac_1_cr_mean,'s','MarkerFaceColor','b','MarkerSize',10);
-errorbar(1.1,ac_1_cr_mean,ac_1_cr_var,'LineWidth',2,'Color','b');
-plot(0.9,av_1_cr_mean,'s','MarkerFaceColor','g','MarkerSize',10);
-errorbar(0.9,av_1_cr_mean,av_1_cr_var,'LineWidth',2,'Color','g');
+plot(1,naive_1_cr_mean,'s','MarkerFaceColor',[1,0.3,0.1],'MarkerSize',10);
+errorbar(1,naive_1_cr_mean,naive_1_cr_var,'LineWidth',2,'Color',[1,0.3,0.1]);
+plot(1.1,ac_1_cr_mean,'s','MarkerFaceColor',[0.2,0.4,1],'MarkerSize',10);
+errorbar(1.1,ac_1_cr_mean,ac_1_cr_var,'LineWidth',2,'Color',[0.2,0.4,1]);
+plot(0.9,av_1_cr_mean,'s','MarkerFaceColor',[0.2,0.8,0.4],'MarkerSize',10);
+errorbar(0.9,av_1_cr_mean,av_1_cr_var,'LineWidth',2,'Color',[0.2,0.8,0.4]);
 % subopt 2
-plot(2,naive_2_cr_mean,'s','MarkerFaceColor','r','MarkerSize',10);
-errorbar(2,naive_2_cr_mean,naive_2_cr_var,'LineWidth',2,'Color','r');
-plot(2.1,ac_2_cr_mean,'s','MarkerFaceColor','b','MarkerSize',10);
-errorbar(2.1,ac_2_cr_mean,ac_2_cr_var,'LineWidth',2,'Color','b');
-plot(1.9,av_2_cr_mean,'s','MarkerFaceColor','g','MarkerSize',10);
-errorbar(1.9,av_2_cr_mean,av_2_cr_var,'LineWidth',2,'Color','g');
+plot(2,naive_2_cr_mean,'s','MarkerFaceColor',[1,0.3,0.1],'MarkerSize',10);
+errorbar(2,naive_2_cr_mean,naive_2_cr_var,'LineWidth',2,'Color',[1,0.3,0.1]);
+plot(2.1,ac_2_cr_mean,'s','MarkerFaceColor',[0.2,0.4,1],'MarkerSize',10);
+errorbar(2.1,ac_2_cr_mean,ac_2_cr_var,'LineWidth',2,'Color',[0.2,0.4,1]);
+plot(1.9,av_2_cr_mean,'s','MarkerFaceColor',[0.2,0.8,0.4],'MarkerSize',10);
+errorbar(1.9,av_2_cr_mean,av_2_cr_var,'LineWidth',2,'Color',[0.2,0.8,0.4]);
 % subopt 3
-a = plot(3,naive_3_cr_mean,'s','MarkerFaceColor','r','MarkerSize',10);
-errorbar(3,naive_3_cr_mean,naive_3_cr_var,'LineWidth',2,'Color','r');
-b = plot(3.1,ac_3_cr_mean,'s','MarkerFaceColor','b','MarkerSize',10);
-errorbar(3.1,ac_3_cr_mean,ac_3_cr_var,'LineWidth',2,'Color','b');
-c= plot(2.9,av_3_cr_mean,'s','MarkerFaceColor','g','MarkerSize',10);
-errorbar(2.9,av_3_cr_mean,av_3_cr_var,'LineWidth',2,'Color','g');
+a = plot(3,naive_3_cr_mean,'s','MarkerFaceColor',[1,0.3,0.1],'MarkerSize',10);
+errorbar(3,naive_3_cr_mean,naive_3_cr_var,'LineWidth',2,'Color',[1,0.3,0.1]);
+b = plot(3.1,ac_3_cr_mean,'s','MarkerFaceColor',[0.2,0.4,1],'MarkerSize',10);
+errorbar(3.1,ac_3_cr_mean,ac_3_cr_var,'LineWidth',2,'Color',[0.2,0.4,1]);
+c= plot(2.9,av_3_cr_mean,'s','MarkerFaceColor',[0.2,0.8,0.4],'MarkerSize',10);
+errorbar(2.9,av_3_cr_mean,av_3_cr_var,'LineWidth',2,'Color',[0.2,0.8,0.4]);
 % evolution 
-plot([0 1 2 3],[naive_opt_cr_mean, naive_1_cr_mean, naive_2_cr_mean, naive_3_cr_mean],'r-');
-plot([0.1 1.1 2.1 3.1],[ac_opt_cr_mean, ac_1_cr_mean, ac_2_cr_mean, ac_3_cr_mean],'b-');
-plot([-0.1 0.9 1.9 2.9],[av_opt_cr_mean, av_1_cr_mean, av_2_cr_mean, av_3_cr_mean],'g-');
+plot([0 1 2 3],[naive_opt_cr_mean, naive_1_cr_mean, naive_2_cr_mean, naive_3_cr_mean],'Color',[1,0.3,0.1]);
+plot([0.1 1.1 2.1 3.1],[ac_opt_cr_mean, ac_1_cr_mean, ac_2_cr_mean, ac_3_cr_mean],'Color',[0.2,0.4,1]);
+plot([-0.1 0.9 1.9 2.9],[av_opt_cr_mean, av_1_cr_mean, av_2_cr_mean, av_3_cr_mean],'Color',[0.2,0.8,0.4]);
 
 h = legend([a,b,c],'Vanishing','Implicit $\beta$','Explicit');
 set(h,'interpreter','latex')
