@@ -918,7 +918,20 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		{
 			\paragraph{} As reminded in the beginning of this document, one of the goals of learning to demonstration is to speed up the learning. The goal of this section is to compare the behavior of the compliant-based learners we developed with some more classical reinforcement learning. 
 			
-			\paragraph{} Figures (\ref{}) and (\ref{}) display the learning curves of the compliant learner opposed with, respectively, TD(0) learners and TD($\lambda$) learners. As one can see, our algorithms performs way better than TD(0) learner, even with largely suboptimal teachers. However, they performed as well or even slight worse than TD($\lambda$) learners. This phenomenon is mostly due to the fact the behind its action selection, our learners update their Q-values thanks to SARSA updates (on-policy). Generalizing to an off-policy update, and eventually by making use of eligibility traces will most likely improve the learning speed and beat TD($\lambda$) learners. 
+			\paragraph{} Figures (\ref{fig::loner_comp_50}) and (\ref{fig::loner_comp_120}) display the learning curves of the compliant learner opposed with, respectively, TD(0) learners and TD($\lambda$) learners. As one can see, our algorithms performs way better than TD(0) learner, even with largely suboptimal teachers. However, they performed as well or even slight worse than TD($\lambda$) learners. This phenomenon is mostly due to the fact the behind its action selection, our learners update their Q-values thanks to SARSA updates (on-policy). Generalizing to an off-policy update, and eventually by making use of eligibility traces will most likely improve the learning speed and beat TD($\lambda$) learners. 
+							
+				\begin{figure}[h!]
+					\begin{minipage}{0.5\linewidth}
+						\includegraphics[width=\linewidth]{loner_comp_50}
+						\caption{Method comparaison (teacher optimality : 50\%)}
+						\label{fig::loner_comp_50}
+					\end{minipage}
+					\begin{minipage}{0.5\linewidth}
+						\includegraphics[width=\linewidth]{loner_comp_120}
+						\caption{Method comparaison (teacher optimality : 75\%)}
+						\label{fig::loner_comp_120}
+					\end{minipage}
+				\end{figure}
 		}
 	}
 	
