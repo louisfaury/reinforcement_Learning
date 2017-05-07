@@ -876,10 +876,47 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\paragraph{} Again, one can see that most wrong recommandations are well-classified. However, this method as a tendency to consider as wrong action all trajectories in the mentor's policy leading to a sub-optimality. This as for consequence that the learner will try to always to go round the mentor's suboptimal recommandation, and sometime by making some detours. 
 			}
 		}
-		\section{Method comparaison}
+		\section{Algorithms comparaison}
 		{
 			\label{sec_method_comp}
 			\paragraph{} We hereinafter focus on comparing the last three methods (vanishing compliance, implicit $\beta$-compliance and explicit compliance) between themselves and with classical reinforcement learning algorithms. 
+			
+			\subsection{Compliant learners}
+			{
+				\paragraph{} Let us now compare the different compliant learners between them. Figures (\ref{fig::compliant_comp_120}) and (\ref{fig::compliant_comp_50}) display the learning curves derived in the previous section altogether. If the $\beta$-implicit and the explicit compliance methods seem to behave better than the vanishing learner, it seems that the speed of convergence of both algorithm tends to equalize as the teacher sub-optimality is strong. This behavior is confirmed by figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}). 
+				
+				\begin{figure}[h!]
+					\begin{minipage}{0.5\linewidth}
+						\includegraphics[width=\linewidth]{fullcomp_subopt_120}
+						\caption{Learning curves for a first teacher}
+						\label{fig::compliant_comp_120}
+					\end{minipage}
+					\begin{minipage}{0.5\linewidth}
+						\includegraphics[width=\linewidth]{fullcomp_subopt_50}
+						\caption{Learning curve for a second teacher}
+						\label{fig::compliant_comp_50}
+					\end{minipage}
+				\end{figure}
+				
+				\paragraph{} In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar value is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence for all methods seem to equalize as the optimality of the teacher decreases. However, the average accumulated reward until convergence is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. 
+				
+				\begin{figure}[h!]
+					\begin{minipage}{0.5\linewidth}
+						\includegraphics[width=\linewidth]{tt_metric}
+						\caption{Time to convergence metric}
+						\label{fig::metric_tt}
+					\end{minipage}
+					\begin{minipage}{0.5\linewidth}
+						\includegraphics[width=\linewidth]{tr_metric}
+						\caption{Reward to convergence metric}
+						\label{fig::metric_tr}
+					\end{minipage}
+				\end{figure}	
+			}
+		}
+		\subsection{Classical learners}
+		{
+			\paragraph{} As reminded in the beginning of this document, one of the goals of learning to demonstration is to speed up the learning. The goal of this section is to compare the behavior of the compliant-based learners we developed with some more classical reinforcement learning 
 		}
 	}
 	
