@@ -16,20 +16,23 @@
 	\include{./title_page/title_page}
 	
 	\tableofcontents
+
 	
 	\chapter{Introduction}
 	{
 		\section{Motivations}
 		{
-			\paragraph{} For long and complex tasks, usual machine learning algorithms are often unable to come up with with feasible solutions, or at least fail to do so in acceptable computational times. A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
+			\paragraph{} When it comes for real world manipulation tasks, common machine learning algorithms are sometimes unable to come up with feasible solutions, or at least fail to do so in an acceptable computational time. A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
 			
-			\paragraph{} Such prior belief is often provided thanks to demonstrations, performed by a teacher (human or not). If this approach is largely covered in the literature (see \ref{subsection::lfd}), it is not really clear how to learn from a largely suboptimal teacher - that is a teacher providing demonstrations with potential danger or clear downside for the robot. 
+			\paragraph{} Such prior belief is often provided thanks to demonstrations, performed by a human teacher. If this approach is largely covered in the literature (see \ref{subsection::lfd}), it is not really clear how to learn from a suboptimal teacher, regardless of its level of sub-optimality. We call \emph{largely} suboptimal a teacher providing demonstrations with potential danger or obvious downside for the robot. 
 			
-			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that travels near the robot's workspace edges, without knowing this isn't recommended. Even if the robotic arm should not trust this demonstration to be optimal, simply discarding it is unwise, since it contains many important informations relative to the task (pose of the object, joint coordination, .. ). We must therefore find a way to handle the demonstration to infer those parameters without falling in its suboptimal reproduction. 
+			\subsection{Motivating examples}
+			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it is unwise, since it contains many important informations relative to the task (pose of the object, joint coordination, .. ). We must therefore find a way to handle the demonstration to infer those parameters without falling in its suboptimal reproduction. 
 			
-			\paragraph{} Before going any further, we can introduce the previous problem slightly differently.  Indeed, we can draw a parallel between the latest example and the one of a children learning to dance (or any other technical skill). Because it's dance teacher doesn't have the same physical abilities than the child, or is maybe just a bad dance teacher, he might give the child a suboptimal way of performing dance moves. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around what he has learnt so far. He might find that, by slightly changing how he performs some moves,  he is able to dance better than by blindly listening to the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
+			\paragraph{} Before going any further, let us rephrase the previous problem slightly differently.  Indeed, we can draw a parallel between the latest example and the one of a children learning to dance (or any other technical skill). Because the child's dance teacher doesn't have the same physical abilities than the child, he might give the child a suboptimal way (with respect to the child's physical abilities) of performing dance moves. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around what he has learnt so far. He might find that, by slightly changing how he performs some moves,  he is able to dance better than by blindly listening to the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
 			
-			\paragraph{} This semester project aims at introducing a theoretical formulation of such a compliance-based behavior, and experimentally test its performance on simple problems and compare it to other usual algorithms. We will define our problem in a reinforcement learning framework, which allows a fairly good definition of our initial problem. 
+			\subsection{Goal}
+			\paragraph{} This semester project aims at introducing a theoretical formulation of such a compliance-based behavior, and experimentally test its performance on simple problems. We will define our problem in a reinforcement learning framework, which allows a fairly good definition of our initial problem, and is a appreciated framework in the field on Learning from Demonstration (). 
 			
 			\paragraph{} The underlying goal behind this objective is to get better intuition about how interactive learning between human and robots can be achieved. Indeed, we would like to be able to teach a robot from demonstration not by only by providing it a large number of trajectories that he will then use as a motion generator, but by directly interacting with him. By showing a robotic arm, at different times of its learning procedure, concrete examples on how to avoid its closest obstacle and grab a given object, seems like a more natural way of teaching the robot a task, while still enabling him to correct some small sub-optimality we could have introduced to it. 
 			
@@ -45,7 +48,7 @@
 				
 				\paragraph{} LfD mostly lies on the principle that the learning robot can be taught new tasks by end-users, without having to be programmed again. We therefore are dealing with robot that are able to generalize from demonstration, be it only to understand what is the task that they must learn. They are many underlying problematics and opened questions on the subject, detailed in \cite{Billard2016}.
 				
-				\paragraph{} On approach of LfD combines with reinforcement learning techniques. A could argument for this is that LfD could easily speed-up the learning process by providing a finite or infinite set of good solutions. However, this assume some kind of reproducibility by the robot, as well as a similar enough context between demonstration and reproduction. \newline
+				\paragraph{}Many LfD approaches combine with reinforcement learning techniques, mostly because it is understood how LfD could easily speed-up the learning process by providing a finite or infinite set of good solutions. However, this assume some kind of reproducibility by the robot, as well as a similar enough context between demonstration and reproduction. \newline
 				Under such assumptions, RL techniques can use LfD to speed up their learning process and discover new control policies through a directed exploration of its action-state space. Indeed, demonstrations are used to guide the RL algorithm exploration, reducing the time and iterations needed for an agent to discover a new control policy, and eventually overcoming the teacher's apparent policy sub-optimalities. 
 				
 				\paragraph{} They are many ways of performing such a demonstration-based learning. We remind here a few of them, taken from \cite{argall2009survey}, all related to Imitation Reinforcement Learning (IRL) : 
@@ -941,6 +944,21 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	}
 	\chapter*{Conclusion}
 	\addcontentsline{toc}{chapter}{Conclusion}
+	{
+		\section{Outline}
+		{
+
+		}
+		\section{Applicability}
+		{
+		
+		}
+		\section{Possible improvements}
+		{
+
+		}
+	}
+	
 	
 	
 	\bibliographystyle{alpha}
