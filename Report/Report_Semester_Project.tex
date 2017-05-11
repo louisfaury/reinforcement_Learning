@@ -32,11 +32,11 @@
 			\paragraph{} Before going any further, let us rephrase the previous problem slightly differently.  Indeed, we can draw a parallel between the latest example and the one of a children learning to dance (or any other technical skill). Because the child's dance teacher doesn't have the same physical abilities than the child, he might give the child a suboptimal way (with respect to the child's physical abilities) of performing dance moves. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around what he has learnt so far. He might find that, by slightly changing how he performs some moves,  he is able to dance better than by blindly listening to the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
 			
 			\subsection{Goal}
-			\paragraph{} This semester project aims at introducing a theoretical formulation of such a compliance-based behavior, and experimentally test its performance on simple problems. We will define our problem in a reinforcement learning framework, which allows a fairly good definition of our initial problem, and is a appreciated framework in the field on Learning from Demonstration (). 
+			\paragraph{} This semester project aims at introducing a theoretical formulation of such a compliance-based behavior, and experimentally test its performance on simple problems.
 			
 			\paragraph{} The underlying goal behind this objective is to get better intuition about how interactive learning between human and robots can be achieved. Indeed, we would like to be able to teach a robot from demonstration not by only by providing it a large number of trajectories that he will then use as a motion generator, but by directly interacting with him. By showing a robotic arm, at different times of its learning procedure, concrete examples on how to avoid its closest obstacle and grab a given object, seems like a more natural way of teaching the robot a task, while still enabling him to correct some small sub-optimality we could have introduced to it. 
 			
-			\paragraph{} Our approach also allows use to tackle a somehow different problem, related to transfer learning. Indeed, the teacher might not be a human but another learner, only better trained than the current learner. In such a case, we would like our learner to quickly find if it can trust its mentor, and if not where it should focus its computations to overcome its mentor sub-optimality. Such questions will therefore be tackled in this report. 
+			\paragraph{} This approach also allows use to tackle a somehow different problem, related to transfer learning. Indeed, the teacher might not be a human but another learner, only better trained than the current learner. In such a case, we would like our learner to quickly find if it can trust its mentor, and if not where it should focus its computations to overcome its mentor's sub-optimality. Such questions will therefore be tackled in this report. 
 		}
 		\section{Background}
 		{
@@ -46,16 +46,16 @@
 				\label{subsection::lfd}
 				\paragraph{} Learning from demonstration (LfD) is a framework where a robot can learn from interacting with a human. It particularly focus on the case where a mentor (human) provides demonstration on how to perform a task. Such an approach is also known as Programming from Demonstration (PbD) or Imitation Learning. 
 				
-				\paragraph{} LfD mostly lies on the principle that the learning robot can be taught new tasks by end-users, without having to be programmed again. We therefore are dealing with robot that are able to generalize from demonstration, be it only to understand what is the task that they must learn. They are many underlying problematics and opened questions on the subject, detailed in \cite{Billard2016}.
+				\paragraph{} LfD mostly lies on the principle that the learning robot can be taught new tasks by end-users, without having to be programmed again. We therefore are dealing with robots that are able to generalize from demonstration, be it only to understand what is the task that they must learn. They are many underlying problematics and opened questions on the subject, detailed in \cite{Billard2016}.
 				
-				\paragraph{}Many LfD approaches combine with reinforcement learning techniques, mostly because it is understood how LfD could easily speed-up the learning process by providing a finite or infinite set of good solutions. However, this assume some kind of reproducibility by the robot, as well as a similar enough context between demonstration and reproduction. \newline
-				Under such assumptions, RL techniques can use LfD to speed up their learning process and discover new control policies through a directed exploration of its action-state space. Indeed, demonstrations are used to guide the RL algorithm exploration, reducing the time and iterations needed for an agent to discover a new control policy, and eventually overcoming the teacher's apparent policy sub-optimalities. 
+				\paragraph{}Many LfD approaches are combined with reinforcement learning techniques. This is mostly related to the understanding that demonstrations can easily speed-up the reinforcement learning process by providing a finite or infinite set of good solutions. However, this assume some kind of reproducibility by the robot, as well as a similar enough context between demonstration and reproduction. \newline
+				Under such assumptions, reinforcement learning techniques can use LfD to speed up their process and discover new control policies through a directed exploration of its action-state space. Indeed, demonstrations are used to guide the reinforcement learning algorithm's exploration, reducing the time and iterations needed for an agent to discover a new control policy, and eventually overcoming the teacher's  policy sub-optimalities. 
 				
 				\paragraph{} They are many ways of performing such a demonstration-based learning. We remind here a few of them, taken from \cite{argall2009survey}, all related to Imitation Reinforcement Learning (IRL) : 
 				\begin{itemize}
 					\item policy derivations techniques : directly approximate the robot's mapping from state to action by reproducing and generalizing the teacher's one. 
 					\item use demonstration data to learn a model from the world's dynamic (or transition probability model) to compute the optimal policy (see \cite{price2003accelerating}). 
-					\item use demonstration data and additional user intention to learn the rule that associate a set of pre and post-condtions which each action as well as a sparse transition model to plan for actions. 
+					\item use demonstration data and additional user intention to learn the rule that associate a set of pre and post-conditions which each action as well as a sparse transition model to plan for actions. 
 				\end{itemize}
 				
 				\paragraph{} The framework we described hereinbefore can easily be extended to more than one teacher. Moreover, such teachers can actually be other learning algorithms with different levels of training. Quickly, the problem drifts toward the underlying issue of performing transfer skill between agents. As this will also be tackled during this project, the next section reminds a few useful facts about the theory of transfer learning. 
@@ -78,9 +78,9 @@
 				\paragraph{} All those metrics actually compared different aspects of how well a RL algorithm learns. Comparing two reinforcement learning methods is actually still an open question, and hence we'll need to address several of those metrics to decide on the wellness of our derived TL methods. 
 			}
 		}
-		\section{Proposed approach}
+		\section{Methodology}
 		{
-			\paragraph{} A reinforcement learning approach makes a lot of sense in our situation. The next chapter of this report is dedicated to derive some background on this framework, therefore we will hereinafter only describe our proposed approach of imitation learning with a reinforcement learning formulation. 
+			\paragraph{} As stated before, reinforcement learning provide an agreeable framework regarding our problem.  The next chapter of this report is dedicated to remind part of the theory behind this framework.  
 			
 			\paragraph{} In the most general case, we will consider the teacher's demonstrations to be a bijection between the state space $\mathcal{S}$ of the robot and its action set $\mathcal{A}(s)$, $\forall s\in\mathcal{S}$, denoted $\pi_m$ : 
 			\begin{equation}
@@ -89,12 +89,12 @@
 						     s &\to a_m(s) 
 				\end{aligned}
 			\end{equation}
-			where $a_m(s)$ is the \emph{recommended action} of the mentor at state $s$. Some other specifications could be brought later on - like considering that the mentor's recommandations don't cover the whole state space, or introducing \emph{inhomogeneous settings}. Given those informations, we want to come up with a learning algorithm that comes up with its own mapping $\pi$, by observing $\pi_m$ and eventually becoming better (we will see later how we define that notion) that its mentor at the demonstrated task. 
-			
+			where $a_m(s)$ is the \emph{recommended action} of the mentor at state $s$. Some other specifications could be brought later on - like considering that the mentor's recommandations don't cover the whole state space, or introducing \emph{inhomogeneous settings}.\newline
+			 Given this information, we want to design a learning algorithm that comes up with its own mapping $\pi$, by observing $\pi_m$ and eventually becoming better (we will see later how we define that notion) that its mentor at the demonstrated task. 
 
-			\paragraph{} Practically speaking, we are going to start with a fairly simple environment and explicit task in order to address the problem of compliance in learning from a teacher. We hope that a simple enough state space will allow us to better understand how compliance in learning by demonstration should be tackled with a reinforcement learning formulation.  We also hope we would be able to generalize to more complex situations once the understanding on a simple but generic model is mastered. 
+			\paragraph{} To grasp ideas and intuitions about a compliant-based imitation learning method, we are going to start with a fairly simple environment and an explicit task. We hope that a simple enough state space will allow us to better understand how compliance in learning by demonstration should be tackled with a reinforcement learning formulation.  We also hope we would be able to generalize to more complex situations once the understanding on a simple but generic model is mastered. 
 			
-			\paragraph{} Hence, after defining a simple two dimensional grid-world state space with a simple action set, we will quickly study how well the different classical reinforcement learning policy search algorithms performs on such a space. Once this done, we will introduce a new exploration policy, based on the learned confidence the learner has in its teacher and compare its efficiency with the latter algorithms. We will also focus on the relation between the learner and the prior information on its tasks it gains through its mentors recommandation. Especially, we will study how well a learner can overcome its mentor own sub-optimality. 
+			\paragraph{} Hence, after defining a simple two dimensional grid-world state space with a simple action set, we will quickly study how well the different classical reinforcement learning policy search algorithms performs on such a space. We will then introduce a new exploration policy, based on the confidence the learner has in its teacher and compare its efficiency with the latter algorithms. We will also focus on the relation between the learner and the prior information that its mentor's recommandations represent. Especially, we will study how well a learner can overcome its mentor own sub-optimality, focusing on largely suboptimal mentors. 
 		}
 	}
 	\newpage
@@ -103,7 +103,7 @@
 	{
 		\section{Formulation}
 		{
-			\subsection{Notations and first definitions}
+			\subsection{Definitions}
 			{
 				\paragraph{} Reinforcement learning is a framework in which an \emph{agent} (or a \emph{learner}) learns its actions from interaction with its environment. The environment generates scalar values called \emph{rewards}, that the agent is seeking to maximize over time. 
 			
@@ -385,7 +385,7 @@
 			\paragraph{} We hereinafter describe two grid-world state spaces, on which we will apply the learning rule derived in the latest section. Such example are trivial and are displayed here just to show convergence and behavior of the different algorithms. 
 			
 			\paragraph{} We'll consider the two following state space : 
-			\begin{figure}[h!]
+			\begin{figure}[ht!]
 				\begin{minipage}{0.45\linewidth}
 					\includegraphics[width=\linewidth]{free_grid}
 					\caption{The \emph{free\_grid} state space}
@@ -407,7 +407,7 @@
 					\text{ If } \max_{s\in\mathcal{S}} \vert V_{k+1}(s) - V_k \vert < \delta \text{ then stop}
 				\end{equation}
 				
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 				\begin{minipage}{0.45\linewidth}
 					\includegraphics[width=\linewidth]{free_grid_bellman_policy}
 					\caption{The \emph{free\_grid} learned optimal policy}
@@ -419,7 +419,7 @@
 				\end{minipage}
 				\end{figure}
 				
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 				\begin{minipage}{0.45\linewidth}
 					\includegraphics[width=\linewidth]{free_grid_bellman_lc}
 					\caption{The \emph{free\_grid} value iteration learning curve}
@@ -444,7 +444,7 @@
 				We'll tune the distribution's temperature $\tau$ to zero, in order to converge toward the greedy policy w.r.t the learned action-value function. 
 				
 				\paragraph{} Following this strategy and tuning our learning rate to comply with the stochastic approximation conditions, we obtain the following learning curves. Again, our stopping criterion addresses the \emph{maximum change in the acton-value function over all the trajectories of a mini-batch}. 
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 					\begin{minipage}{0.4\linewidth}
 						\includegraphics[width=\linewidth]{sarsa_learning_curve_free_grid}
 						\caption{Learning curve for SARSA on \emph{free\_grid}}
@@ -460,7 +460,7 @@
 			\subsection{Q-learning solving}
 			{
 				\paragraph{} We display here the learning curves for the \emph{bar\_grid} state space using Q-learning. Again, the algorithm manages to learn the optimal policy and the right action-value functions. We use Gibbs sampling for the behavior policy, without any tuning for the temperature (the behavior policy doesn't need to be greedy in limit). The learning curves obtained are given hereinafter.
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 					\begin{minipage}{0.4\linewidth}
 						\includegraphics[width=\linewidth]{bargrid_ql_learning_curve}
 						\caption{Learning curve for Q-learning on \emph{bar\_grid}}
@@ -479,11 +479,11 @@
 	\chapter{Compliant-based reinforcement learning}
 	\chaptermark{Compliant RL}
 	{
-		\section{Problem selection}
+		\section{Environment selection}
 		{
-			\paragraph{} With our approach, we wish to tackle two topics : on one hand, we wish to display a imitation based learning framework that \emph{accelerate} the learning process. Also, we wish to have a shifting compliance based behavior so that an agent can \emph{overtake a suboptimal teacher}. To test the effectiveness of the solutions we would propose, we decided to provide ourself with a model that would stay fixed all along the experiments, in order to compare the different algorithms we could come up with. 
+			\paragraph{} With our approach, we wish to tackle two topics : on one hand, we wish to display a imitation based learning framework that \emph{accelerate} the learning process. Also, we wish to have a shifting compliance based behavior so that an agent can a suboptimal teacher. To test the effectiveness of the solutions we would propose, we decided to provide ourself with a model that would stay fixed all along the experiments, in order to compare the different algorithms we could come up with. 
 			
-			\paragraph{} We therefore needed to provide an environment that, with the algorithms described before, cannot solve its MDP quickly, and can sometimes get stuck in local minima. We chose the state space displayed in figure (\ref{fig::maze_display}). In this environment, all black cells are obstacles. They give out highly negative rewards ($r=-10$). Whenever an agent take the action to enter such a cell, it immediately perceives the negative reward but stays in its current cell. The only positive reward in this environment is at the middle of the grid ($r=10$), the only terminal state. Any trajectory of the learner starts at one of the corner of the grid (green cells), and every step spent on a non-terminal cell gives out a small negative reward ($r=-0.1$). The environment is stochastic, with the transition probability model : 
+			\paragraph{} We designed the state space displayed in figure (\ref{fig::maze_display}). In this environment, all black cells are obstacles. They give out highly negative rewards ($r=-10$). Whenever an agent take the action to enter such a cell, it immediately perceives the negative reward but stays in its current cell. The only positive reward is at the middle of the grid ($r=10$), the only terminal state. Any episode starts at one of the corner of the grid (green cells), and every step spent on a non-terminal cell gives out a small negative reward ($r=-0.1$). The transitions are stochastic, with the transition probability model : 
 			\begin{equation}
 				s' = \left\{ 
 					\begin{aligned}
@@ -491,9 +491,10 @@
 						&s'' \neq a(s) \text{ otherwise, uniformly sampled}
 					\end{aligned}\right.
 			\end{equation}
-			 It is big enough for the usual algorithms to learn rather slowly, even if they are greatly enhanced by the use of eligibility traces. Also, all tested algorithms (SARSA, Q-learning, SARSA($\lambda$) and Watkins Q($\lambda$)), because they do not perform infinite exploitation / exploration moves, renders slightly suboptimal policies.
+			 
+			 \paragraph{} This state space is big enough for the usual algorithms to learn rather slowly, even if they are greatly enhanced by the use of eligibility traces. Also, all tested algorithms (SARSA, Q-learning, SARSA($\lambda$) and Watkins Q($\lambda$)), because they do not perform infinite exploitation / exploration moves, renders slightly suboptimal policies. 
 			
-			\begin{figure}[h!]
+			\begin{figure}[ht!]
 				\begin{minipage}{0.45\linewidth}
 					\includegraphics[width=\linewidth]{maze_grid}
 					\caption{The \emph{maze\_grid} state space}
@@ -507,7 +508,7 @@
 				\end{minipage}
 			\end{figure}
 				
-			
+			\paragraph{} If we go back at one of our motivating example (robot grasping an object), we could easily draw parallels between such an example and the grid environment we just presented. Indeed, we could imagine a teacher providing a demonstration that borders the obstacle. Because the learner suffers a (slightly) stochastic dynamic, this would indeed be a largely suboptimal solution, since large negative rewards will be likely to occur during the learning. However, the demonstration contains a fairly important demonstration, that is the direction to follow to reach the center of the grid. 
 						
 			\paragraph{} Figure (\ref{fig::comp_maze}) displays the convergence (expressed as average reward on minibatch) for Qlearning, Sarsa($\lambda$), Sarsa(0) and Watkins Q($\lambda$). By average reward on minibatch, we mean that at every iteration, the reward is average around a given number of trajectories, following the same \emph{exploratory} policy. This allows to reduce the stochasticity of trajectories while learning and give a smoother estimation of how well the algorithm is learning. As a way of comparing them to the optimal and random policies, we also plot the average rewards perceived by the latest along many trajectories. \newline
 For all the learning algorithms tested, we used optimistic action-value initialisation to promote exploration. This explains why many negative rewards are perceived in the beginning. 
@@ -519,15 +520,13 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\label{fig::comp_maze}
 				\end{center}
 			\end{figure}
-		
-			\paragraph{} As explained before, this environment is considered as a base line in all that follows, and will serve as a sandbox model where we will test our different methods for an imitation learning based approach. 
 		}
 		
-	\section{First naive approaches}
+	\section{Naive learners}
 	{
 		\subsection{Constant compliance}
 		{
-			\paragraph{} In order to grasp as well as possible some intuition behind a compliance-based learning, we decided to first implement a really simple method, which consist in following the teacher's recommandation with a constant probability $p$ (close from $1$), defined globally (the same for all the states). More formally, the \emph{action selection} process is defined as follows. For all $s\in\mathcal{S}$ 
+			\paragraph{} In order to grasp as well as possible some intuition behind a compliance-based learning, we decided to first implement a fairly naive method, which consist in following the teacher's recommandation with a constant probability $p$ (close from $1$), defined globally (the same for all the states). More formally, the \emph{action selection} process is defined as follows. For all $s\in\mathcal{S}$ 
 			\begin{equation}
 				a = \left\{
 				\begin{aligned}
@@ -541,13 +540,13 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + Q(s',a') - Q(s,a) \right]
 			\end{equation}
 			
-			\paragraph{} Therefore, the learner \emph{complies} with the teacher with probability $p$, and decide to choose its own action (that \textbf{could include} $\pmb{a_m}$) with probability $1-p$. Only the action selection (hence the \emph{exploratory policy}) is impacted by the presence of the mentor. 
+			\paragraph{} Therefore, the learner \emph{complies} with the teacher with probability $p$, and decide to choose its own action (that \textbf{could include} $\boldsymbol{a_m}$) with probability $1-p$. Only the action selection (hence the \emph{exploratory policy}) is impacted by the presence of the mentor. 
 			
 			\paragraph{} The intuition behind this approach is rather simple : we direct the exploration of the learner with the recommandations from the teacher, while still enabling it to search around them, based on its current Q-values. The softmax based exploration is regulated by a temperature factor, making it greedy in limit. 
 			
 			\paragraph{} The figures (\ref{fig::comp_opt_verynaive}) and (\ref{fig::comp_subopt220_verynaive}) display the learning obtained (cumulated rewards averaged over mini-batches) when fed with, respectively, the optimal policy for the MDP and a slightly suboptimal one. 
 			
-			\begin{figure}[h!]
+			\begin{figure}[ht!]
 				\begin{minipage}{0.5\linewidth}
 					\begin{center}
 						\includegraphics[width=0.9\linewidth]{very_naive_opt}
@@ -566,7 +565,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	
 			\paragraph{} Figure (\ref{fig::comp_opt_verynaive}) shows that from its exploration, the learner is able to quickly learn his way thanks to the optimal mentor. As expected, it eventually follows the mentor's action, wether it complies or not, since the recommended action holds the best action-values. On the other hand, figure (\ref{fig::comp_subopt220_verynaive}) : because of the high confidence the learner initially have in its mentor, its is never able to reach optimal performance, and the policy its renders actually mimic its mentor suboptimal one. Still, one could expect the learned policy to be slightly better than its suboptimal teacher's one, even if not optimal. However, achieving this comes with a lot of effort in the tuning of $p$ and of the softmax distribution temperature decrease coefficient. 
 	
-			\begin{figure}[h!]
+			\begin{figure}[ht!]
 				\begin{center}
 					\includegraphics[width=0.7\linewidth]{subopt_policy_block}
 					\caption{An exemple of suboptimal mentor policy that doesn't always lead to the positive reward}
@@ -581,7 +580,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		{
 			\paragraph{} One of the downside of the constant compliance approach is that the exploratory behavior is always biased by the mentor's recommandation. This breaks the need of this policy to be \emph{greedy in limit} (which is a specification of the SARSA algorithm). In the case of a sub-obptimal mentor, this means that the optimal behavior could never be reached. 
 			
-			\paragraph{} We now decide to comply with SARSA's exigence to be greedy in limit. Therefore, $p$ is \emph{constantly decreased along the learning procedure} : 
+			\paragraph{} We now decide to comply with SARSA's exigence policy we are learning on to be greedy in limit. Therefore, $p$ is \emph{constantly decreased along the learning procedure} : 
 			\begin{equation}
 				p_{t+1} = \beta p_{t}
 			\end{equation}
@@ -589,7 +588,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			
 			\paragraph{} The action-selection is therefore biased by the mentor's recommandation in the beginning of the learning only, and slowly decides to take its own choices, based on its current Q-values estimates. This approach sounds more promising as the learner is more likely to quickly discover the location of high rewards (following the teacher policy with $p$ close to 1), and will then makes it own exploration along those trajectory, to end up in a setting where the teacher's actions are now longer considered. 
 		
-			\begin{figure}[h!]
+			\begin{figure}[ht!]
 				\begin{minipage}{0.5\linewidth}
 					\begin{center}
 						\includegraphics[width=0.95\linewidth]{comp_naive_compliance_120}
@@ -607,24 +606,13 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\end{figure}
 			
 			\paragraph{} Figures (\ref{fig::comp_naive_compliance_120}) and (\ref{fig::comp_naive_compliance_50}) display the result on two sub-optimal policies, that were derived from the Q-values learned at a given moment (denoted through a red square) in a learning process. They show that with this approach, while the learner is compliant with the teacher, it steadily increases its accumulated reward thanks to its exploratory actions, where he discard the teacher's recommandation. However, it then comes to a plateau (or even an undershoot) when the guidance by the teacher becomes too weak as $p$ reaches a critical level. The learner then mostly relies on its exploratory actions (which volatility are guided by its learning processus' temperature) to explore the space where the teacher's action never took it before. Once it has somehow learnt the action value function related to this part of its state space, and as its temperature goes down, the learner's accumulated reward goes up until it reaches the level of the optimal policy. 
-			
-			\paragraph{} With this technique, the learner is therefore able to learn the optimal policy even if following its teacher recommandation never takes it to the target. It is interesting to see, in such case, what policy the learner actually learns. In figure (\ref{fig::learnt_from_mentor}), we display the policy learnt from the mentor's policy showed in figure (\ref{subopt_policy_block}). One can notice that the learner actually learns to avoid place where the mentor was wrong or created loops, and forks to part of the state space where the teacher was more accurate. 
-			
-			\begin{figure}[h!]
-				\begin{center}
-					\includegraphics[width=0.7\linewidth]{learnt_from_mentor}
-					\caption{Policy learnt from a suboptimal mentor}
-					\label{fig::learnt_from_mentor}
-				\end{center}
-			\end{figure}
-
 
 		}		
 		
 		\paragraph{} If this approach seems to work relatively well, there are still some critical downsides to it. First of all, a lot of tuning is required in order to find the hyper-parameters ($p_0$, $\beta$, temperature evolution, ..) that lead to a fast learning. Also, there is an undershoot in the learning that seems to slow it down, due to the exploring phase that happens when $p$ becomes too low.  Such exploration could be avoided or reduced if the learner is able to figure out quickly that indeed, the mentor was right in its recommandation.
 	}
 	
-	\section{Adaptative compliance approach}
+	\section{Adaptative compliance learners}
 	{	
 	
 		\paragraph{} Up to this point, it makes sense to somehow \emph{learn} the optimal value of the confidence parameter $p$, so that we don't have to manually tune its evolution, and so that it can store how right the teacher recommandations are. We hereinafter describe two method which attempt to do so. Their respective experimental results as well as further discussion will be found in the chapter (\ref{chap::res}).  
@@ -742,7 +730,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			{
 				\paragraph{} Figures (\ref{fig::ac_il_subopt_120}) and (\ref{fig::ac_il_subopt_50}) show the learning curves for an agent using the actor-critic compliant-based method, with two different suboptimal teachers. As before, both of them were generated by observing the Q-values of a "normal" learner (without mentor) and by creating the greedy policy with respect to them.  
 				
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.95\linewidth]{ac_il_subopt_120}
@@ -765,7 +753,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			{
 				\paragraph{} It would be interesting to see what is the \emph{posterior distribution} of the $p(s)$ , $s\in\mathcal{S}$ We expect our final policy to be greedy, and hence the posterior distribution of the compliance term to be sharply peaked around $0$ or $1$, with proportion given by how good the mentor is.. Figures (\ref{fig::post_mean_120}) and (\ref{fig::post_mean_50}) display the histogram of the repartition of the mean of $p(s)$, $s\in\mathcal{S}$ (again, we approximate the Beta distribution by its mean to have an understandable visualization), for two different mentors (figure (\ref{fig::post_mean_120}) uses the mentor of (\ref{fig::ac_il_subopt_120}) and figure (\ref{fig::post_mean_50}) the mentor of (\ref{fig::ac_il_subopt_50})) . As expected, most of the means are either close to $0$ and $1$, and they are more means close to 0 (poor confidence) when using the second mentor that is far worse than the first. 
 				
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.95\linewidth]{post_mean_120}
@@ -784,7 +772,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				
 				\paragraph{} Also, to better understand how this algorithm work, being able to visualize the areas where the learner rejects or listen to its mentor. We expect the learner to discard the mentor's recommandation where those are wrong, and to trust its mentor where it is right. Figures (\ref{fig::heatmap_confidence_120}) and (\ref{fig::heatmap_confidence_50}) display, for two different mentors (the same two ones as we just used), the mentor's policy and the heat-map of the confidence the learner as acquired with respect to its teacher's recommandation at the end of the learning. 
 				
-				 \begin{figure}[h!]
+				 \begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.95\linewidth]{heatmap_confidence_120}
@@ -817,7 +805,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			{
 				 \paragraph{} Figures (\ref{fig::av_il_subopt_120}) and (\ref{fig::av_il_subopt_50}) show the learning curves for an agent using the action-value compliant-based method, with two different suboptimal teachers. As before, both of them were generated by observing the Q-values of a "normal" learner (without mentor) and by creating the greedy policy with respect to them.
 				 
-				 \begin{figure}[h!]
+				 \begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.95\linewidth]{av_il_subopt_120}
@@ -841,7 +829,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\paragraph{} Similar plots of posterior result as for the actor-critic can now be drawn. Figures (\ref{fig::post_des_120}) and (\ref{fig::post_des_50}) display the histograms distributions for the action 'listen' and 'discard' (computed by the sigmoid value at end temperature). Figures (\ref{fig::heatmap_des_120}) and (\ref{fig::heatmap_des_50}) show the learnt decision over the action-state space. 
 				
 				
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.95\linewidth]{pos_des_120}
@@ -859,17 +847,17 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\end{figure}
 				
 				
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
-							\includegraphics[width=0.95\linewidth]{heatmap_decision_120}
+							\includegraphics[width=0.9\linewidth]{heatmap_decision_120}
 							\caption{Learnt decisions : green arrows show listening, red arrows discarding}
 							\label{fig::heatmap_des_120}
 						\end{center}
 					\end{minipage}
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
-							\includegraphics[width=0.95\linewidth]{heatmap_decision_50}
+							\includegraphics[width=0.9\linewidth]{heatmap_decision_50}
 							\caption{Learnt decisions : green arrows show listening, red arrows discarding}
 							\label{fig::heatmap_des_50}
 						\end{center}
@@ -888,7 +876,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			{
 				\paragraph{} Let us now compare the different compliant learners between them. Figures (\ref{fig::compliant_comp_120}) and (\ref{fig::compliant_comp_50}) display the learning curves derived in the previous section altogether. If the $\beta$-implicit and the explicit compliance methods seem to behave better than the vanishing learner, it seems that the speed of convergence of both algorithm tends to equalize as the teacher sub-optimality is strong. This behavior is confirmed by figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}). 
 				
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\includegraphics[width=\linewidth]{fullcomp_subopt_120}
 						\caption{Learning curves for a first teacher}
@@ -901,9 +889,9 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar value is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence for all methods seem to equalize as the optimality of the teacher decreases. However, the average accumulated reward until convergence is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. 
+				\paragraph{} In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar value is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence for all methods seem to equalize as the optimality of the teacher decreases. However, the average accumulated reward until convergence is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. Hence, if our algorithms can't always speed up the learning (compared to a naive compliant learner), they \emph{provide better behaving agents}. 
 				
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\includegraphics[width=\linewidth]{tt_metric}
 						\caption{Time to convergence metric}
@@ -923,7 +911,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			
 			\paragraph{} Figures (\ref{fig::loner_comp_50}) and (\ref{fig::loner_comp_120}) display the learning curves of the compliant learner opposed with, respectively, TD(0) learners and TD($\lambda$) learners. As one can see, our algorithms performs way better than TD(0) learner, even with largely suboptimal teachers. However, they performed as well or even slight worse than TD($\lambda$) learners. This phenomenon is mostly due to the fact the behind its action selection, our learners update their Q-values thanks to SARSA updates (on-policy). Generalizing to an off-policy update, and eventually by making use of eligibility traces will most likely improve the learning speed and beat TD($\lambda$) learners. 
 							
-				\begin{figure}[h!]
+				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\includegraphics[width=\linewidth]{loner_comp_50}
 						\caption{Method comparaison (teacher optimality : 50\%)}

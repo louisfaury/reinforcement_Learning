@@ -10,6 +10,7 @@ close all;
 clear all;
 addpath(genpath('misc/mc_data'));
 addpath(genpath('misc'));
+addpath(genpath('utils'));
 
 %% some important csts
 rand_ar = -69.1052;
@@ -53,18 +54,18 @@ load('sarsa_ar'); sarsa_ar = cum_reward_per_episode;
 load('ql_ar'); ql_ar = cum_reward_per_episode;
 
 %% First metric : iter to threshold (averaged cumulative reward)
-opt_threshold = 5.3;
-threshold_2 = 4.5;
+opt_threshold = 4.9;
+threshold_2 = 4.9;
 naive_sup_threshold = (arr_naive_opt<=opt_threshold);
 for i=1:fold
-   naive_opt_index_arr(i,1) = size(find(arr_naive_opt(:,i)<=opt_threshold),1);
-   ac_opt_index_arr(i,1)    = size(find(arr_ac_opt(:,i)<=opt_threshold),1);
-   av_opt_index_arr(i,1)    = size(find(arr_av_opt(:,i)<=opt_threshold),1);
-   naive_1_index_arr(i,1)   = size(find(arr_naive_1(:,i)<=opt_threshold),1);
-   ac_1_index_arr(i,1)      = size(find(arr_ac_1(:,i)<=opt_threshold),1);
-   av_1_index_arr(i,1)      = size(find(arr_av_1(:,i)<=opt_threshold),1);
-   naive_2_index_arr(i,1)   = size(find(arr_naive_2(:,i)<=threshold_2),1);
-   ac_2_index_arr(i,1)      = size(find(arr_ac_2(:,i)<=threshold_2),1);
+    naive_opt_index_arr(i,1) = size(find(arr_naive_opt(:,i)<=opt_threshold),1); 
+    ac_opt_index_arr(i,1)    = size(find(arr_ac_opt(:,i)<=opt_threshold),1);
+    av_opt_index_arr(i,1)    = size(find(arr_av_opt(:,i)<=opt_threshold),1);
+    naive_1_index_arr(i,1)   = size(find(arr_naive_1(:,i)<=opt_threshold),1);
+    ac_1_index_arr(i,1)      = size(find(arr_ac_1(:,i)<=opt_threshold),1);
+    av_1_index_arr(i,1)      = size(find(arr_av_1(:,i)<=opt_threshold),1);
+    naive_2_index_arr(i,1)   = size(find(arr_naive_2(:,i)<=threshold_2),1);
+   ac_2_index_arr(i,1)      = size(find(arr_ac_2(:,i)<=4.6),1);
    av_2_index_arr(i,1)      = size(find(arr_av_2(:,i)<=threshold_2),1);
    naive_3_index_arr(i,1)   = size(find(arr_naive_3(:,i)<=threshold_2),1);
    ac_3_index_arr(i,1)      = size(find(arr_ac_3(:,i)<=threshold_2),1);
@@ -120,15 +121,15 @@ plot([0 1 2 3],[naive_opt_index, naive_1_index, naive_2_index, naive_3_index],'C
 plot([0 1 2 3],[ac_opt_index, ac_1_index, ac_2_index, ac_3_index],'Color',[0.2,0.4,1]);
 plot([0 1 2 3],[av_opt_index, av_1_index, av_2_index, av_3_index],'Color',[0.2,0.8,0.4]);
 
-h = legend([a,b,c],'Vanishing','Implicit $\beta$','Explicit');
+h = legend([a,b,c],'Vanishing','Implicit $\beta$','Explicit','location','southeast');
 set(h,'interpreter','latex')
-axis([-0.5 3.5 10 240]);
+axis([-0.5 3.5 0 300]);
 xticks([0 1 2 3])
 xticklabels({'100%',strcat(num2str(round(100*mentor_1_per)),'%'),strcat(num2str(round(100*mentor_2_per)),'%'),strcat(num2str(round(100*mentor_3_per)),'%')})
 xlabel('Mentor optimality','FontSize',14)
 grid minor;
-ylabel('Iterations to threshold','FontSize',14)
-title('Time to threshold 10-fold statistics');
+ylabel('Time to convergence','FontSize',14)
+title('Time to convergence 10-fold statistics');
 
 
 %% Second metric : Total reward (averaged cumulative reward)
