@@ -612,7 +612,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		{
 			\paragraph{} One of the downside of the constant compliance approach is that the exploratory behavior is always biased by the mentor's recommandation. This breaks the need of this policy to be \emph{greedy in limit} (which is a specification for SARSA algorithm to converge). In the case of a sub-obptimal mentor, this means that the optimal behavior could never be reached. 
 			
-			\paragraph{} We now decide to comply with the need to be greedy in limit. Therefore, we decide to set $p$ to be \emph{constantly decreased along the learning procedure} : 
+			\paragraph{} We now decide to comply with the need to be greedy in limit. Therefore, we decide to set $p$ to be \emph{constantly decreasing along the learning procedure} : 
 			\begin{equation}
 				p_{t+1} = \beta p_{t}
 			\end{equation}
@@ -624,20 +624,20 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\begin{minipage}{0.5\linewidth}
 					\begin{center}
 						\includegraphics[width=0.95\linewidth]{comp_naive_compliance_120}
-						\caption{Constantly decreasing compliance learning, $\beta = 0.99$}
+						\caption{Vanishing compliance, $\beta = 0.99$}
 						\label{fig::comp_naive_compliance_120}
 					\end{center}
 				\end{minipage}
 				\begin{minipage}{0.5\linewidth}
 					\begin{center}
 						\includegraphics[width=0.95\linewidth]{comp_naive_compliance_50}
-						\caption{Constantly decreasing compliance learning, $\beta = 0.97$}
+						\caption{Vanishing compliance, $\beta = 0.97$}
 						\label{fig::comp_naive_compliance_50}
 					\end{center}
 				\end{minipage}
 			\end{figure}
 			
-			\paragraph{} Figures (\ref{fig::comp_naive_compliance_120}) and (\ref{fig::comp_naive_compliance_50}) display the result on two sub-optimal policies, that were derived from the Q-values learned at a given moment (denoted through a red square) in a learning process. They show that with this approach, while the learner is compliant with the teacher, it steadily increases its accumulated reward thanks to its exploratory actions, where he discard the teacher's recommandation. However, it then comes to a plateau (or even an undershoot) when the guidance by the teacher becomes too weak as $p$ reaches a critical level. The learner then mostly relies on its exploratory actions (which volatility are guided by its learning processus' temperature) to explore the space where the teacher's action never took it before. Once it has somehow learnt the action value function related to this part of its state space, and as its temperature goes down, the learner's accumulated reward goes up until it reaches the level of the optimal policy. 
+			\paragraph{} Figures (\ref{fig::comp_naive_compliance_120}) and (\ref{fig::comp_naive_compliance_50}) display the result on two sub-optimal policies, that were derived from the Q-values learned at a given moment (denoted through a red square) in a learning process. They show that with this approach, while the learner is compliant with the teacher, it steadily increases its accumulated reward thanks to its exploratory actions. However, it then comes to a plateau (or even an undershoot) when the guidance by the teacher becomes too weak as $p$ reaches a critical level. The learner then mostly relies on its exploratory actions (which volatility are guided by its temperature coefficient) to explore new regions of the state space. Once it has somehow learnt the action value function related to this part of its state space, and as its temperature goes down, the learner's accumulated reward goes up until it reaches the level of the optimal policy. 
 
 		}		
 		
@@ -647,11 +647,13 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	\section{Adaptative compliance learners}
 	{	
 		\label{section::adaptative_learners}
-		\paragraph{} Up to this point, it makes sense to somehow \emph{learn} the optimal value of the confidence parameter $p$, so that we don't have to manually tune its evolution, and so that it can store how right the teacher recommandations are. We hereinafter describe two method which attempt to do so. Their respective experimental results as well as further discussion will be found in the chapter (\ref{chap::res}).  
+		\paragraph{} Up to this point, it makes sense to somehow \emph{learn} the optimal value of the confidence parameter $p$, so that we don't have to manually tune its evolution, and so that it can store how right the teacher recommandations are. Ideally, we would like $p$ to be near $0$ when the teacher provide a suboptimal action and $1$ when the recommended action is sampled from the optimal policy. The underlying problem is therefore to infer the optimality of the teacher in different regions of the state space. 
+		
+		\paragraph{}We hereinafter describe two methods which attempt to do so. Their respective experimental results as well as further discussion will be found in chapter (\ref{chap::res}).  
 		
 		\subsection{Implicit $\beta$-compliance}
 		{
-			\paragraph{}  Let us define the \emph{compliance} term $p$ locally at every state of the state space. For each $s\in\mathcal{S}$, $p(s)$ is given a Beta prior : $p(s)\sim \beta(\alpha(s),\beta(s))$ and represents the trust we have in a mentor's recommandation at state $s$. The initial values $\alpha_0$ and $\beta_0$ define the initial prior belief we have over $p$ (for instance, $\alpha=0.5$ and $\beta = 0.055$ define a prior belief that the teacher is most probably right). 
+			\paragraph{}  Let us define the \emph{confidence} term $p$ locally for every state of the state space. For each $s\in\mathcal{S}$, $p(s)$ is given a Beta prior : $p(s)\sim \beta(\alpha(s),\beta(s))$ and represents the initial trust we have in a mentor's recommandation at state $s$. The initial values $\alpha_0$ and $\beta_0$ define the initial prior belief we have over $p$ (for instance, $\alpha=0.5$ and $\beta = 0.055$ define a prior belief that the teacher is most probably right). 
 			
 			\paragraph{} As in before, we perform a $\color{red}p$\textcolor{red}{\emph{-greedy policy}} with respect to the teacher recommandation : 
 			\begin{equation}
@@ -680,16 +682,15 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\end{equation}
 			The intuition behind this update rule is simple : if we see that the expected return for the mentor action increases (resp. decreases), then we increase (resp. decrease) $\alpha$ which results in a shift of $p$ toward a larger (resp. smaller) confidence. A similar reasoning holds for the $\beta$ term.  $\eps_t$ is the update rule's learning rate, which value and dynamic will be discussed later. 
 		
-			\paragraph{} The Q-values for the initial MDP are updated with SARSA algorithm, as it is usually done. Only the action selection is different (for instance, it will be in the usual case derived directly from the learned action function). 
 		}
 	
 		\subsection{Explicit compliance}
 		{
-			\paragraph{} We consider here a somewhat similar approach, where our listen vs discard exploration policy is computed according to the current estimated values of the actions \emph{'listen'} and \emph{'discard'}. Let us introduce the action spaces : 
+			\paragraph{} We consider here a somewhat similar approach, where our listen versus discard exploration policy is computed according to the current estimated values of the actions \emph{'listen'} and \emph{'discard'}. Let us introduce the action spaces : 
 			\begin{equation}
 				\forall s\in\mathcal{S}, \, \mathcal{A}_c(s) = \left\{ 'listen', \, 'discard'\right\}
 			\end{equation}
-			to which we assign the action values $Q_c(\cdot,l)$ and  $Q_c(\cdot,d)$ (where $l$ denotes the action of listening and $d$ the action of discarding the teacher recommendation). 
+			to which we assign the action values $Q_c(\cdot,l)$ and  $Q_c(\cdot,d)$ (where $'l'$ denotes the action of listening and $'d'$ the action of discarding the teacher recommendation). 
 			
 			\paragraph{} The exploration is done by computing a soft policy derived from $\{Q_c(s,l), Q_c(s,d)\}$ for all $s\in\mathcal{S}$. We do this using a Gibbs softmax distribution, which yields : 
 			\begin{equation}
@@ -701,13 +702,9 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 						\end{aligned}
 					\right.
 			\end{equation}
-			where $\sigma(\cdot)$ is the logistic sigmoid and $\tau$ is a temperate decreasing to $1$ (greedy policy in limit). 
+			where $\sigma(\cdot)$ is the logistic sigmoid and $\tau$ is a temperate coefficient decreasing to $0$ (greedy policy in limit). 
 			
-			\paragraph{} The update rule for the initial MDP is performed as usual, using TD updates : $\forall{(s,a)}\in\mathcal{S}\times\mathcal{A}(s)$
-			\begin{equation}
-				Q(s,a) \leftarrow (1-\alpha)Q(s,a) + \alpha \left[ r + \gamma Q(s',a')\right]
-			\end{equation}
-			After each of those update, we also make the following update : 
+			\paragraph{} After each SARSA update, we also make the following update : 
 			\begin{equation}
 				\label{eq::av_update_rule}
 				\left\{
@@ -733,7 +730,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	
 		\section{Implicit $\beta$-compliance}
 		{
-			\paragraph{} We hereinafter give some practical considerations for the actor-critic approach of compliance-based reinforcement learning, and discuss the experimental results we obtained. 
+			\paragraph{} We hereinafter give some practical considerations for the implicit $\beta$-compliance and explicit compliance methods, and discuss the experimental results we obtained. 
 			\subsection{Practical considerations}
 			{
 				\paragraph{} One of the main specification of the SARSA learning paradigm is that the exploration policy must be \emph{greedy in limit} so that a fixed point can emerge (hopefully the set of Q-values related to the optimal policy). In an actor-critic approach, the usual way to bring the \emph{critic} term in a stationary regime is to modify its learning rate to take the probability of taking an action into account (see \cite{Sutton98a}). \newline
@@ -760,7 +757,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			}
 			\subsection{Results}
 			{
-				\paragraph{} Figures (\ref{fig::ac_il_subopt_120}) and (\ref{fig::ac_il_subopt_50}) show the learning curves for an agent using the actor-critic compliant-based method, with two different suboptimal teachers. As before, both of them were generated by observing the Q-values of a "normal" learner (without mentor) and by creating the greedy policy with respect to them.  
+				\paragraph{} Figures (\ref{fig::ac_il_subopt_120}) and (\ref{fig::ac_il_subopt_50}) show the learning curves for an agent using the $\beta$-compliance, with two different suboptimal teachers. As before, both of them were generated by observing the Q-values of a "normal" learner (without mentor) and by creating the greedy policy with respect to them.  
 				
 				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
@@ -779,11 +776,11 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-			\paragraph{} The first remark we can make is that by learning the confidence, we were able  to avoid the undershoot that we observed for the constantly decreasing compliance (see figures (\ref{fig::comp_naive_compliance_120}) and (\ref{fig::comp_naive_compliance_50})). This results in a faster learning and more natural learning curve. The different methods will be further compared in (\ref{sec_method_comp}). 
+			\paragraph{} The first remark we can make is that by learning the confidence, we were able  to avoid the undershoot that we observed for the vanishing compliance method (see figures (\ref{fig::comp_naive_compliance_120}) and (\ref{fig::comp_naive_compliance_50})). This results in a faster learning and better behaving learning curves. The different methods will be further compared in (\ref{sec_method_comp}). 
 			}
 			\subsection{Discussion}
 			{
-				\paragraph{} It would be interesting to see what is the \emph{posterior distribution} of the $p(s)$ , $s\in\mathcal{S}$ We expect our final policy to be greedy, and hence the posterior distribution of the compliance term to be sharply peaked around $0$ or $1$, with proportion given by how good the mentor is.. Figures (\ref{fig::post_mean_120}) and (\ref{fig::post_mean_50}) display the histogram of the repartition of the mean of $p(s)$, $s\in\mathcal{S}$ (again, we approximate the Beta distribution by its mean to have an understandable visualization), for two different mentors (figure (\ref{fig::post_mean_120}) uses the mentor of (\ref{fig::ac_il_subopt_120}) and figure (\ref{fig::post_mean_50}) the mentor of (\ref{fig::ac_il_subopt_50})) . As expected, most of the means are either close to $0$ and $1$, and they are more means close to 0 (poor confidence) when using the second mentor that is far worse than the first. 
+				\paragraph{} It would be interesting to see what is the \emph{posterior distribution} of the $p(s)$ , $s\in\mathcal{S}$. We expect our final policy to be greedy, and hence the posterior distribution of the compliance term to be sharply peaked around $0$ or $1$, with proportion given by how good the mentor is.. Figures (\ref{fig::post_mean_120}) and (\ref{fig::post_mean_50}) display the histogram of the repartition of the mean of $p(s)$, $s\in\mathcal{S}$ (again, we approximate the Beta distribution by its mean to have an understandable visualization), for two different mentors (figure (\ref{fig::post_mean_120}) uses the mentor of (\ref{fig::ac_il_subopt_120}) and figure (\ref{fig::post_mean_50}) the mentor of (\ref{fig::ac_il_subopt_50})) . As expected, most of the means are either close to $0$ and $1$, and they are more means close to 0 (poor confidence) when using the second mentor that is far worse than the first. 
 				
 				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
@@ -802,7 +799,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} Also, to better understand how this algorithm work, being able to visualize the areas where the learner rejects or listen to its mentor. We expect the learner to discard the mentor's recommandation where those are wrong, and to trust its mentor where it is right. Figures (\ref{fig::heatmap_confidence_120}) and (\ref{fig::heatmap_confidence_50}) display, for two different mentors (the same two ones as we just used), the mentor's policy and the heat-map of the confidence the learner as acquired with respect to its teacher's recommandation at the end of the learning. 
+				\paragraph{} Also, to better understand how this algorithm works, it would be interesting to visualize the areas where the learner rejects or listen to its mentor. We expect the learner to discard the mentor's recommandations where those are wrong, and to trust its mentor where it is right. Figures (\ref{fig::heatmap_confidence_120}) and (\ref{fig::heatmap_confidence_50}) display, for two different mentors (the same two ones as we just used), the mentor's policy and the heat-map of the confidence the learner as acquired with respect to its teacher's recommandation at the end of the learning. 
 				
 				 \begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
@@ -821,7 +818,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} The first observation one can make is that most of the suboptimal mentor actions are indeed well classified by the learner (red arrows). Also, most of the actions leading to such actions are also classified as poor recommandation, because they have a tendency of leading to deadlocks, or suboptimal actions. On the other hand, some optimal actions are also classified as bad recommandations, as due to the greedisation, the learner will somehow prefer another equivalently optimal action. 
+				\paragraph{} The first observation one can make is that most of the suboptimal mentor actions are indeed well classified by the learner (red arrows). Also, most of the actions leading to such actions are also classified as poor recommandations, because they have a tendency of leading to deadlocks, or suboptimal actions.  
 			}
 		}
 		\section{Explicit compliance}
@@ -829,13 +826,13 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		
 			\subsection{Practical considerations}
 			{
-				\paragraph{} The implementation of this method is rather straight forward and contain no major difficulties. However, some hyper-parameters have to be tuned, like the two temperatures (one for the initial MDP, the other for the above action selection) as well as their dynamics, and the update rule of (\ref{eq::av_update_rule}). 
+				\paragraph{} The implementation of this method is rather straight forward and contains no major difficulties. However, some hyper-parameters have to be tuned, like the two temperatures (one for the initial MDP, the other for the above action selection) as well as their dynamics, and the update rule of (\ref{eq::av_update_rule}). 
 				
-				\paragraph{} In practice, this tuning is rather easy to perform, as long as one make sure that the initial value for $Q_c(s,l)$ and $Q_c(s,d)$ ($s\in\mathcal{S}$) don't absorb the observations but also retain some prior knowledge along the learning (the learning rate $\beta$ has to be related to those initial values in some way). 
+				\paragraph{} In practice, this tuning is rather easy to perform, as long as one make sure that the initial values for $Q_c(s,l)$ and $Q_c(s,d)$ ($s\in\mathcal{S}$) don't absorb the observations but also retain some prior knowledge along the learning (the learning rate $\beta$ has to be related to those initial values in some way). 
 			}
 			\subsection{Results}
 			{
-				 \paragraph{} Figures (\ref{fig::av_il_subopt_120}) and (\ref{fig::av_il_subopt_50}) show the learning curves for an agent using the action-value compliant-based method, with two different suboptimal teachers. As before, both of them were generated by observing the Q-values of a "normal" learner (without mentor) and by creating the greedy policy with respect to them.
+				 \paragraph{} Figures (\ref{fig::av_il_subopt_120}) and (\ref{fig::av_il_subopt_50}) show the learning curves for an agent using the action-value compliant-based method, with two different suboptimal teachers. 
 				 
 				 \begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
@@ -854,11 +851,11 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} As for the actor-critic method, we are able to reduce or even suppress the undershoot the constantly decreasing compliant approach displayed, and to obtain fast convergence. 				
+				\paragraph{} As for the $\beta$-implicit method, we are able to reduce or even suppress the undershoot that the vanishing compliance method displayed, and to obtain fast convergence. 				
 			}
 			\subsection{Discussion}
 			{
-				\paragraph{} Similar plots of posterior result as for the actor-critic can now be drawn. Figures (\ref{fig::post_des_120}) and (\ref{fig::post_des_50}) display the histograms distributions for the action 'listen' and 'discard' (computed by the sigmoid value at end temperature). Figures (\ref{fig::heatmap_des_120}) and (\ref{fig::heatmap_des_50}) show the learnt decision over the action-state space. 
+				\paragraph{} Similar plots of posterior result as for the actor-critic can now be drawn. Figures (\ref{fig::post_des_120}) and (\ref{fig::post_des_50}) display the histograms distributions for the action 'listen' and 'discard' (computed by the sigmoid value at end temperature). Figures (\ref{fig::heatmap_des_120}) and (\ref{fig::heatmap_des_50}) show the learnt decisions over the action-state space. 
 				
 				
 				\begin{figure}[ht!]
@@ -896,7 +893,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 			
-			\paragraph{} Again, one can see that most wrong recommandations are well-classified. However, this method as a tendency to consider as wrong action all trajectories in the mentor's policy leading to a sub-optimality. This as for consequence that the learner will try to always to go round the mentor's suboptimal recommandation, and sometime by making some detours. 
+			\paragraph{} Again, one can see that most wrong recommandations are well-classified. However, this method as a tendency to classify an action leading to a suboptimal sequence (in the mentor's policy) as a poor action. This as for consequence that the learner will try to always to go round the mentor's suboptimal recommandation, and sometime by making some detours. 
 			}
 		}
 		\section{Algorithms comparaison}
@@ -906,7 +903,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			
 			\subsection{Compliant learners}
 			{
-				\paragraph{} Let us now compare the different compliant learners between them. Figures (\ref{fig::compliant_comp_120}) and (\ref{fig::compliant_comp_50}) display the learning curves derived in the previous section altogether. If the $\beta$-implicit and the explicit compliance methods seem to behave better than the vanishing learner, it seems that the speed of convergence of both algorithm tends to equalize as the teacher sub-optimality is strong. This behavior is confirmed by figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}). 
+				\paragraph{} Let us now compare the different compliant learners between them. Figures (\ref{fig::compliant_comp_120}) and (\ref{fig::compliant_comp_50}) display the learning curves derived in the previous section altogether. If the $\beta$-implicit and the explicit compliance methods seem to behave better than the vanishing learner, it seems that the speed of convergence of all three algorithms tends to equalize as the teacher sub-optimality grows. This behavior is confirmed by figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}). 
 				
 				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
@@ -921,7 +918,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar value is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence for all methods seem to equalize as the optimality of the teacher decreases. However, the average accumulated reward until convergence is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. Hence, if our algorithms can't always speed up the learning (compared to a naive compliant learner), they \emph{provide better behaving agents}. 
+				\paragraph{} In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar measure of optimality is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence for all methods seem to equalize as the optimality of the teacher decreases. However, the average accumulated reward until convergence is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. Hence, if our algorithms can't always speed up the learning (compared to a naive compliant learner), they \emph{provide better behaving agents}. 
 				
 				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
@@ -941,7 +938,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		{
 			\paragraph{} As reminded in the beginning of this document, one of the goals of learning to demonstration is to speed up the learning. The goal of this section is to compare the behavior of the compliant-based learners we developed with some more classical reinforcement learning. 
 			
-			\paragraph{} Figures (\ref{fig::loner_comp_50}) and (\ref{fig::loner_comp_120}) display the learning curves of the compliant learner opposed with, respectively, TD(0) learners and TD($\lambda$) learners. As one can see, our algorithms performs way better than TD(0) learner, even with largely suboptimal teachers. However, they performed as well or even slight worse than TD($\lambda$) learners. This phenomenon is mostly due to the fact the behind its action selection, our learners update their Q-values thanks to SARSA updates (on-policy). Generalizing to an off-policy update, and eventually by making use of eligibility traces will most likely improve the learning speed and beat TD($\lambda$) learners. 
+			\paragraph{} Figures (\ref{fig::loner_comp_50}) and (\ref{fig::loner_comp_120}) display the learning curves of the compliant learner opposed with, respectively, TD(0) learners and TD($\lambda$) learners. As one can see, our algorithms performs way better than TD(0) learners, even with largely suboptimal teachers. However, they performed as well or even slightly worse than TD($\lambda$) learners. This phenomenon is mostly due to the fact the behind its action selection, our learners update their Q-values thanks to SARSA updates (on-policy). Generalizing to an off-policy update, and eventually by making use of eligibility traces will most likely improve the learning speed and beat TD($\lambda$) learners. 
 							
 				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
