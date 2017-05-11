@@ -918,7 +918,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar measure of optimality is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence for all methods seem to equalize as the optimality of the teacher decreases. However, the average accumulated reward until convergence is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. Hence, if our algorithms can't always speed up the learning (compared to a naive compliant learner), they \emph{provide better behaving agents}. 
+				\paragraph{} In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar measure of optimality is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence for all methods seem to equalize as the optimality of the teacher decreases. However, the average accumulated reward until convergence is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. Hence, if our adaptive algorithms can't always speed up the learning (compared to a naive compliant learner), they \emph{provide better behaving agents}. 
 				
 				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
@@ -964,22 +964,35 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	{
 		\section{Outline}
 		{
-
+			\paragraph{} We presented in this report a few attempts at generating compliant exploratory policies with respect to a generalized teacher demonstration. We first introduced a naive method, called \emph{vanishing compliance}, where a learner first follows its mentors recommandation before slightly taking its own decision, to eventually exploiting only its Q-values to move along its state space. We then introduce two adaptative compliance methods, learning a measure of their mentor optimality. One provides a prior to a point based confidence measure ($\beta$-implicit), while the other drives the exploration based on the learnt values of listening or discarding the teacher (explicit compliance).
+			
+			\paragraph{} We then evaluated those methods, focusing on their convergence speed as well as on their general behavior. When it comes to convergence speed, adaptative learners tends to performs well better than the naive learner, provided a well-behaving teacher. As the mentor's optimality level decreases, the performance of those methods tends to equalize. 
+			\newline However, adaptative methods constantly performs better (in terms of behavior or average rewards in a reinforcement learning vocabulary) than the naive one, which can be of consequent advantage for real world implementation. 
+			
+			\paragraph{} Using rather basic reinforcement learning updates (SARSA), all three of our methods equalize the performances of more more sophisticated algorithms (eligibility traces for instance), even with teachers of questionable optimality levels. What's more, they clearly outperforms the algorithms they rely on when those ones are implemented without demonstrations. However, some consequent work is left to be done in order to be able to generalize those algorithms to more complicated environments or to weaker hypothesis. 
 		}
 		\section{Applicability}
 		{
-		
+			\paragraph{} Because the final goal of this approach concerns the application to real world problems, the question of applicability arises. 
+			
+			\paragraph{} Because our approach only modifies a rather small aspect of reinforcement learning, the question of its applicability actually reports to the question of applicability of reinforcement learning itself. Because of the greediness of reinforcement learning (be it computationally or in terms of the quantity of data it needs to learn), this has been quite an important topic over the last years, with some interesting results (see \cite{hester2017learning}). 
+			
+			\paragraph{} Hence, if an attempt shows to be particularly successful in this attempt, we believe that our approach could show some interesting results - since it aims at speeding up learning. However, there still some work to be done to be able to be comply with real world constraints - see  
 		}
-		\section{Possible improvements}
+		\section{Future work}
 		{
-
+			% eligibility traces 
+			
+			% generalization to continuous space, to sparse rewards 
+			
+			% learn the prior, or initialization 
 		}
 	}
 	
 	
 	
-	\bibliographystyle{alpha}
+	\bibliographystyle{plain}
  	 \bibliography{bibfile}
-	 \nocite{*}
-  
+  	\nocite{*}
+	
 \end{document}
