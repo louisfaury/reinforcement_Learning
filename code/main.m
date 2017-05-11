@@ -40,14 +40,14 @@ toc
 %draw_policy(pi_star,mdp.states);
  
 %% imitation reinforcement learning methods
-  load('misc/policy/subopt_policy_1.mat','pi'); pi_m = pi;
-  il_method = 'naive'; % 'ac' % 'av' % 'naive'
+  load('misc/policy/subopt_policy_3.mat','pi'); pi_m = pi;
+  il_method = 'ac'; % 'ac' % 'av' % 'naive'
   switch il_method 
       case 'ac'
-          [pi_star,mdp] = ac_imitation_learning(pi_m, mdp);
+          [pi_star,mdp] = ac_imitation_learning_off(pi_m, mdp);
           draw_compliance_cmap(pi,mdp.states)
       case 'av'
-          [pi_star,mdp] = av_imitation_learning(pi_m, mdp);
+          [pi_star,mdp] = av_imitation_learning_off(pi_m, mdp);
           draw_decision_map(pi,mdp.states)
       case 'naive'
           [pi_star,mdp] = naive_imitation_learning(pi_m, mdp);
