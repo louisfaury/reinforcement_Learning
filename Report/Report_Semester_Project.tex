@@ -486,7 +486,7 @@
 			\newline 
 			Such an hypothesis isn't trivial, and will be discussed later in this report. The main reason it is considered is that it enables to treat the whole state space in the same way - without having to distinguish regions in the state space that are provided with demonstrations and regions which are not. 
 			
-			\paragraph{} As discussed earlier in this report, our goal is to mimic the shifting compliance a child can have with respect to its teacher when learning a new skill. Because this implies making choices as to wether follow a recommended action or sample elsewhere in the action space, it is clear that a compliant-based algorithm should focus on the \emph{action selection} of the learner. 
+			\paragraph{} As discussed earlier in this report, our goal is to mimic the shifting compliance a child can have with respect to its teacher when learning a new skill. Because this implies making choices as to wether follow a recommended action or sample elsewhere in the action space, it is clear that only the action selection (hence the \emph{exploratory policy}) should be impacted by the presence of the mentor. 
 
 			\paragraph{} We will now consider an action selection process based on the teacher's recommandation. We introduce a parameter $p$, that can be understood as a \textbf{confidence measure} in the teacher. The action selection process we chose to follow can be understood as a $p$-greedy action selection with respect to the teacher recommandation and is defined as : 
 			\boxedeq{red}
@@ -496,10 +496,18 @@
 					&a_m \, \text{with probability }p \\
 					& a \in \mathcal{A}(s) \text{ with probability } (1-p)
 				\end{aligned}\right.
+				\label{eq::compliant_exploration}
 			}
 			The learner therefore has two possibilities : follow the teacher with probability $p$, or take its own action, with probability $(1-p)$. This motivates to call $p$ a confidence measure : the greater $p$ is, the more the learner will trust the teacher and follow its recommandation. In the case where the learner decides to take its own action, it samples in its state space through Gibbs softmax sampling, thanks to its current action-value estimates. 
 			
 			\paragraph{} The purpose of sections (\ref{section::naive_learners}) and (\ref{section::adaptative_learners}) is to provide $p$ with different dynamics through time and evaluate the corresponding performances. 
+			
+						
+			\paragraph{} The updates will follow the SARSA algorithm, and the usual TD(0) updates : $\forall s\in\mathcal{S}, a\in\mathcal{A}(s)$
+			\begin{equation}
+				Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + Q(s',a') - Q(s,a) \right]
+			\end{equation}
+			which are indeed not impacted by the presence of a mentor. Therefore, under the very simple conditions for SARSA to converge to a locally optimal policy (that is, among others, that the exploratory policy is greedy in limit), our algorithms will converge too. 
 		}
 		\section{Experimental MDP}
 		{
@@ -566,18 +574,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		\label{section::naive_learners}
 		\subsection{Constant compliance}
 		{
-			\paragraph{} We decided to first implement a fairly naive method. As previously discussed, the notion of compliance concerns the exploration phase - or equivalently the action selection process. 
-			\newline This first naive method consists in following the teacher's recommandation with a constant probability $p$ (close from $1$), defined globally (the same for all the states). More formally, the \emph{action selection} process is defined as follows. For all $s\in\mathcal{S}$ 
-			
-			
-			\paragraph{} Therefore, the learner \emph{complies} with the teacher with probability $p$, and decide to choose its own action (that \textbf{could include} $\boldsymbol{a_m}$) with probability $1-p$. Only the action selection (hence the \emph{exploratory policy}) is impacted by the presence of the mentor. 
-			
-			\paragraph{} The intuition behind this approach is rather simple : we direct the exploration of the learner with the recommandations from the teacher, while still enabling it to search around them, based on its current Q-values. The softmax based exploration is regulated by a temperature factor, making it greedy in limit. 
-			
-			\paragraph{} The learning follows the SARSA algorithm, and the usual TD(0) updates : $\forall s\in\mathcal{S}, a\in\mathcal{A}(s)$
-			\begin{equation}
-				Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + Q(s',a') - Q(s,a) \right]
-			\end{equation}
+			\paragraph{} In the context of the action-selection described in (\ref{eq::compliant_exploration}), we decided to first implement a fairly naive method. It consists in following the teacher's recommandation with a \textbf{constant} confidence term $p$. Therefore, the learner \emph{complies} with the teacher with probability $p$, and decide to choose its own action (that \textbf{could include} $\boldsymbol{a_m}$) with probability $1-p$. The softmax sampling used when discarding a recommandation is tuned by a decaying temperature coefficient, making it greedy in limit.
 			
 			\paragraph{} The figures (\ref{fig::comp_opt_verynaive}) and (\ref{fig::comp_subopt220_verynaive}) display the learning obtained (cumulated rewards averaged over mini-batches) when fed with, respectively, the optimal policy for the MDP and a slightly suboptimal one. 
 			
@@ -608,14 +605,14 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\end{center}
 			\end{figure}
 			
-			\paragraph{} This remark actually pinpoints a major downside of this method, that is the need of fine tuning of the parameter $p$. But obviously, there is even a bigger downside, that would after become a major game killer and is related to how we generate suboptimal policies from learner. Indeed, mentor policies are taken by generating greedy policies (argmax over the Q-values) of a learner that hasn't completed its learning. Therefore, some mentors can be suboptimal enough to only show a good direction of exploitation, but not be able to reach the target. On a learning from demonstration point of view, such a phenomenon could happen if the human teacher only show the robot part of the task it has to do. Figure (\ref{subopt_policy_block}) displays such a policy, where the mentor's policy creates loops and does not always leads to the positive reward.  \newline. 
-			Applying the latest method with such a teacher is fatal for the learning, as the learner discovers that following the mentor's action yields largely negative rewards, but is not able to bypass them as it keeps a constant confidence in its teacher. This leads the learner to build up low Q-values in the directions of the teacher, and trying to follow an opposite path from the mentor. This is highly counter-productive since the mentor still gives the right exploration direction. 
+			\paragraph{} This remark actually pinpoints a major downside of this method, that is the need of fine tuning of the parameter $p$. But obviously, there is even a bigger downside, that becomes a major game killer when dealing with largely suboptimal mentors. Indeed, some mentors can be suboptimal enough to only show a good direction of exploitation, but not be able to reach the target. . Figure (\ref{subopt_policy_block}) displays such a policy, where the mentor's policy creates loops and does not always leads to the positive reward.  \newline. 
+			Applying the latest method with such a teacher is fatal for the learning, as the learner discovers that following the mentor's action yields largely negative rewards, but is not able to bypass them as it keeps a constant confidence in its teacher. This leads the learner to build up low Q-values in the directions recommended by the mentor, and to try to follow an opposite path. This is highly counter-productive since the mentor still gives the right exploration direction. 
 		
 		\subsection{Vanishing compliance }
 		{
-			\paragraph{} One of the downside of the constant compliance approach is that the exploratory behavior is always biased by the mentor's recommandation. This breaks the need of this policy to be \emph{greedy in limit} (which is a specification of the SARSA algorithm). In the case of a sub-obptimal mentor, this means that the optimal behavior could never be reached. 
+			\paragraph{} One of the downside of the constant compliance approach is that the exploratory behavior is always biased by the mentor's recommandation. This breaks the need of this policy to be \emph{greedy in limit} (which is a specification for SARSA algorithm to converge). In the case of a sub-obptimal mentor, this means that the optimal behavior could never be reached. 
 			
-			\paragraph{} We now decide to comply with SARSA's exigence policy we are learning on to be greedy in limit. Therefore, $p$ is \emph{constantly decreased along the learning procedure} : 
+			\paragraph{} We now decide to comply with the need to be greedy in limit. Therefore, we decide to set $p$ to be \emph{constantly decreased along the learning procedure} : 
 			\begin{equation}
 				p_{t+1} = \beta p_{t}
 			\end{equation}
