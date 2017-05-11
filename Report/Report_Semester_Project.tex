@@ -22,21 +22,21 @@
 	{
 		\section{Motivations}
 		{
-			\paragraph{} When it comes for real world manipulation tasks, common machine learning algorithms are sometimes unable to come up with feasible solutions, or at least fail to do so in an acceptable computational time. A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
+			\paragraph{} When it comes to real world manipulation tasks, common machine learning algorithms are sometimes unable to come up with feasible solutions, or at least fail to do so in an acceptable computational time. A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
 			
-			\paragraph{} Such prior belief is often provided thanks to demonstrations, performed by a human teacher. If this approach is largely covered in the literature (see \ref{subsection::lfd}), it is not really clear how to learn from a suboptimal teacher, regardless of its level of sub-optimality. We call \emph{largely} suboptimal a teacher providing demonstrations with potential danger or obvious downside for the robot. 
+			\paragraph{} Such prior belief is often achieved thanks to demonstrations, performed by a human teacher. If this approach is largely covered in the literature (see \ref{subsection::lfd}), it is not really clear how to learn from a suboptimal teacher, regardless of its level of sub-optimality. Such learning abilities could enlarge the human / robot interactions possibilities, as only little knowledge in robotics or artificial intelligence would be needed to help a robot learn a task. 
 			
 			\subsection{Motivating examples}
-			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it is unwise, since it contains many important informations relative to the task (pose of the object, joint coordination, .. ). We must therefore find a way to handle the demonstration to infer those parameters without falling in its suboptimal reproduction. 
+			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it would be unwise, since it contains many important informations relative to the task (pose of the object, joint coordination,..). We must therefore find a way to handle the demonstration in order to infer those parameters without falling in its suboptimal reproduction. 
 			
 			\paragraph{} Before going any further, let us rephrase the previous problem slightly differently.  Indeed, we can draw a parallel between the latest example and the one of a children learning to dance (or any other technical skill). Because the child's dance teacher doesn't have the same physical abilities than the child, he might give the child a suboptimal way (with respect to the child's physical abilities) of performing dance moves. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around what he has learnt so far. He might find that, by slightly changing how he performs some moves,  he is able to dance better than by blindly listening to the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
 			
 			\subsection{Goal}
 			\paragraph{} This semester project aims at introducing a theoretical formulation of such a compliance-based behavior, and experimentally test its performance on simple problems.
 			
-			\paragraph{} The underlying goal behind this objective is to get better intuition about how interactive learning between human and robots can be achieved. Indeed, we would like to be able to teach a robot from demonstration not by only by providing it a large number of trajectories that he will then use as a motion generator, but by directly interacting with him. By showing a robotic arm, at different times of its learning procedure, concrete examples on how to avoid its closest obstacle and grab a given object, seems like a more natural way of teaching the robot a task, while still enabling him to correct some small sub-optimality we could have introduced to it. 
+			\paragraph{} The underlying goal behind this objective is to get better intuition about how interactive learning between humans and robots can be achieved. Indeed, we would like to be able to teach a robot from demonstration not by only by providing it a large number of trajectories that he will then use as a motion generator, but by directly interacting with him. By showing a robotic arm, at different times of its learning procedure, concrete examples on how to avoid its closest obstacle and grab a given object, seems like a more natural way of teaching the robot a task, while still enabling him to correct some small sub-optimality we could have introduced to it. 
 			
-			\paragraph{} This approach also allows use to tackle a somehow different problem, related to transfer learning. Indeed, the teacher might not be a human but another learner, only better trained than the current learner. In such a case, we would like our learner to quickly find if it can trust its mentor, and if not where it should focus its computations to overcome its mentor's sub-optimality. Such questions will therefore be tackled in this report. 
+			\paragraph{} This approach also allows us to tackle a somehow different problem, related to transfer learning. Indeed, the teacher might not be a human but another learner, only better trained than the current learner. In such a case, we would like the learner to quickly find if it can trust its mentor, and if not where it should focus its computations to overcome its mentor's sub-optimality. Such questions will therefore be tackled in this report. 
 		}
 		\section{Background}
 		{
@@ -83,7 +83,7 @@
 			
 			\paragraph{} To grasp ideas and intuitions about a compliant-based imitation learning method, we are going to start with a fairly simple environment and an explicit task. We hope that a simple enough state space will allow us to better understand how compliance in learning by demonstration should be tackled with a reinforcement learning formulation.  We also hope we would be able to generalize to more complex situations once the understanding on a simple but generic model is mastered. 
 			
-			\paragraph{} Hence, after defining a simple two dimensional grid-world state space with a simple action set, we will quickly study how well the different classical reinforcement learning policy search algorithms performs on such a space. We will then introduce new exploration policies, based on the confidence the learner has in its teacher and compare their efficiency with the latter algorithms. We will also focus on the relation between the learner and the prior information that its mentor's recommandations represent. Especially, we will study how well a learner can overcome its mentor own sub-optimality, focusing on largely suboptimal mentors. 
+			\paragraph{} Hence, after defining a simple two dimensional grid-world state space with a simple action set, we will quickly study how well the different classical reinforcement learning policy search algorithms performs on such a space. We will then introduce new exploration policies, based on the confidence the learner has in its teacher and compare their efficiency with the latter algorithms. We will also focus on the relation between the learner and the prior information that its mentor's recommandations represent. Especially, we will study how well a learner can overcome its mentor own sub-optimality, focusing on largely suboptimal mentors. We call \emph{largely} suboptimal a teacher providing demonstrations with potential danger or obvious downsides for the learner. 
 		}
 	}
 	\newpage
@@ -555,14 +555,14 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	{
 		\paragraph{} More than giving us an idea how generic reinforcement learning algorithms performs on our sandbox MDP, coding those different methods enables us to \emph{generate mentors of varying sub-optimal levels}. 
 		
-		\paragraph{} If we consider a SARSA learner (for instance), we can at any time of its learning to generate a deterministic version of the current exploratory policy. This is done by taking its greedy version with respect to its current Q-values estimates. Hence $\forall s\in\mathcal{S}$ : 
+		\paragraph{} If we consider a SARSA learner (for instance), we can at any time of its learning generate a deterministic version of the current exploratory policy. This is done by taking its greedy version with respect to its current Q-values estimates. Hence $\forall s\in\mathcal{S}$ : 
 		\begin{equation}
 			\pi_m(s) = \argmax{a\in\mathcal{A}(s)}{Q(s,a)}
 		\end{equation}
 		
 		\begin{figure}[h!]
 			\begin{center}
-				\includegraphics[width=0.8\linewidth]{mentor_gen}
+				\includegraphics[width=0.7\linewidth]{mentor_gen}
 				\caption{Generating a suboptimal mentor from a SARSA learner}
 				\label{fig::mentor_gen}
 			\end{center}
