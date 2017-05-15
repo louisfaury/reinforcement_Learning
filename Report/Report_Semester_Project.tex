@@ -918,7 +918,12 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar measure of optimality is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence for all methods seem to equalize as the optimality of the teacher decreases. However, the average accumulated reward until convergence is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. Hence, if our adaptive algorithms can't always speed up the learning (compared to a naive compliant learner), they \emph{provide better behaving agents}. 
+				\paragraph{} We now derive some more precise metrics to assess the performances of our different algorithms. We will focus on two different metric : 
+				\begin{itemize}[label=$\cdot$]
+					\item \textbf{Time to convergence} : as its name indicates, we here measure how many iterations it took for the tested algorithm to reach convergence. We define convergence as a threshold value over which the accumulated reward on one episode will stay superior to. This threshold is set to be close to the optimal policy accumulated reward on one episode (98\% of its value). 
+					\item \textbf{Accumulated reward ratio} : this metric measure how the learner behaves until convergence. It computes the ratio between the reward accumulated by the learner until convergence (see above) and the reward the optimal policy would have accumulated over the same period of time. Therefore, the quickest a learning curves goes near the optimal reward, the better this metric would be. 
+				\end{itemize}
+				 In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar measure of optimality is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence (measured thanks to the number of iterations to reach a given threshold) for all methods seem to equalize as the optimality of the teacher decreases. However, the accumulated reward ratio (ratio of the accumulated reward during learning, until convergence and the optimal policy's accumulated reward on the same horizon) is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. Hence, if our adaptive algorithms can't always speed up the learning (compared to a naive compliant learner), they \emph{provide better behaving agents}. 
 				
 				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
@@ -928,11 +933,13 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 					\begin{minipage}{0.5\linewidth}
 						\includegraphics[width=\linewidth]{tr_metric}
-						\caption{Reward to convergence metric}
+						\caption{Reward ratio to convergence metric}
 						\label{fig::metric_tr}
 					\end{minipage}
 				\end{figure}	
 			}
+			
+			\paragraph{} As a sum-up, the following table recalls the different advantages and drawback of the different methods. 
 		}
 		\subsection{Classical learners}
 		{
@@ -955,10 +962,6 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		}
 	}
 	
-	\section{Improvements}
-	{
-		% Off-policy learning from the teacher 
-	}
 	\chapter*{Conclusion}
 	\addcontentsline{toc}{chapter}{Conclusion}
 	{

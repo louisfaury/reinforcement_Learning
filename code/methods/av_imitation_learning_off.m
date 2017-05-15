@@ -54,7 +54,7 @@ while (k<max_iter && delta>stop_criterion)
         lIter = 0;
         while(~mdp.states(state_index).terminal && lIter < max_search_iter)
             ql = mdp.states(state_index).ql_value; qd= mdp.states(state_index).qd_value;
-            [action_index,mentor_action_index] = comply_or_defy_sig(pi_m(state_index),mdp.states(state_index).actions,temperature,ql,qd,t0/(count^(0.55)));
+            [action_index,mentor_action_index] = comply_or_defy_sig(pi_m(state_index),mdp.states(state_index).actions,temperature,ql,qd,t0/(count^(0.55)),true);
             [next_state_index, reward] = follow_action(mdp, state_index,action_index);
             cum_reward = cum_reward + reward;
             count = sum(counts(next_state_index,:))-3;
@@ -63,7 +63,7 @@ while (k<max_iter && delta>stop_criterion)
                 % mdp update
                 n_qvalue = max([mdp.states(next_state_index).actions.value]);
                 qvalue = mdp.states(state_index).actions(action_index).value;
-                lrate = init_lr/(counts(state_index,action_index)^(0.55));
+                lrate = init_lr/(counts(state_index,action_index)^(0.51));
                 u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
                 counts(state_index,action_index) = counts(state_index,action_index)+1;
                 delta = max(delta,abs(u_qvalue-qvalue));

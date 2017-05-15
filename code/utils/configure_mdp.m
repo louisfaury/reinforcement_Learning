@@ -98,11 +98,11 @@ switch model_name
         mdp.av_il.qd_init_value = 0;
         mdp.av_il.ql_init_value = mdp.av_il.t0*2.19;
         mdp.av_il.default_value = 0;
-        mdp.av_il.init_temp = 2;
+        mdp.av_il.init_temp = 1;
         mdp.av_il.stop_criterion = -0.1;
-        mdp.av_il.temp_mult = 0.95;
+        mdp.av_il.temp_mult = 0.98;
         mdp.av_il.max_iter = 400;
-        mdp.av_il.init_lr = 1.1;
+        mdp.av_il.init_lr = 1;
         mdp.av_il.ld_lr = 0.02; % listening/discard learning rate
     otherwise
         error('File name is not known (thrown in configure_model(.))');

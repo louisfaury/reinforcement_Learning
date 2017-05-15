@@ -53,7 +53,7 @@ while (k<max_iter && delta>stop_criterion)
         lIter = 0;
         while(~mdp.states(state_index).terminal && lIter < max_search_iter)
             alpha = mdp.states(state_index).alpha; beta  = mdp.states(state_index).beta;
-            [action_index,mentor_action_index] = comply_or_defy_beta(pi_m(state_index),mdp.states(state_index).actions,temperature,alpha,beta,true);
+            [action_index,mentor_action_index] = comply_or_defy_beta(pi_m(state_index),mdp.states(state_index).actions,temperature,alpha,beta);
             [next_state_index, reward] = follow_action(mdp, state_index,action_index);
             cum_reward = cum_reward + reward;
             
