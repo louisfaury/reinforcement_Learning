@@ -83,6 +83,8 @@ while (k<max_iter && delta>stop_criterion)
             lIter = lIter +1;
         end
     end
+    t0 = t0*0.99;
+    ld_lr = ld_lr * 0.99;
     deltas(k) = delta;
     temperature = temperature*temperature_mult_factor;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;

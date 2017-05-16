@@ -77,7 +77,7 @@ while (k<max_iter && delta>stop_criterion)
                 eligibility_traces = eligibility_traces*0;
             end
             
-            counts(state_index,action_index) = counts(state_index,action_index)+1;
+            counts(state_index,action_index) = counts(state_index,action_index)+1/mini_batch_size;
             u_qvalue =  mdp.states(state_index).actions(action_index).value;
             delta = max(delta,abs(u_qvalue-qvalue));
             qvalue = u_qvalue;

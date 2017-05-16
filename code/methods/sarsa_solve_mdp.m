@@ -59,9 +59,9 @@ while (k<max_iter && delta>stop_criterion)
             % update
             qvalue = mdp.states(state_index).actions(action_index).value;
             n_qvalue = mdp.states(next_state_index).actions(next_action_index).value;
-            lrate = alpha/(counts(state_index,action_index)^(0.55));
+            lrate = alpha/(counts(state_index,action_index)^(1));
             u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
-            counts(state_index,action_index) = counts(state_index,action_index)+1;
+            counts(state_index,action_index) = counts(state_index,action_index)+1/mini_batch_size;
             delta = max(delta,abs(u_qvalue-qvalue));
             qvalue = u_qvalue;
             mdp.states(state_index).actions(action_index).value = qvalue;
@@ -75,7 +75,7 @@ while (k<max_iter && delta>stop_criterion)
     temperature = temperature*temperature_mult_factor;
     deltas(k) = delta;
     cum_reward_per_episode(k) = cum_reward/mini_batch_size;
-    k = k+1;
+    k = k+1
 end
 
 pi = generate_greedy_policy(mdp.states,counts);  
