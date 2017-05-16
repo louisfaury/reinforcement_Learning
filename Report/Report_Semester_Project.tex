@@ -6,6 +6,8 @@
 %% ----------------------------------------------------- PACKAGES ----------------------------------------------------- %%
 \usepackage{coolReport}
 \usepackage{algorithm2e}
+\usepackage{multirow}
+\usepackage{tabularx}
 \graphicspath{{./Images/}}
 \cRTitle{Semester project report}
 
@@ -970,7 +972,27 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\paragraph{} We presented in this report a few attempts at generating compliant exploratory policies with respect to a generalized teacher demonstration. We first introduced a naive method, called \emph{vanishing compliance}, where a learner first follows its mentors recommandation before slightly taking its own decision, to eventually exploiting only its Q-values to move along its state space. We then introduced two adaptative compliance methods, learning a measure of their mentor optimality. One provides a prior to a point based confidence measure ($\beta$-implicit), while the other drives the exploration based on the learnt values of listening or discarding the teacher (explicit compliance).
 			
 			\paragraph{} We then evaluated those methods, focusing on their convergence speed as well as on their general behavior. When it comes to convergence speed, adaptative learners tends to performs well better than the naive learner, provided a well-behaving teacher. As the mentor's optimality level decreases, the performance of those methods tends to equalize. 
-			\newline However, adaptative methods constantly displays better behavior (in terms of average rewards in a reinforcement learning vocabulary) than the naive one, which can be of consequent advantage for real world implementations. 
+			\newline However, adaptative methods constantly displays better behavior (in terms of average rewards in a reinforcement learning vocabulary) than the naive one, which can be of consequent advantage for real world implementations. The following table sums-up the advantages and drawbacks of the three different methods displayed in this report. 
+			
+			\begin{center}
+				\begin{tabularx}{\textwidth}{|X|X|X|}
+					\hline
+					\textbf{Method} & \textbf{Advantages} & \textbf{Drawbacks}\\
+					\hline
+					\multirow{3}{*}{Vanishing Compliance} & Easy to implement & Delicate tuning\\
+												   & Systematic & Learning curve undershoots \\
+												   & & No inference over the mentor's optimality level \\
+					\hline
+					\multirow{3}{*}{$\beta$-implicit compliance} &  Intuitive tuning & Harder to implement \\
+													  & Infers the mentor's optimality level & Prior must be well defined \\
+													  & Quickly reaches suboptimal level & Convergence rates are highly impacted by the quality of the mentor \\ 
+					\hline
+					\multirow{3}{*}{Explicit compliance} &  Easy to implement &  Convergence rates are highly impacted by the quality of the mentor \\
+					& Infers the mentor's optimality level  & \\
+					& Quickly reaches suboptimal level  & \\
+					\hline
+				\end{tabularx}
+			\end{center}
 			
 			\paragraph{} Using rather basic reinforcement learning updates (SARSA), all three of our methods equalize the performances of more more sophisticated algorithms (eligibility traces for instance), even with teachers of questionable optimality levels. What's more, they clearly outperform the algorithms they rely on when those ones are implemented without demonstrations. However, some consequent work is left to be done in order to be able to generalize those algorithms to more complicated environments or to weaker hypothesis. 
 		}

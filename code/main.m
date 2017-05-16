@@ -41,7 +41,7 @@ toc
 %draw_policy(pi_star,mdp.states);
  
 %% imitation reinforcement learning methods
-  load('misc/policy/subopt_policy_2.mat','pi'); pi_m = pi;
+  load('misc/policy/subopt_policy_3.mat','pi'); pi_m = pi;
   il_method = 'ac'; % 'ac' % 'av' % 'naive'
   switch il_method 
       case 'ac'
