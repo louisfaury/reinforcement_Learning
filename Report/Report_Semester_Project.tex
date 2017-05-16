@@ -961,6 +961,23 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 						\label{fig::loner_comp_120}
 					\end{minipage}
 				\end{figure}
+				
+				\paragraph{} Figures (\ref{fig::tt_metric_w_loners}) and (\ref{fig::tr_metric_w_loners}) display the previously define metric values of the different common reinforcement learning algorithms. On (\ref{fig::tt_metric_w_loners}), we only display the result for eligibility traces algorithms, since SARSA and Q-learning have much higher convergence times than the other considered algorithms. 
+				
+				\begin{figure}
+					\begin{minipage}{0.5\linewidth}
+						\includegraphics[width=\linewidth]{tt_metric_w_loners}
+						\caption{Time to convergence metric : comparaison with classical RL algorithms}
+						\label{fig::tt_metric_w_loners}
+					\end{minipage}
+					\begin{minipage}{0.5\linewidth}
+						\includegraphics[width=\linewidth]{tr_metric_w_loners}
+						\caption{Reward ratio to convergence metric : comparaison with classical RL algorithms}
+						\label{fig::tr_metric_w_loners}
+					\end{minipage}
+				\end{figure}
+				
+			\paragraph{} Those figures confirm the fact that our compliant based algorithms have comparable performance than eligibility traces based reinforcement learning algorithms. This is rather pleasing, knowing that our update are tailored by TD(0) updates. When compared to TD(0) learners (like SARSA or Q-learning), it is clear that our compliant-based learners perform equally or better (depending on the metric). This is reassuring, since they have a significant advantage : the prior knowledge given by the mentor's demonstration. 
 		}
 	}
 	
