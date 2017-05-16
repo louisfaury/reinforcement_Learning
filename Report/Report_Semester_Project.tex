@@ -488,7 +488,7 @@
 			\newline 
 			Such an hypothesis isn't trivial, and will be discussed later in this report. The main reason it is considered is that it enables to treat the whole state space in the same way - without having to distinguish regions in the state space that are provided with demonstrations and regions which are not. 
 			
-			\paragraph{} As discussed earlier in this report, our goal is to mimic the shifting compliance a child can have with respect to its teacher when learning a new skill. Because this implies making choices as to wether follow a recommended action or sample elsewhere in the action space, it is clear that only the action selection (hence the \emph{exploratory policy}) should be impacted by the presence of the mentor. 
+			\paragraph{} As discussed earlier in this report, our goal is to mimic the shifting compliance a child can have with respect to its teacher when learning a new skill. Because this implies making choices as to wether follow a recommended action or sample elsewhere in the action space, it is clear that \textbf{only the action selection  should be impacted by the presence of the mentor}. 
 
 			\paragraph{} We will now consider an action selection process based on the teacher's recommandation. We introduce a parameter $p$, that can be understood as a \textbf{confidence measure} in the teacher. The action selection process we chose to follow can be understood as a $p$-greedy action selection with respect to the teacher recommandation and is defined as : 
 			\boxedeq{red}
@@ -496,20 +496,19 @@
 				\forall s\in\mathcal{S}, \quad \pi(s) = \left\{
 				\begin{aligned}
 					&a_m \, \text{with probability }p \\
-					& a \in \mathcal{A}(s) \text{ with probability } (1-p)
+					& a \in \mathcal{A}(s)\backslash a_m \text{ with probability } (1-p)
 				\end{aligned}\right.
 				\label{eq::compliant_exploration}
 			}
-			The learner therefore has two possibilities : follow the teacher with probability $p$, or take its own action, with probability $(1-p)$. This motivates to call $p$ a confidence measure : the greater $p$ is, the more the learner will trust the teacher and follow its recommandation. In the case where the learner decides to take its own action, it samples in its state space through Gibbs softmax sampling, thanks to its current action-value estimates. 
-			
-			\paragraph{} The purpose of sections (\ref{section::naive_learners}) and (\ref{section::adaptative_learners}) is to provide $p$ with different dynamics through time and evaluate the corresponding performances. 
-			
-						
-			\paragraph{} The updates will follow the SARSA algorithm, and the usual TD(0) updates : $\forall s\in\mathcal{S}, a\in\mathcal{A}(s)$
+			The learner therefore has two possibilities : follow the teacher with probability $p$, or take its own action, with probability $(1-p)$. This motivates to call $p$ a confidence measure : the greater $p$ is, the more the learner will trust the teacher and follow its recommandation. In the case where the learner decides to take its own action, it samples in its state space through Gibbs softmax sampling, thanks to its current action-value estimates. \newline
+			The updates will follow the SARSA algorithm, and the usual TD(0) updates : $\forall s\in\mathcal{S}, a\in\mathcal{A}(s)$
 			\begin{equation}
 				Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + Q(s',a') - Q(s,a) \right]
 			\end{equation}
 			which are indeed not impacted by the presence of a mentor. Therefore, under the very simple conditions for SARSA to converge to a locally optimal policy (that is, among others, that the exploratory policy is greedy in limit), our algorithms will converge too. 
+			
+			\paragraph{} The purpose of sections (\ref{section::naive_learners}) and (\ref{section::adaptative_learners}) is to provide the confidence $p$ with different dynamics through time and evaluate the corresponding performances. 
+			
 		}
 		\section{Experimental MDP}
 		{
@@ -542,7 +541,7 @@
 				
 			\paragraph{} If we go back at one of our motivating example (robot grasping an object), we could easily draw parallels between such an example and the grid environment we just presented. Indeed, we could imagine a teacher providing a demonstration that borders the obstacle. Because the learner suffers a (slightly) stochastic dynamic, this would indeed be a largely suboptimal solution, since large negative rewards will be likely to occur during the learning. However, the demonstration contains a fairly important information, that is the direction to follow to reach the center of the grid. 
 						
-			\paragraph{} Figure (\ref{fig::comp_maze}) displays the convergence (expressed as average reward on minibatch) for Qlearning, Sarsa($\lambda$), Sarsa(0) and Watkins Q($\lambda$). By average reward on minibatch, we mean that at every iteration, the reward is average around a given number of trajectories, following the same \emph{exploratory} policy. This allows to reduce the stochasticity of trajectories while learning and give a smoother estimation of how well the algorithm is learning. As a way of comparing them to the optimal and random policies, we also plot the average rewards perceived by the latest along many trajectories. \newline
+			\paragraph{} Figure (\ref{fig::comp_maze}) displays the convergence (expressed as average reward on minibatch) for Q-learning, Sarsa($\lambda$), Sarsa(0) and Watkins Q($\lambda$). By average reward on minibatch, we mean that at every iteration, the reward is average around a given number of trajectories, following the same \emph{exploratory} policy. This allows to reduce the stochasticity of trajectories while learning and give a smoother estimation of how well the algorithm is learning. As a way of comparing them to the optimal and random policies, we also plot the average rewards perceived by the latest along many trajectories. \newline
 For all the learning algorithms tested, we used optimistic action-value initialisation to promote exploration. This explains why many negative rewards are perceived in the beginning. 
 				
 			\begin{figure}
@@ -555,13 +554,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		}
 	\section{Generating mentors}
 	{
-		\paragraph{} More than giving us an idea how generic reinforcement learning algorithms performs on our sandbox MDP, coding those different methods enables us to \emph{generate mentors of varying sub-optimal levels}. 
-		
-		\paragraph{} If we consider a SARSA learner (for instance), we can at any time of its learning generate a deterministic version of the current exploratory policy. This is done by taking its greedy version with respect to its current Q-values estimates. Hence $\forall s\in\mathcal{S}$ : 
-		\begin{equation}
-			\pi_m(s) = \argmax{a\in\mathcal{A}(s)}{Q(s,a)}
-		\end{equation}
-		
+	
 		\begin{figure}[h!]
 			\begin{center}
 				\includegraphics[width=0.7\linewidth]{mentor_gen}
@@ -569,16 +562,24 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\label{fig::mentor_gen}
 			\end{center}
 		\end{figure}
-		Such a process is displayed in figure (\ref{fig::mentor_gen}). Because it is now longer stochastic, the mentor is slightly better than the learner it was generated from, but still is clearly suboptimal. This method hence enables us to generate mentor of different optimality levels. 
+		
+		\paragraph{} Besides than giving us an idea how generic reinforcement learning algorithms performs on our sandbox MDP, those different reinforcement learning methods enables us to \emph{generate mentors of varying sub-optimal levels}. 
+		
+		\paragraph{} If we consider a SARSA learner (for instance), we can at any time of its learning generate a deterministic version of the current exploratory policy. This is done by taking its greedy version with respect to its current Q-values estimates. Hence $\forall s\in\mathcal{S}$ : 
+		\begin{equation}
+			\pi_m(s) = \argmax{a\in\mathcal{A}(s)}{Q(s,a)}
+		\end{equation}
+		
+		Such a process is displayed in figure (\ref{fig::mentor_gen}). Because the mentor's policy is deterministic, it is slightly better than the learner it was generated from, but still is clearly suboptimal. This method hence enables us to generate mentor of different optimality levels. 
 	}
 	\section{Naive learners}
 	{
 		\label{section::naive_learners}
 		\subsection{Constant compliance}
 		{
-			\paragraph{} In the context of the action-selection described in (\ref{eq::compliant_exploration}), we decided to first implement a fairly naive method. It consists in following the teacher's recommandation with a \textbf{constant} confidence term $p$. Therefore, the learner \emph{complies} with the teacher with probability $p$, and decide to choose its own action (that \textbf{could include} $\boldsymbol{a_m}$) with probability $1-p$. The softmax sampling used when discarding a recommandation is tuned by a decaying temperature coefficient, making it greedy in limit.
+			\paragraph{} In the context of the action-selection described in (\ref{eq::compliant_exploration}), we decided to first implement a fairly naive method. It consists in following the teacher's recommandation with a \textbf{constant} confidence term $p$. Therefore, the learner \emph{complies} with the teacher with probability $p$, and decide to choose its own action (that \textbf{could include} $\boldsymbol{a_m}$) with probability $1-p$. This is a slight digression from (\ref{eq::compliant_exploration}), that is made here to enable a learner to reach optimality. The softmax sampling used when discarding a recommandation is tuned by a decaying temperature coefficient, making it greedy in limit.
 			
-			\paragraph{} The figures (\ref{fig::comp_opt_verynaive}) and (\ref{fig::comp_subopt220_verynaive}) display the learning obtained (cumulated rewards averaged over mini-batches) when fed with, respectively, the optimal policy for the MDP and a slightly suboptimal one. 
+			\paragraph{} The figures (\ref{fig::comp_opt_verynaive}) and (\ref{fig::comp_subopt220_verynaive}) display the learning curves obtained when fed with, respectively, the optimal policy for the MDP and a slightly suboptimal one. 
 			
 			\begin{figure}[ht!]
 				\begin{minipage}{0.5\linewidth}
@@ -607,18 +608,18 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\end{center}
 			\end{figure}
 			
-			\paragraph{} This remark actually pinpoints a major downside of this method, that is the need of fine tuning of the parameter $p$. But obviously, there is even a bigger downside, that becomes a major game killer when dealing with largely suboptimal mentors. Indeed, some mentors can be suboptimal enough to only show a good direction of exploitation, but not be able to reach the target. . Figure (\ref{subopt_policy_block}) displays such a policy, where the mentor's policy creates loops and does not always leads to the positive reward.  \newline. 
+			\paragraph{} This remark actually pinpoints a major downside of this method, that is the need of fine tuning of the parameter $p$. But obviously, there is even a bigger downside, that becomes a major game killer when dealing with largely suboptimal mentors. Indeed, some mentors can be suboptimal enough to only show a good direction of exploitation, but not be able to reach the target. . Figure (\ref{subopt_policy_block}) displays such a policy, where the mentor's policy creates loops and does not always leads to the positive reward.  \newline
 			Applying the latest method with such a teacher is fatal for the learning, as the learner discovers that following the mentor's action yields largely negative rewards, but is not able to bypass them as it keeps a constant confidence in its teacher. This leads the learner to build up low Q-values in the directions recommended by the mentor, and to try to follow an opposite path. This is highly counter-productive since the mentor still gives the right exploration direction. 
 		
 		\subsection{Vanishing compliance }
 		{
-			\paragraph{} One of the downside of the constant compliance approach is that the exploratory behavior is always biased by the mentor's recommandation. This breaks the need of this policy to be \emph{greedy in limit} (which is a specification for SARSA algorithm to converge). In the case of a sub-obptimal mentor, this means that the optimal behavior could never be reached. 
+			\paragraph{} One of the downside of the constant compliance approach is therefore that the exploratory behavior is always biased by the mentor's recommandation. This breaks the need of this policy to be \emph{greedy in limit} (which is a specification for SARSA algorithm to converge). In the case of a sub-obptimal mentor, this means that the optimal behavior could never be reached. 
 			
-			\paragraph{} We now decide to comply with the need to be greedy in limit. Therefore, we decide to set $p$ to be \emph{constantly decreasing along the learning procedure} : 
+			\paragraph{} We now decide to comply with the need to be greedy in limit. Therefore, we decide to set $p$ to be \emph{constantly decreasing along the learning} : 
 			\begin{equation}
 				p_{t+1} = \beta p_{t}
 			\end{equation}
-			with $\beta < 1$. As before, the temperature of the Gibb's softmax sampling also goes to $0$ as the learning goes on. 
+			with $\beta < 1$. 
 			
 			\paragraph{} The action-selection is therefore biased by the mentor's recommandation in the beginning of the learning only, and slowly decides to take its own choices, based on its current Q-values estimates. This approach sounds more promising as the learner is more likely to quickly discover the location of high rewards (following the teacher policy with $p$ close to 1), and will then makes it own exploration along those trajectory, to end up in a setting where the teacher's actions are now longer considered. 
 		
@@ -644,6 +645,8 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		}		
 		
 		\paragraph{} If this approach seems to work relatively well, there are still some critical downsides to it. First of all, a lot of tuning is required in order to find the hyper-parameters ($p_0$, $\beta$, temperature evolution, ..) that lead to a fast learning. Also, there is an undershoot in the learning that seems to slow it down, due to the exploring phase that happens when $p$ becomes too low.  Such exploration could be avoided or reduced if the learner is able to figure out quickly that indeed, the mentor was right in its recommandation.
+		
+		\paragraph{} This last remark is a clear motivation to search for better behaving confidence dynamics. Indeed, why automatically reject a recommandation (which is what the vanishing compliance does in the end of its learning) when we have all the information needed to state that this recommandation is a good one ? On the contrary, a learner should directly accept it once its exploration has taught it that the mentor's recommandation at one point of state space seems to be an optimal one.  
 	}
 	
 	\section{Adaptative compliance learners}
@@ -657,13 +660,20 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		{
 			\paragraph{}  Let us define the \emph{confidence} term $p$ locally for every state of the state space. For each $s\in\mathcal{S}$, $p(s)$ is given a Beta prior : $p(s)\sim \beta(\alpha(s),\beta(s))$ and represents the initial trust we have in a mentor's recommandation at state $s$. The initial values $\alpha_0$ and $\beta_0$ define the initial prior belief we have over $p$ (for instance, $\alpha=0.5$ and $\beta = 0.055$ define a prior belief that the teacher is most probably right). 
 			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=0.5\linewidth]{Beta_distribution_pdf.png}
+					\caption{The Beta distribution for several values of $(\alpha,\beta)$ (\emph{source : Wikepedia})}
+				\end{center}
+			\end{figure}
+			
 			\paragraph{} As in before, we perform a $\color{red}p$\textcolor{red}{\emph{-greedy policy}} with respect to the teacher recommandation : 
 			\begin{equation}
 				\forall s\in\mathcal{S}, \quad \pi_p(s) = 
 					\left\{ 
 					\begin{aligned}
 						&a_m \text{ with probability } p(s) \\
-						& a\in\mathcal{A}(s) \text{ with probability } (1-p(s))
+						& a\in\mathcal{A}(s)\backslash{a_m} \text{ with probability } (1-p(s))
 					\end{aligned}
 					\right. 
 			\end{equation}
@@ -719,7 +729,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			with $\beta >0$ the update rule's learning rate. 
 			\paragraph{} We can introduce some prior confidence in the teacher by setting, $\forall s\in\mathcal{S}$ : 
 			\begin{equation}
-				Q^0_c(s,l) - Q^0_c(s,d) = \log\{\frac{p}{1-p}\}
+				Q^0_c(s,l) - Q^0_c(s,d) =\tau \log\{\frac{p}{1-p}\}
 			\end{equation}
 			where $p$ is the retained probability of initially choosing to listen to the teacher. 
 			}
@@ -729,29 +739,28 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	\chapter{Results}
 	{
 		\label{chap::res}
-	
+				\paragraph{} We hereinafter give some practical considerations for the implicit $\beta$-compliance and explicit compliance methods, and discuss the experimental results we obtained. 
 		\section{Implicit $\beta$-compliance}
 		{
-			\paragraph{} We hereinafter give some practical considerations for the implicit $\beta$-compliance and explicit compliance methods, and discuss the experimental results we obtained. 
 			\subsection{Practical considerations}
 			{
 				\paragraph{} One of the main specification of the SARSA learning paradigm is that the exploration policy must be \emph{greedy in limit} so that a fixed point can emerge (hopefully the set of Q-values related to the optimal policy). In an actor-critic approach, the usual way to bring the \emph{critic} term in a stationary regime is to modify its learning rate to take the probability of taking an action into account (see \cite{Sutton98a}). \newline
 				This is the approach we chose in order to pick the learning rate $\eps_t$ of the update rule (\ref{eq::update_rule}), which now becomes : 
 			\begin{equation}
 				\begin{aligned}
-					\alpha_t(s) &\leftarrow \alpha_t(s) +  \mathds{1}_{a=a_m}\gamma \delta_t p(s)\\
-					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m}\gamma \delta_t (1-p(s))
+					\alpha_t(s) &\leftarrow \alpha_t(s) +  \mathds{1}_{a=a_m}\gamma \delta_t(1- p(s))\\
+					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m}\gamma \delta_t p(s)
 				\end{aligned}
 			\end{equation}
 			with $\gamma >0$. This update rule can still be simplified, by approximating $p$ by its mean value, which gives the update rule that we applied in practice : 
 			\boxedeq{red}
 			{
 				\begin{aligned}
-					\alpha_t(s) &\leftarrow \alpha_t(s) +  \mathds{1}_{a=a_m} \frac{\gamma \alpha_t(s)}{\alpha_t(s) + \beta_t(s) }\delta_t \\
-					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m} \frac{\gamma \beta_t(s) }{\alpha_t(s) + \beta_t(s) } \delta_t
+					\alpha_t(s) &\leftarrow \alpha_t(s) +  \mathds{1}_{a=a_m} \frac{\gamma \beta_t(s)}{\alpha_t(s) + \beta_t(s) }\delta_t \\
+					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m} \frac{\gamma \alpha_t(s) }{\alpha_t(s) + \beta_t(s) } \delta_t
 				\end{aligned}
 			}
-			This ensures us that we will direct the update toward a fixed point, and end up with a greedy policy (in limit). 
+			This ensures us that we will direct the update toward a fixed point, and end up with a greedy exploratory policy (in limit). 
 			
 			\paragraph{} In this method, $p$ is given a Beta prior distribution. To perform the action selection, we would therefore need to sample $p(s)$ from its current distribution, and then sample a Bernoulli random variable of parameter $p(s)$. Assuming that the Beta distribution is sharply peaked around its mean (which we will guarantee by choosing an appropriate prior and learning rate $\gamma$). Then $p(s)$ can be approximated by its mean value $\E{p(s)} = \displaystyle\frac{\alpha(s)}{\alpha(s) + \beta(s)}$. We therefore only need to sample a Bernoulli random variable of parameter $\E{p(s)}$ at every state to complete the action selection process. 
 			
@@ -801,7 +810,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} Also, to better understand how this algorithm works, it would be interesting to visualize the areas where the learner rejects or listen to its mentor. We expect the learner to discard the mentor's recommandations where those are wrong, and to trust its mentor where it is right. Figures (\ref{fig::heatmap_confidence_120}) and (\ref{fig::heatmap_confidence_50}) display, for two different mentors (the same two ones as we just used), the mentor's policy and the heat-map of the confidence the learner as acquired with respect to its teacher's recommandation at the end of the learning. 
+				\paragraph{} Also, to better understand how this algorithm works, it would be interesting to visualize the areas where the learner rejects or listen to its mentor. We expect the learner to discard the mentor's recommandations where those are wrong, and to trust its mentor where it is right (compared to one of the optimal policies). Figures (\ref{fig::heatmap_confidence_120}) and (\ref{fig::heatmap_confidence_50}) display, for two different mentors (the same two ones as we just used), the mentor's policy and the heat-map of the confidence the learner as acquired with respect to its teacher's recommandation at the end of the learning. Red arrows indicate a confidence close to 0, when green arrows are for confidence close to 1. 
 				
 				 \begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
