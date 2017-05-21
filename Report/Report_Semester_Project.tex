@@ -24,9 +24,11 @@
 	{
 		\section{Motivations}
 		{
-			\paragraph{} When it comes to real world manipulation tasks, common machine learning algorithms are sometimes unable to come up with feasible solutions, or at least fail to do so in an acceptable computational time. A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
+			\paragraph{} When it comes to real world manipulation tasks, common machine learning algorithms are sometimes unable to come up with feasible solutions, or at least fail to do so in an acceptable computational time - mostly because of the size of the action-state space that has to be explored,  exponentially growing with the dimensionality of a given problem.  A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
 			
 			\paragraph{} Such prior belief is often achieved thanks to demonstrations, performed by a human teacher. If this approach is largely covered in the literature (see \ref{subsection::lfd}), it is not really clear how to learn from a suboptimal teacher, regardless of its level of sub-optimality. Such learning abilities could enlarge the human / robot interactions possibilities, as only little knowledge in robotics or artificial intelligence would be needed to help a robot learn a task. 
+			
+			\paragraph{} We call suboptimal a teacher that provides imperfect demonstrations of a task. A demonstration can be imperfect in many ways - for instance, it could poorly transfer to the robot abilities, or simply be a naive way of completing the considered task (in the sense that it does not optimize some numerical criterion evaluating the fitness of an agent's behavior). Also, we will use the term \emph{largely suboptimal} for teachers providing demonstrations that are harmful for the learner or present obvious drawbacks at completing a task. 
 			
 			\subsection{Motivating examples}
 			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it would be unwise, since it contains many important informations relative to the task (pose of the object, joint coordination,..). We must therefore find a way to handle the demonstration in order to infer those parameters without falling in its suboptimal reproduction. 
@@ -40,11 +42,9 @@
 			
 			\paragraph{} This approach also allows us to tackle a somehow different problem, related to transfer learning. Indeed, the teacher might not be a human but another learner, only better trained than the current learner. In such a case, we would like the learner to quickly find if it can trust its mentor, and if not where it should focus its computations to overcome its mentor's sub-optimality. Such questions will therefore be tackled in this report. 
 		}
-		\section{Background}
+		\section{Learning from Demonstration}
 		{
 			\paragraph{} We hereinafter introduce some notions from the Learning from Demonstration (LfD) framework, as well as some transfer learning metrics that will show useful later on. 
-			\subsection{Learning from demonstration}
-			{
 				\label{subsection::lfd}
 				\paragraph{} Learning from demonstration (LfD) is a framework where a robot can learn from interacting with a human. It particularly focus on the case where a mentor (human) provides demonstration on how to perform a task. Such an approach is also known as Programming from Demonstration (PbD) or Imitation Learning. 
 				
@@ -53,32 +53,14 @@
 				\paragraph{}Many LfD approaches are combined with reinforcement learning techniques. This is mostly related to the understanding that demonstrations can easily speed-up the reinforcement learning process by providing a finite or infinite set of good solutions. However, this assume some kind of reproducibility by the robot, as well as a similar enough context between demonstration and reproduction. \newline
 				Under such assumptions, reinforcement learning techniques can use LfD to speed up their process and discover new control policies through a directed exploration of its action-state space. Indeed, demonstrations are used to guide the reinforcement learning algorithm's exploration, reducing the time and iterations needed for an agent to discover a new control policy, and eventually overcoming the teacher's  policy sub-optimalities. 
 				
-				\paragraph{} They are many ways of performing such a demonstration-based learning. We remind here a few of them, taken from \cite{argall2009survey}, all related to Imitation Reinforcement Learning (IRL) : 
-				\begin{itemize}
-					\item policy derivations techniques : directly approximate the robot's mapping from state to action by reproducing and generalizing the teacher's one. 
-					\item use demonstration data to learn a model from the world's dynamic (or transition probability model) to compute the optimal policy (see \cite{price2003accelerating}). 
-					\item use demonstration data and additional user intention to learn the rule that associate a set of pre and post-conditions which each action as well as a sparse transition model to plan for actions. 
+				\paragraph{} They are many ways of performing demonstration-based reinforcement learning (see \cite{argall2009survey}) - also called Imitation Reinforcement Learning (IRL). Namely, some commons approach are : 
+				\begin{itemize}[label=$\color{red}\blacktriangleright$]
+					\item Directly approximate the robot's mapping from state to action by reproducing and generalizing the teacher's one. This can namely be done by learning the teacher's transition through a motion generator. 
+					\item Use demonstration data, or more precisely the teacher's transition to learn a model from the world's dynamic (or transition probability model) to compute the optimal policy (see \cite{price2003accelerating}). 
+					\item Use demonstration data and additional user intention to learn the rule that associate a set of pre and post-conditions which each action as well as a sparse transition model to plan for actions. 
+					% Do biblio and introduce the two new articles 
 				\end{itemize}
 				
-				\paragraph{} The framework we described hereinbefore can easily be extended to more than one teacher. Moreover, such teachers can actually be other learning algorithms with different levels of training. Quickly, the problem drifts toward the underlying issue of performing transfer skill between agents. As this will also be tackled during this project, the next section reminds a few useful facts about the theory of transfer learning. 
-			}
-			\subsection{Transfer learning}
-			{
-				\paragraph{} Transfer learning deals with speeding a learning process thanks to another learning experience - for instance training an agent based on the previous training on another agent, performing a similar task. The literature of transfer learning in reinforcement learning is pretty large, and for a full description of the different problematics (homogeneous / inhomogeneous sets of actions, multi task learning, ..) we'll refer to \cite{taylor2009transfer}. 
-				
-				\paragraph{} As we said before, one of our goal is to assess our method as a transfer learning one, and up to a point, consider our teacher to be a trained (fully or not) agent, before considering many different agents as potential mentors. We would consider a really simple case of transfer learning, where all agents display the same state-action state, with the same abilities and constraints. 
-				
-				\paragraph{} Hence, we remind here some metrics to evaluate transfer learning methods that we would have to use to compare our different approaches : 
-				\begin{itemize}
-					\item \emph{Jump start} : the initial performance of an agent can be improved by transfer. 
-					\item \emph{Asymptotic performance} : how close is the asymptotic learned policy from the optimal policy ? 
-					\item \emph{Total or averaged reward} : averaged reward may be improved by transfer 
-					\item \emph{Transfer ratio} : Ratio of total reward accumulated by the transfer learner and the total of reward accumulated by a non-transfer learner. 
-					\item \emph{Time to threshold} : the time required by a transfer learning to reach a pre-specified level of skills in achieving its task. 
-				\end{itemize}
-				
-				\paragraph{} All those metrics actually compared different aspects of how well a RL algorithm learns. Comparing two reinforcement learning methods is actually still an open question, and hence we'll need to address several of those metrics to decide on the wellness of our derived TL methods. 
-			}
 		}
 		\section{Outline}
 		{
@@ -374,7 +356,7 @@
 	
 		\section{Grid-world examples}
 		{
-			\paragraph{} We hereinafter describe two grid-world state spaces, on which we will apply the learning rule derived in the latest section. Such example are trivial and are displayed here just to show convergence and behavior of the different algorithms. 
+			\paragraph{} We hereinafter describe two grid-world state spaces, on which we will apply the learning rule derived in the latest section. Such example are trivial and are displayed here simply to show convergence and behavior of the different algorithms. 
 			
 			\paragraph{} We'll consider the two following state spaces : 
 			\begin{figure}[ht!]
@@ -394,7 +376,8 @@
 				\begin{equation}
 					\mathcal{P}_{s,s'}^a = \left\{\begin{aligned} &0.9 &\text{ if }s' = a(s) \\ &0.1 &\text{ otherwise} \end{aligned}\right.
 				\end{equation}
-				Running the value iteration algorithm (assuming we now the environment model), we obtain the following policies and learning curves. The stopping criterion adresses the maximum absolute change brought to the value function as the sweeping goes through the state space : 
+				Using a stochastic dynamic, is a first step in designing an environment closer to reality. Also, this allows to provide a simple example (like the one considered) we non-trivial solutions. 
+				\paragraph{} Running the value iteration algorithm (assuming we now the environment model), we obtain the following policies and learning curves. The stopping criterion adresses the maximum absolute change brought to the value function as the sweeping goes through the state space : 
 				\begin{equation}
 					\text{ If } \max_{s\in\mathcal{S}} \vert V_{k+1}(s) - V_k \vert < \delta \text{ then stop}
 				\end{equation}
