@@ -295,6 +295,8 @@
 					}
 				
 				\paragraph{} Along with this hypothesis and a slight variation in the usual stochastic approximation conditions, the learned action value function by Q-learning has been shown to converge to $Q^*$ with probability $1$. 
+				
+				\paragraph{} In some cases, off-learning policies algorithms (like Q-learning) and on-policy ones (like SARSA) can learn different optimal policies (see \cite{Sutton98a}). This is mainly due to the fact that Q-learning performs update like if it was following a greedy policy - which it is not. That leads it to be less sensitive to a possible behavioral policy failure. 
 			}
 			\subsection{Eligibility traces}
 			{
@@ -381,6 +383,7 @@
 				\begin{equation}
 					\text{ If } \max_{s\in\mathcal{S}} \vert V_{k+1}(s) - V_k \vert < \delta \text{ then stop}
 				\end{equation}
+				In practice, $\delta$ is defined to be 0.1\% of the first state-value function update. 
 				
 				\begin{figure}[ht!]
 				\begin{minipage}{0.4\linewidth}
@@ -430,23 +433,34 @@
 						\caption{Averaged rewards over mini-batch for SARSA on \emph{free\_grid}}
 					\end{minipage}
 				\end{figure}
-				  
-			}
-			\subsection{Q-learning solving}
-			{
-			
-				\begin{figure}[ht!]
+				\begin{figure}[h!]
 					\begin{minipage}{0.4\linewidth}
 						\includegraphics[width=0.9\linewidth]{bargrid_ql_learning_curve}
 						\caption{Learning curve for Q-learning on \emph{bar\_grid}}
+						\label{fig::bargrid_ql_lc}
 					\end{minipage}
 					\hfill
 					\begin{minipage}{0.4\linewidth}
 						\includegraphics[width=0.9\linewidth]{bargrid_ql_averaged_rewards}
 						\caption{Averaged rewards over mini-batch for Q-learning on \emph{bar\_grid}}
+						\label{fig::bargrid_ql_ar}
 					\end{minipage}
 				\end{figure}
-				\paragraph{} We display here the learning curves for the \emph{bar\_grid} state space using Q-learning. Again, the algorithm manages to learn the optimal policy and the right action-value functions. We use Gibbs sampling for the behavior policy, without any tuning for the temperature (the behavior policy doesn't need to be greedy in limit). The learning curves obtained are given hereinafter.
+				\paragraph{} More precisely, in this example, we used the following dynamics for the temperature and the learning rate : 
+				\begin{equation}
+					\tau_t = 0.995*\tau_t
+				\end{equation}
+				and, $\forall s \in\mathcal{S}, a\in\mathcal{A}(s)$ :  
+				\begin{equation}
+					\alpha_t(s,a) = \frac{\alpha_0(s,a)}{k(s,a)+1}
+				\end{equation}
+				where $k(s,a)$ denotes the number of time the action-state $(s,a)$ was chosen during the learning. Hence, we comply with the greedy-in-limit as well as the stochastic approximation conditions. 
+				  
+			}
+			\subsection{Q-learning solving}
+			{
+			
+				\paragraph{} Figures (\ref{fig::bargrid_ql_lc}) and (\ref{fig::bargrid_ql_ar}) display the learning curves for the \emph{bar\_grid} state space using Q-learning. Again, the algorithm manages to learn the optimal policy and the right action-value functions. We use Gibbs sampling for the behavior policy, without any tuning for the temperature (the behavior policy doesn't need to be greedy in limit). 
 
 			}
 		}
@@ -990,7 +1004,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				
 			\paragraph{} The effect of learning off-policy are only noticeable when applied to largely suboptimal mentors - or more precisely, to mentors giving poor recommandations in large regions of the state space. Figures (\ref{fig::off_policy_implicit}) and (\ref{fig::off_policy_explicit}) display the learning curves of off-policy versions of our adaptative compliance methods for such a sub-optimal teacher, and compares then to their on-policy version. If it is clear that the general behavior of the learner is improved (most of the learning is done much quicker), the time to convergence is also slightly improved . If there is some incompressible time needed for exploring around the teacher's sub-optimalities, this method seems to find quicker an optimal way of doing so. 
 			
-			\paragraph{} As previously quoted, the benefit of compliant off-policy learning is only noticeable for some special kind of mentor sub-optimalities. It is therefore a fairly good approach to treat systematically sub-optimal teachers, regardless of their level optimality. However, there is a certain level of sub-optimality (for instance, near random mentor) for which this method will tend to perform equally to the on-policy compliant learning. 
+			\paragraph{} As previously quoted, the benefit of compliant off-policy learning is only noticeable for some special kind of mentor sub-optimalities. It is therefore a fairly good approach to treat systematically sub-optimal teachers, regardless of their level optimality. However, there is a certain level of sub-optimality (for instance, near random mentor) for which this method will tend to perform equally to the on-policy compliant learning. Again, most of the advantages of using off-policy learning in this context is that the correspoding learner will try to fix the mentor's action in some suboptimal subspace region, instead of trying to bypass it. 
 				
 		}
 	}
