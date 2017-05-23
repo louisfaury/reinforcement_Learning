@@ -24,14 +24,14 @@
 	{
 		\section{Motivations}
 		{
-			\paragraph{} When it comes to real world manipulation tasks, common machine learning algorithms are sometimes unable to come up with feasible solutions, or at least fail to do so in an acceptable computational time - mostly because of the size of the action-state space that has to be explored,  exponentially growing with the dimensionality of a given problem.  A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
+			\paragraph{} When it comes to real world manipulation tasks, common machine learning algorithms are sometimes unable to come up with feasible solutions, or at least fail to do so in an acceptable computational time. This is mostly due to the size of the action-state space which has to be explored, exponentially growing with the dimensionality of a given problem.  A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
 			
-			\paragraph{} Such prior belief is often achieved thanks to demonstrations, performed by a human teacher. If this approach is largely covered in the literature (see \ref{subsection::lfd}), it is not really clear how to learn from a suboptimal teacher, regardless of its level of sub-optimality. Such learning abilities could enlarge the human / robot interactions possibilities, as only little knowledge in robotics or artificial intelligence would be needed to help a robot learn a task. 
+			\paragraph{} Such prior belief is often achieved thanks to demonstrations (assumed to be near optimal), performed by a human teacher. If this approach is largely covered in the literature (see \ref{subsection::lfd}), it is not really clear how to learn from a suboptimal teacher, regardless of its level of sub-optimality. Such learning abilities could enlarge the human / robot interactions possibilities, as only little knowledge in robotics or artificial intelligence would be needed to help a robot learn a task. 
 			
 			\paragraph{} We call suboptimal a teacher that provides imperfect demonstrations of a task. A demonstration can be imperfect in many ways - for instance, it could poorly transfer to the robot abilities, or simply be a naive way of completing the considered task (in the sense that it does not optimize some numerical criterion evaluating the fitness of an agent's behavior). Also, we will use the term \emph{largely suboptimal} for teachers providing demonstrations that are harmful for the learner or present obvious drawbacks at completing a task. 
 			
 			\subsection{Motivating examples}
-			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it would be unwise, since it contains many important informations relative to the task (pose of the object, joint coordination,..). We must therefore find a way to handle the demonstration in order to infer those parameters without falling in its suboptimal reproduction. 
+			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it would be unwise, since it contains many important information relative to the task (pose of the object, joint coordination,..). We must therefore find a way to handle the demonstration in order to infer those parameters without falling into its suboptimal reproduction. 
 			
 			\paragraph{} Before going any further, let us rephrase the previous problem slightly differently.  Indeed, we can draw a parallel between the latest example and the one of a children learning to dance (or any other technical skill). Because the child's dance teacher doesn't have the same physical abilities than the child, he might give the child a suboptimal way (with respect to the child's physical abilities) of performing dance moves. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around what he has learnt so far. He might find that, by slightly changing how he performs some moves,  he is able to dance better than by blindly listening to the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
 			
@@ -179,22 +179,22 @@
 		{
 			\paragraph{} Dynamic programing is a mathematically well-developed theory. It requires the complete and accurate model of the environment, making it a model-based method. 
 			
-			\paragraph{} Dynamic programing methods aims at computing the optimal value function at every state of state space. This could, of course, be done by solving the $\vert \mathcal{S} \vert $ equations of $\vert \mathcal{S} \vert $ unknowns that are the Bellman equations for a given policy, and then evolve that policy toward a better one, based on the current value function. Of course, this approach is computationally intractable for large state space and therefore needs to be adapted, but gives a first approach of the idea behind dynamic programing. 
+			\paragraph{} Dynamic programing methods aims at computing the optimal value function at every state of state space. This could, of course, be done by solving the $\vert \mathcal{S} \vert $ equations of $\vert \mathcal{S} \vert $ unknowns that are the Bellman equations for a given policy, and then evolve that policy toward a better one, based on the current value function. Of course, this approach is computationally intractable for large state space and therefore needs to be adapted. Nonetheless, it gives a first approach of the idea behind dynamic programing. 
 				
 			\subsection{Generalized policy iteration}
 			{
-				\paragraph{} The generalized policy iteration methods rely on alternating two processes, known as \textcolor{red}{policy evaluation} and \textcolor{red}{policy improvement}. 
+				\paragraph{} The generalized policy iteration methods rely on alternating two processes known as \textcolor{red}{policy evaluation} and \textcolor{red}{policy improvement}. 
 				\begin{itemize}[label=$\triangleright$]
-					\item Policy evaluation deals with estimating the value function of a given policy $\pi$, without directly solving the full system given by Bellman equations. The idea is actually pretty simple : use Bellman's equation as an update rule, using that the value function is a fixed point for this update rule. The algorithm, after setting the tabled value function to an initial value, iterate by performing what is called \emph{full Bellman backups} : 
+					\item Policy evaluation deals with estimating the value function of a given policy $\pi$, without directly solving the full system given by Bellman equations. The idea is actually pretty simple : use Bellman's equation as an update rule, the value function being a fixed point. After setting the tabled value function to an initial value, the algorithm iterates by performing what is called \emph{full Bellman backups} : 
 					\begin{equation}
 						\forall{s}\in\mathcal{S}, \quad V_{k+1}^\pi(s) = \sum_{a\in\mathcal{S}} \pi(s,a)\sum_{s'}\mathcal{P}_a(s,s') \left[\mathcal{R}_a(s,s')+V_k^\pi(s')\right]
 					\end{equation}
-					This algorithm converges under the same assumptions that guarantee the existence of the value function, and has the generic name of \emph{iterative policy evaluation}. They are many refining for speeding up that process (reduced backups, prioritized sweeping) that we won't address here. 
-				\item Policy evaluation is a process that from a given policy value function, returns a better or equal policy compared to the latter. The simplest way to do that is for every state $s\in\mathcal{S}$, consider every action-value functions : 
+					This algorithm converges under the same assumptions that guarantee the existence of the value function, and has the generic name of \emph{iterative policy evaluation}. They are many refining for speeding up that process (reduced backups, prioritized sweeping) which we won't address here. 
+				\item Policy improvement is a process that from a given policy value function, returns a better or equal policy compared to the latter. The simplest way to do that is to consider, for every state $s\in\mathcal{S}$, every action-value functions : 
 				\begin{equation}
 					Q(s,a) = \sum_{s'}\mathcal{P}_a(s,s')\left[\mathcal{R}_a(s,s') + \gamma V\pi(s')\right], \quad a\in\mathcal{A}(s)
 				\end{equation}
-				and to build $\pi'$ to be \emph{greedy} with respect to those actions-values : 
+				and then to build $\pi'$ to be \emph{greedy} with respect to those actions-values : 
 				\begin{equation}
 					\pi'(s) = \argmax{a\in\mathcal{A}(s)}{Q(s,a)}
 				\end{equation}
@@ -352,7 +352,7 @@
 					}
 
 
-				\paragraph{} Such a formulation of eligibility traces is known as the \emph{\textcolor{red}{forward view}} of TD($\lambda$), and shows how eligibility traces build the bridge between TD(0) methods and Monte-Carlo one. It is not implementable as is since it is non-causal. There exist a more mechanistic view, equivalent to the forward view (see \cite{Sutton98a}), known as the \emph{backward-view}. It gives birth to causal version of the TD($\lambda$) method. We give as an example the pseudo-code for the SARSA($\lambda$) algorithm above. Its Q-learning equivalent can be found in \cite{Sutton98a}.   
+				\paragraph{} Such a formulation of eligibility traces is known as the \emph{\textcolor{red}{forward view}} of TD($\lambda$), and shows how eligibility traces build the bridge between TD(0) methods and Monte-Carlo one. It is not implementable as is since it is non-causal. There exist a more mechanistic view, equivalent to the forward view (see \cite{Sutton98a}), known as the \emph{backward-view}. It gives birth to causal version of the TD($\lambda$) method. We give as an example the pseudo-code for the SARSA($\lambda$) algorithm above. Its Q-learning equivalent can be found in \cite{Sutton98a}. In the following, we'll use the variant of eligibility traces for Q-learning known as Watkins Q-learning.   
 			}
 		}
 	
@@ -509,7 +509,7 @@
 		}
 		\section{Experimental MDP}
 		{
-			\paragraph{} To test the effectiveness of the solutions we willl propose, we decided to provide ourself with a model that would stay fixed all along the experiments, in order to compare the different algorithms we could come up with. 
+			\paragraph{} To test the effectiveness of the solutions we will propose, we decided to provide ourself with a model that would stay fixed all along the experiments. We will use it in order to compare our different algorithms.
 			
 			\paragraph{} We designed the state space displayed in figure (\ref{fig::maze_display}). In this environment, all black cells are obstacles. They give out highly negative rewards ($r=-10$). Whenever an agent take the action to enter such a cell, it immediately perceives the negative reward but stays in its current cell. The only positive reward is at the middle of the grid ($r=10$), the only terminal state. Any episode starts at one of the corner of the grid (green cells), and every step spent on a non-terminal cell gives out a small negative reward ($r=-0.1$). The transitions are stochastic, with the transition probability model : 
 			\begin{equation}
@@ -560,7 +560,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\end{center}
 		\end{figure}
 		
-		\paragraph{} Besides than giving us an idea how generic reinforcement learning algorithms performs on our sandbox MDP, those different reinforcement learning methods enables us to \emph{generate mentors of varying sub-optimal levels}. 
+		\paragraph{} Besides giving us an idea how generic reinforcement learning algorithms performs on our sandbox MDP, those different reinforcement learning methods enables us to \emph{generate mentors of varying sub-optimal levels}. 
 		
 		\paragraph{} If we consider a SARSA learner (for instance), we can at any time of its learning generate a deterministic version of the current exploratory policy. This is done by taking its greedy version with respect to its current Q-values estimates. Hence $\forall s\in\mathcal{S}$ : 
 		\begin{equation}
@@ -605,7 +605,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\end{center}
 			\end{figure}
 			
-			\paragraph{} This remark actually pinpoints a major downside of this method, that is the need of fine tuning of the parameter $p$. But obviously, there is even a bigger downside, that becomes a major game killer when dealing with largely suboptimal mentors. Indeed, some mentors can be suboptimal enough to only show a good direction of exploitation, but not be able to reach the target. . Figure (\ref{subopt_policy_block}) displays such a policy, where the mentor's policy creates loops and does not always leads to the positive reward.  \newline
+			\paragraph{} This remark actually pinpoints a major downside of this method, that is the need of fine tuning of the parameter $p$. But obviously, there is even a bigger downside, which becomes a major game killer when dealing with largely suboptimal mentors. Indeed, some mentors can be suboptimal enough to only show a good direction of exploitation, but not be able to reach the target. . Figure (\ref{subopt_policy_block}) displays such a policy, where the mentor's policy creates loops and does not always leads to the positive reward.  \newline
 			Applying the latest method with such a teacher is fatal for the learning, as the learner discovers that following the mentor's action yields largely negative rewards, but is not able to bypass them as it keeps a constant confidence in its teacher. This leads the learner to build up low Q-values in the directions recommended by the mentor, and to try to follow an opposite path. This is highly counter-productive since the mentor still gives the right exploration direction. 
 		
 		\subsection{Vanishing compliance }
@@ -736,7 +736,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	\chapter{Results}
 	{
 		\label{chap::res}
-				\paragraph{} We hereinafter give some practical considerations for the implicit $\beta$-compliance and explicit compliance methods, and discuss the experimental results we obtained. 
+				\paragraph{} The following sections procide some practical considerations for the implicit $\beta$-compliance and explicit compliance methods, and discuss the experimental results we obtained. 
 		\section{Implicit $\beta$-compliance}
 		{
 			\subsection{Practical considerations}
@@ -1039,7 +1039,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\end{tabularx}
 			\end{center}
 			
-			\paragraph{} Using rather basic reinforcement learning updates (SARSA), all three of our methods equalize the performances of more more sophisticated algorithms (eligibility traces for instance), even with teachers of questionable optimality levels. What's more, they clearly outperform the algorithms they rely on when those ones are implemented without demonstrations. However, some consequent work is left to be done in order to be able to generalize those algorithms to more complicated environments or to weaker hypothesis. 
+			\paragraph{} Using rather basic reinforcement learning updates (SARSA), all three of our methods rival with the performances of more more sophisticated algorithms (eligibility traces for instance), even with teachers of questionable optimality levels (in our experiment, nearly-optimal teachers have optimality levels approaching 100\% by only a few percentage). What's more, they clearly outperform the algorithms they rely on when those ones are implemented without demonstrations. However, some consequent work is left to be done in order to be able to generalize those algorithms to more complicated environments or to weaker hypothesis. 
 		}
 		\section{Applicability}
 		{
