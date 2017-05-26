@@ -24,7 +24,7 @@
 	{
 		\section{Motivations}
 		{
-			\paragraph{} When it comes to real world manipulation tasks, common machine learning algorithms are sometimes unable to come up with feasible solutions, or at least fail to do so in an acceptable computational time. This is mostly due to the size of the action-state space which has to be explored, exponentially growing with the dimensionality of a given problem.  A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
+			\paragraph{} When it comes to learning real world manipulation tasks, common machine learning algorithms are sometimes unable to come up with feasible solutions, or at least fail to do so in an acceptable computational time. This is mostly due to the size of the action-state space which has to be explored, exponentially growing with the dimensionality of a given problem.  A natural way to accelerate the learning process is to provide a learning algorithm with prior belief on its environment, as well as recommandations with respect to the task it is trying to learn. 
 			
 			\paragraph{} Such prior belief is often achieved thanks to demonstrations (assumed to be near optimal), performed by a human teacher. If this approach is largely covered in the literature (see \ref{subsection::lfd}), it is not really clear how to learn from a suboptimal teacher, regardless of its level of sub-optimality. Such learning abilities could enlarge the human / robot interactions possibilities, as only little knowledge in robotics or artificial intelligence would be needed to help a robot learn a task. 
 			
@@ -44,22 +44,23 @@
 		}
 		\section{Learning from Demonstration}
 		{
-			\paragraph{} We hereinafter introduce some notions from the Learning from Demonstration (LfD) framework, as well as some transfer learning metrics that will show useful later on. 
-				\label{subsection::lfd}
-				\paragraph{} Learning from demonstration (LfD) is a framework where a robot can learn from interacting with a human. It particularly focus on the case where a mentor (human) provides demonstration on how to perform a task. Such an approach is also known as Programming from Demonstration (PbD) or Imitation Learning. 
-				
-				\paragraph{} LfD mostly lies on the principle that the learning robot can be taught new tasks by end-users, without having to be programmed again. We therefore are dealing with robots that are able to generalize from demonstration, be it only to understand what is the task that they must learn. They are many underlying problematics and opened questions on the subject, detailed in \cite{Billard2016}.
-				
-				\paragraph{}Many LfD approaches are combined with reinforcement learning techniques. This is mostly related to the understanding that demonstrations can easily speed-up the reinforcement learning process by providing a finite or infinite set of good solutions. However, this assume some kind of reproducibility by the robot, as well as a similar enough context between demonstration and reproduction. \newline
-				Under such assumptions, reinforcement learning techniques can use LfD to speed up their process and discover new control policies through a directed exploration of its action-state space. Indeed, demonstrations are used to guide the reinforcement learning algorithm's exploration, reducing the time and iterations needed for an agent to discover a new control policy, and eventually overcoming the teacher's  policy sub-optimalities. 
-				
-				\paragraph{} They are many ways of performing demonstration-based reinforcement learning (see \cite{argall2009survey}) - also called Imitation Reinforcement Learning (IRL). Namely, some commons approach are : 
-				\begin{itemize}[label=$\color{red}\blacktriangleright$]
-					\item Directly approximate the robot's mapping from state to action by reproducing and generalizing the teacher's one. This can namely be done by learning the teacher's transition through a motion generator. 
-					\item Use demonstration data, or more precisely the teacher's transition to learn a model from the world's dynamic (or transition probability model) to compute the optimal policy (see \cite{price2003accelerating}). 
-					\item Use demonstration data and additional user intention to learn the rule that associate a set of pre and post-conditions which each action as well as a sparse transition model to plan for actions. 
-					% Do biblio and introduce the two new articles 
-				\end{itemize}
+			\label{subsection::lfd}
+			\paragraph{} The process of mapping states to actions (also called \emph{policy}) is a fundamental task in robotics. The traditional approach for this problem is based on dynamical system theory. This branch of methods is well understood and has many different derivations, but however suffers from different drawbacks that limit a global access to robotics. Indeed, designing control laws for robots implies having a sensible knowledge of a robot's kinematic and dynamical model, and is subject to many approximations (linearisation, ..).  It therefore requires a fairly advanced level of expertise - restricting this field to robotic experts. 
+			
+			\paragraph{} Learning from demonstration (LfD) is a framework where a robot can learn from interacting with a human. It particularly focus on the case where a mentor provides demonstrations on how to perform a task. LfD mostly lies on the principle that the learning robot can be taught new tasks by end-users, without having to be programmed again. Such robots must therefore be able to generalize from demonstration, be it only to understand what is the task that they must learn. Therefore, LfD show better promises than dynamical systems for a global use of robotics systems outside of expert communities. Another main advantage of LfD is to focus the dataset in areas that actually matter for a given task or problem. 
+			
+			\paragraph{} The LfD framework is still a hot research topic, and raise different technical and theoretical issues. A complete introduction to this subject can be found in \cite{Billard2016}. We'll hereinafter focus on two general methods often used when it comes to learning from demonstration. 
+			\newline One common approach is to draw inferences for a policy - thanks to statistical learning tools - from the teacher's demonstrations (that are therefore used in a supervised learning way to learn a motion generator). This technique is known as \emph{behavior cloning} or the \emph{mapping function} approach (see \cite{argall2009survey}), and was successfully used for many application (see \cite{hovland1996skill} and \cite{mataric2002} for examples). However, this method is applicable only if the reproduction of the task by a learner operates in a somehow similar context as in when the demonstrations were performed. Hence, the task might need to be re-learned when the environment slightly changes. 
+			\newline This last remark is one of the main argument for the use of reinforcement learning based methods for learning from demonstrations. Indeed, in this framework, an agent could discover new control policies by itself, while getting help from demonstrations. 
+			
+			\paragraph{} The use of reinforcement learning in the context of learning from demonstrations has been studied under many different aspects, and is still an active research field. 
+			\newline A natural way to use demonstrations in a reinforcement learning approach is to use them as \emph{bootstrap} for a reinforcement learner (see \cite{Billard2016}). For instance, one can use the teacher's policy as a roll-out to get an initial estimate of the value of different teacher actions. 
+			\newline The approach that we are more interested in involves using demonstration at exploration time. For instance, one could decide to let the demonstrator take over during one trial, or even create mixtures of policies involving the teacher's one in a policy search context (see \cite{ross2011reduction}). In a exploration-exploitation tradeoff context, the idea of using a policy guided by the teacher was also used in \cite{chu2017analyzing}. The idea followed in this report somehow relates to the last two ones, but enables to have adaptative mixtures / exploratory policies. 
+			
+			\paragraph{} Another approach to LfD was recently developed in the framework of \emph{Inverse Reinforcement Learning} (IRL). The main justification of this approach comes from the fact that engineering a well-behaved reward function quickly becomes intractable for complex tasks. The idea of IRL (at least in a LfD context) is therefore to consider the demonstrations as expert moves, and learn the reward function that will best explain the observed (allegedly optimal) policy. This approach have some inherent ambiguities that were recently partially or completely solved (see \cite{abbeel2004apprenticeship} and \cite{ziebart2008maximum}). A formal gap between LfD and IRL was also drawn in \cite{piot2017}. 
+			\newline One of the main disadvantage of IRL, for our concerns, is that demonstrations are considered as expert moves - excluding therefore suboptimal teachers. The considerations of such teachers was also recently studied in a Bayesian framework (see \cite{choi2015hierarchical}).
+			
+		\paragraph{} As stated earlier, most of the existing approach in LfD rely on the hypothesis that the dataset contains some high-quality demonstrations. With a compliant-based exploration approach, we hope to loosen that assumption and teach a reinforcement learner from (largely) suboptimal demonstrations. 
 				
 		}
 		\section{Outline}
