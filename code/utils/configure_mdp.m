@@ -103,7 +103,7 @@ switch model_name
         mdp.av_il.temp_mult = 0.995;
         mdp.av_il.max_iter = 400;
         mdp.av_il.init_lr = 1;
-        mdp.av_il.ld_lr = 0.2; % listening/discard learning rate
+        mdp.av_il.ld_lr = 0.1; % listening/discard learning rate
     otherwise
         error('File name is not known (thrown in configure_model(.))');
 end
