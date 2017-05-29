@@ -33,7 +33,7 @@
 			\subsection{Motivating examples}
 			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object: an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it would be unwise, since it contains important information relative to the task (pose of the object, joint coordination,..). We must therefore find a way to handle the demonstration in order to infer those parameters without falling into its suboptimal reproduction. 
 			
-			\paragraph{} Before going any further, let us rephrase the previous problem slightly differently.  Indeed, we can draw a parallel between the latest example and the one of a children learning to dance (or any other technical skill). Because the child's dance teacher doesn't have the same physical abilities than the child, he might give the child a suboptimal way (with respect to the child's physical abilities) of performing dance moves. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around what he has learnt so far. He might find that, by slightly changing how he performs some moves,  he is able to dance better than by blindly listening to the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
+			\paragraph{} Before going any further, let us rephrase the previous problem slightly differently. Indeed, we can draw a parallel between the latest example and the one of a children learning to dance (or any other technical skill). Because the child's dance teacher doesn't have the same physical abilities than the child, he might give the child a suboptimal way (with respect to the child's physical abilities) of performing dance moves. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around what he has learnt so far. He might find that, by slightly changing how he performs some moves, he is able to dance better than by blindly listening to the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
 			
 			\subsection{Goal}
 			\paragraph{} This semester project aims at introducing a theoretical formulation of such a compliance-based behavior, and experimentally test its performance on simple problems.
@@ -45,7 +45,7 @@
 		\section{Learning from Demonstration}
 		{
 			\label{subsection::lfd}
-			\paragraph{} The process of mapping states to actions (also called \emph{policy}) is a fundamental task in robotics. The traditional approach for this problem is based on dynamical system theory. This branch of methods is well understood and has many different derivations, but however suffers from different drawbacks that limit a global access to robotics. Indeed, designing control laws for robots implies having a sensible knowledge of a robot's kinematic and dynamical model, and is subject to many approximations (linearisation, ..).  It therefore requires a fairly advanced level of expertise - restricting this field to robotic experts. 
+			\paragraph{} The process of mapping states to actions (also called \emph{policy}) is a fundamental task in robotics. The traditional approach for this problem is based on dynamical system theory. This branch of methods is well understood and has many different derivations, but however suffers from different drawbacks that limit a global access to robotics. Indeed, designing control laws for robots implies having a sensible knowledge of a robot's kinematic and dynamical model, and is subject to many approximations (linearisation, ..). It therefore requires a fairly advanced level of expertise - restricting this field to robotic experts. 
 			
 			\paragraph{} Learning from demonstration (LfD) is a framework where a robot can learn from interacting with a human. It particularly focus on the case where a mentor provides demonstrations on how to perform a task. LfD mostly lies on the principle that the learning robot can be taught new tasks by end-users, without having to be programmed again. Such robots must therefore be able to generalize from demonstration, be it only to understand what is the task that they must learn. Therefore, LfD show better promises than dynamical systems for a global use of robotics systems outside of expert communities. Another main advantage of LfD is to focus the dataset in areas that actually matter for a given task or problem. 
 			
@@ -66,7 +66,7 @@
 		\section{Outline}
 		{
 			
-			\paragraph{} To grasp ideas and intuitions about a compliant-based imitation learning method, we are going to start with a fairly simple environment and an explicit task. We hope that a simple enough state space will allow us to better understand how compliance in learning by demonstration should be tackled with a reinforcement learning formulation.  We also hope we would be able to generalize to more complex situations once the understanding on a simple but generic model is mastered. 
+			\paragraph{} To grasp ideas and intuitions about a compliant-based imitation learning method, we are going to start with a fairly simple environment and an explicit task. We hope that a simple enough state space will allow us to better understand how compliance in learning by demonstration should be tackled with a reinforcement learning formulation. We also hope we would be able to generalize to more complex situations once the understanding on a simple but generic model is mastered. 
 			
 			\paragraph{} Hence, after defining a simple two dimensional grid-world state space with a simple action set, we will quickly study how well the different classical reinforcement learning policy search algorithms performs on such a space. We will then introduce new exploration policies, based on the confidence the learner has in its teacher and compare their efficiency with the latter algorithms. We will also focus on the relation between the learner and the prior information that its mentor's recommandations represent. Especially, we will study how well a learner can overcome its mentor own sub-optimality, focusing on largely suboptimal mentors. We call \emph{largely} suboptimal a teacher providing demonstrations with potential danger or obvious downsides for the learner. 
 		}
@@ -351,7 +351,7 @@
 					}
 
 
-				\paragraph{} Such a formulation of eligibility traces is known as the \emph{\textcolor{red}{forward view}} of TD($\lambda$), and shows how eligibility traces build the bridge between TD(0) methods and Monte-Carlo one. It is not implementable as is since it is non-causal. There exist a more mechanistic view, equivalent to the forward view (see \cite{Sutton98a}), known as the \emph{backward-view}. It gives birth to causal version of the TD($\lambda$) method. We give as an example the pseudo-code for the SARSA($\lambda$) algorithm above. Its Q-learning equivalent can be found in \cite{Sutton98a}. In the following, we'll use the variant of eligibility traces for Q-learning known as Watkins Q-learning.   
+				\paragraph{} Such a formulation of eligibility traces is known as the \emph{\textcolor{red}{forward view}} of TD($\lambda$), and shows how eligibility traces build the bridge between TD(0) methods and Monte-Carlo one. It is not implementable as is since it is non-causal. There exist a more mechanistic view, equivalent to the forward view (see \cite{Sutton98a}), known as the \emph{backward-view}. It gives birth to causal version of the TD($\lambda$) method. We give as an example the pseudo-code for the SARSA($\lambda$) algorithm above. Its Q-learning equivalent can be found in \cite{Sutton98a}. In the following, we'll use the variant of eligibility traces for Q-learning known as Watkins Q-learning.
 			}
 		}
 	
@@ -482,7 +482,7 @@
 			\end{equation}
 			where $a_m(s)$ is the \emph{recommended action} of the mentor at state $s$. 
 			\newline 
-			Such an hypothesis isn't trivial, and will be discussed later in this report. The main reason it is considered is that it enables to treat the whole state space in the same way - without having to distinguish regions in the state space that are provided with demonstrations and regions which are not. 
+			Such an hypothesis isn't trivial, and will be discussed later in this report. The main reason it is considered is that it enables to treat the whole state space in the same way - without having to distinguish regions that are provided with demonstrations and regions which are not. 
 			
 			\paragraph{} As discussed earlier in this report, our goal is to mimic the shifting compliance a child can have with respect to its teacher when learning a new skill. Because this implies making choices as to wether follow a recommended action or sample elsewhere in the action space, it is clear that \textbf{only the action selection should be impacted by the presence of the mentor}. 
 
@@ -640,7 +640,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 
 		}		
 		
-		\paragraph{} If this approach seems to work relatively well, there are still some critical downsides to it. First of all, a lot of tuning is required in order to find the hyper-parameters ($p_0$, $\beta$, temperature evolution, ..) that lead to a fast learning. Also, there is an undershoot in the learning that seems to slow it down, due to the exploring phase that happens when $p$ becomes too low.  Such exploration could be avoided or reduced if the learner is able to figure out quickly that indeed, the mentor was right in its recommandation.
+		\paragraph{} If this approach seems to work relatively well, there are still some critical downsides to it. First of all, a lot of tuning is required in order to find the hyper-parameters ($p_0$, $\beta$, temperature evolution, ..) that lead to a fast learning. Also, there is an undershoot in the learning that seems to slow it down, due to the exploring phase that happens when $p$ becomes too low. Such exploration could be avoided or reduced if the learner is able to figure out quickly that indeed, the mentor was right in its recommandation.
 		
 		\paragraph{} This last remark is a clear motivation to search for better behaving confidence dynamics. Indeed, why automatically reject a recommandation (which is what the vanishing compliance does in the end of its learning) when we have all the information needed to state that this recommandation is a good one ? On the contrary, a learner should directly accept it once its exploration has taught it that the mentor's recommandation at one point of state space seems to be an optimal one.  
 	}
@@ -698,7 +698,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\begin{equation}
 				\forall s\in\mathcal{S}, \, \mathcal{A}_c(s) = \left\{ 'listen', \, 'discard'\right\}
 			\end{equation}
-			to which we assign the action values $Q_c(\cdot,l)$ and  $Q_c(\cdot,d)$ (where $'l'$ denotes the action of listening and $'d'$ the action of discarding the teacher recommendation). 
+			to which we assign the action values $Q_c(\cdot,l)$ and $Q_c(\cdot,d)$ (where $'l'$ denotes the action of listening and $'d'$ the action of discarding the teacher recommendation). 
 			
 			\paragraph{} The exploration is done by computing a soft policy derived from $\{Q_c(s,l), Q_c(s,d)\}$ for all $s\in\mathcal{S}$. We do this using a Gibbs softmax distribution, which yields: 
 			\begin{equation}
@@ -783,7 +783,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-			\paragraph{} The first remark we can make is that by learning the confidence, we were able  to avoid the undershoot that we observed for the vanishing compliance method (see figures (\ref{fig::comp_naive_compliance_120}) and (\ref{fig::comp_naive_compliance_50})). This results in a faster learning and better behaving learning curves. The different methods will be further compared in (\ref{sec_method_comp}). 
+			\paragraph{} The first remark we can make is that by learning the confidence, we were able to avoid the undershoot that we observed for the vanishing compliance method (see figures (\ref{fig::comp_naive_compliance_120}) and (\ref{fig::comp_naive_compliance_50})). This results in a faster learning and better behaving learning curves. The different methods will be further compared in (\ref{sec_method_comp}). 
 			}
 			\subsection{Discussion}
 			{
