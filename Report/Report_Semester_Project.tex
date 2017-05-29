@@ -31,7 +31,7 @@
 			\paragraph{} We call suboptimal a teacher that provides imperfect demonstrations of a task. A demonstration can be imperfect in many ways - for instance, it could poorly transfer to the robot abilities, or simply be a naive way of completing the considered task (in the sense that it does not optimize some numerical criterion evaluating the fitness of an agent's behavior). Also, we will use the term \emph{largely suboptimal} for teachers providing demonstrations that are harmful for the learner or present obvious drawbacks at completing a task. 
 			
 			\subsection{Motivating examples}
-			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it would be unwise, since it contains many important information relative to the task (pose of the object, joint coordination,..). We must therefore find a way to handle the demonstration in order to infer those parameters without falling into its suboptimal reproduction. 
+			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it would be unwise, since it contains important information relative to the task (pose of the object, joint coordination,..). We must therefore find a way to handle the demonstration in order to infer those parameters without falling into its suboptimal reproduction. 
 			
 			\paragraph{} Before going any further, let us rephrase the previous problem slightly differently.  Indeed, we can draw a parallel between the latest example and the one of a children learning to dance (or any other technical skill). Because the child's dance teacher doesn't have the same physical abilities than the child, he might give the child a suboptimal way (with respect to the child's physical abilities) of performing dance moves. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around what he has learnt so far. He might find that, by slightly changing how he performs some moves,  he is able to dance better than by blindly listening to the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
 			
@@ -49,7 +49,7 @@
 			
 			\paragraph{} Learning from demonstration (LfD) is a framework where a robot can learn from interacting with a human. It particularly focus on the case where a mentor provides demonstrations on how to perform a task. LfD mostly lies on the principle that the learning robot can be taught new tasks by end-users, without having to be programmed again. Such robots must therefore be able to generalize from demonstration, be it only to understand what is the task that they must learn. Therefore, LfD show better promises than dynamical systems for a global use of robotics systems outside of expert communities. Another main advantage of LfD is to focus the dataset in areas that actually matter for a given task or problem. 
 			
-			\paragraph{} The LfD framework is still a hot research topic, and raise different technical and theoretical issues. A complete introduction to this subject can be found in \cite{Billard2016}. We'll hereinafter focus on two general methods often used when it comes to learning from demonstration. 
+			\paragraph{} Learning from demonstration is still a hot research topic, and raise different technical and theoretical issues. A complete introduction to this subject can be found in \cite{Billard2016}. We'll hereinafter focus on two general methods often used when it comes to learning from demonstration. 
 			\newline One common approach is to draw inferences for a policy - thanks to statistical learning tools - from the teacher's demonstrations (that are therefore used in a supervised learning way to learn a motion generator). This technique is known as \emph{behavior cloning} or the \emph{mapping function} approach (see \cite{argall2009survey}), and was successfully used for many application (see \cite{hovland1996skill} and \cite{mataric2002} for examples). However, this method is applicable only if the reproduction of the task by a learner operates in a somehow similar context as in when the demonstrations were performed. Hence, the task might need to be re-learned when the environment slightly changes. 
 			\newline This last remark is one of the main argument for the use of reinforcement learning based methods for learning from demonstrations. Indeed, in this framework, an agent could discover new control policies by itself, while getting help from demonstrations. 
 			
@@ -119,7 +119,7 @@
 			}
 			\subsection{State and action value function}
 			{
-				\paragraph{} Most of the reinforcement learning algorithms are based on evaluation value function. A value function is a function mapping the state space in $\mathbb{R}$, estimating how good (in terms of expected future reward) it is for the agent to be in a given space. More precisely, a value function $V^\pi(\cdot)$ evaluates the expected return of a state when following the policy $\pi$. $V^\pi(\cdot)$ is called the \textbf{state-value function}. 
+				\paragraph{} Most of the reinforcement learning algorithms are based on value function evaluation. A value function is a function mapping the state space in $\mathbb{R}$, estimating how good (in terms of expected future reward) it is for the agent to be in a given space. More precisely, a value function $V^\pi(\cdot)$ evaluates the expected return of a state when following the policy $\pi$. $V^\pi(\cdot)$ is called the \textbf{state-value function}. 
 				\begin{equation}
 					\forall{s}\in\mathcal{S}, \quad V^\pi(s) = \E[\pi]{R_t \, \vert \, s_t = s}
 				\end{equation}
@@ -128,7 +128,7 @@
 					\forall{s,a}\in\mathcal{S}\times\mathcal{A}(s), \quad Q^\pi(s,a) = \E[\pi]{ R_t \, \vert \, s_t=s, \, a_t=a}
 				\end{equation}
 				
-				\paragraph{} Both those functions satisfy particular recursive relationships known as the \emph{Bellman equations}. It is shown that (see TODO quote Sutton) we have the following results : 
+				\paragraph{} Both those functions satisfy particular recursive relationships known as the \emph{Bellman equations}. It is shown that (see \cite{Sutton98a}) we have the following results : 
 				\vspace{10pt}
 				
 				\coolbox{white}{\textcolor{black}{Bellman equations for Markov Decision Process}}
@@ -152,7 +152,7 @@
 					\forall\pi, \quad \pi^* \geq \pi 
 				\end{equation}
 				
-				TODO quote showed that for finite MDPs, there is always at least one policy that is better our equal to all others, and therefore is called the \emph{optimal policy} $\pi^*$. As shown in TODO quote, the state-value and action-value function verify the \emph{Bellman optimality equations}. 
+				It was showed that for finite MDPs, there is always at least one policy that is better our equal to all others, and therefore is called the \emph{optimal policy} $\pi^*$. As shown in \cite{Sutton98a}, the state-value and action-value function verify the \emph{Bellman optimality equations}. 
 				
 				\vspace{10pt}
 				
@@ -175,7 +175,7 @@
 		}
 
 
-			\paragraph{} There exists several ways of solving (i.e computing the optimal policy) of a Markov Decision Process, that can generically be separated in two categories : \emph{model-based} and \emph{model-free} methods. 
+			\paragraph{} There exists several ways of solving (i.e computing the optimal policy) a Markov Decision Process, that can generically be separated in two categories : \emph{model-based} and \emph{model-free} methods. 
 		\section{Dynamic Programing}
 		{
 			\paragraph{} Dynamic programing is a mathematically well-developed theory. It requires the complete and accurate model of the environment, making it a model-based method. 
@@ -208,7 +208,7 @@
 			{
 				\paragraph{} The value iteration algorithm takes the limit of the behavior we just described, and stops the value evaluation procedure after only \emph{one state space sweep}. It therefore performs a simple backup procedure : 
 					\begin{equation}
-						\forall{s}\in\mathcal{S}, \quad V_{k+1}  = \max_{a\in\mathcal{A}}  \sum_{s'}\mathcal{P}_a(s,s')\left[\mathcal{R}_a(s,s') + \gamma V_k^\pi(s')\right]
+						\forall{s}\in\mathcal{S}, \quad V_{k+1}(s)  = \max_{a\in\mathcal{A}}  \sum_{s'}\mathcal{P}_a(s,s')\left[\mathcal{R}_a(s,s') + \gamma V_k^\pi(s')\right]
 					\end{equation}
 					For any arbitrary $V_0$, it is shown that $V_k\to V^*$ as $k\to\infty$, under the same hypothesis that ensure the existence of the optimal value function $V^*$. As one can notice, it actually implements the \emph{Bellman optimality conditions} as an update rule !
 				}
@@ -219,7 +219,7 @@
 		{
 			\paragraph{} Temporal difference methods can be seen as a combination of dynamic programing and another kind of learning called Monte Carlo methods, where the expected return are approximated via sampling. Like dynamic programming, TD methods are said to bootstrap (meaning that they build their estimators through already estimated values), but are \emph{model-free} methods and learn from experience. 
 			
-			\paragraph{} The justification, proof of convergences and literature and those models is pretty wide, hence we will not cover them in this report. However, full description of those methods can be found in TODO quote. 
+			\paragraph{} The justification, proof of convergences and literature and those models is pretty wide, hence we will not cover them in this report. However, a full description of those methods can be found in \cite{Sutton98a}. 
 			
 			\subsection{On-policy method : SARSA}
 			{
@@ -1064,7 +1064,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 	
 	
 	
-	\bibliographystyle{plain}
+	\bibliographystyle{ieeetr}
  	 \bibliography{bibfile}
   	\nocite{*}
 	
