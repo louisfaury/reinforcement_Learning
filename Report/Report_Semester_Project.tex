@@ -559,7 +559,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\end{center}
 		\end{figure}
 		
-		\paragraph{} Besides giving us an idea how generic reinforcement learning algorithms performs on our sandbox MDP, those different reinforcement learning methods enables us to \emph{generate mentors of varying sub-optimal levels}. 
+		\paragraph{} Besides giving us an idea on how generic reinforcement learning algorithms performs on our sandbox MDP, those different reinforcement learning methods enable us to \emph{generate mentors of varying sub-optimal levels}. 
 		
 		\paragraph{} If we consider a SARSA learner (for instance), we can at any time of its learning generate a deterministic version of the current exploratory policy. This is done by taking its greedy version with respect to its current Q-values estimates. Hence $\forall s\in\mathcal{S}$: 
 		\begin{equation}
@@ -573,7 +573,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		\label{section::naive_learners}
 		\subsection{Constant compliance}
 		{
-			\paragraph{} In the context of the action-selection described in (\ref{eq::compliant_exploration}), we decided to first implement a fairly naive method. It consists in following the teacher's recommandation with a \textbf{constant} confidence term $p$. Therefore, the learner \emph{complies} with the teacher with probability $p$, and decide to choose its own action (that \textbf{could include} $\boldsymbol{a_m}$) with probability $1-p$. This is a slight digression from (\ref{eq::compliant_exploration}), that is made here to enable a learner to reach optimality. The softmax sampling used when discarding a recommandation is tuned by a decaying temperature coefficient, making it greedy in limit.
+			\paragraph{} In the context of the action-selection process described in (\ref{eq::compliant_exploration}), we decided to first implement a fairly naive method. It consists in following the teacher's recommandation with a \textbf{constant} confidence term $p$. Therefore, the learner \emph{complies} with the teacher with probability $p$, and decide to choose its own action (that \textbf{could include} $\boldsymbol{a_m}$) with probability $1-p$. This is a slight digression from (\ref{eq::compliant_exploration}), that is made here to enable a learner to reach optimality. The softmax sampling used when discarding a recommandation is tuned by a decaying temperature coefficient, making it greedy in limit.
 			
 			\paragraph{} The figures (\ref{fig::comp_opt_verynaive}) and (\ref{fig::comp_subopt220_verynaive}) display the learning curves obtained when fed with, respectively, the optimal policy for the MDP and a slightly suboptimal one. 
 			
@@ -604,7 +604,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\end{center}
 			\end{figure}
 			
-			\paragraph{} This remark actually pinpoints a major downside of this method, that is the need of fine tuning of the parameter $p$. But obviously, there is even a bigger downside, which becomes a major game killer when dealing with largely suboptimal mentors. Indeed, some mentors can be suboptimal enough to only show a good direction of exploitation, but not be able to reach the target. . Figure (\ref{subopt_policy_block}) displays such a policy, where the mentor's policy creates loops and does not always leads to the positive reward.  \newline
+			\paragraph{} This remark actually pinpoints a major downside of this method, that is the need of fine tuning of the parameter $p$. But obviously, there is even a bigger downside, which becomes a major game killer when dealing with largely suboptimal mentors. Indeed, some mentors can be suboptimal enough to only show a good direction of exploitation, but not be able to reach the target. Figure (\ref{subopt_policy_block}) displays such a policy, where the mentor's policy creates loops and does not always leads to the positive reward.  \newline
 			Applying the latest method with such a teacher is fatal for the learning, as the learner discovers that following the mentor's action yields largely negative rewards, but is not able to bypass them as it keeps a constant confidence in its teacher. This leads the learner to build up low Q-values in the directions recommended by the mentor, and to try to follow an opposite path. This is highly counter-productive since the mentor still gives the right exploration direction. 
 		
 		\subsection{Vanishing compliance }
@@ -642,13 +642,13 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		
 		\paragraph{} If this approach seems to work relatively well, there are still some critical downsides to it. First of all, a lot of tuning is required in order to find the hyper-parameters ($p_0$, $\beta$, temperature evolution, ..) that lead to a fast learning. Also, there is an undershoot in the learning that seems to slow it down, due to the exploring phase that happens when $p$ becomes too low. Such exploration could be avoided or reduced if the learner is able to figure out quickly that indeed, the mentor was right in its recommandation.
 		
-		\paragraph{} This last remark is a clear motivation to search for better behaving confidence dynamics. Indeed, why automatically reject a recommandation (which is what the vanishing compliance does in the end of its learning) when we have all the information needed to state that this recommandation is a good one ? On the contrary, a learner should directly accept it once its exploration has taught it that the mentor's recommandation at one point of state space seems to be an optimal one.  
+		\paragraph{} This last remark is a clear motivation to search for better behaving confidence dynamics. Indeed, why automatically reject a recommandation (which is what the vanishing compliance does in the end of its learning) when we have all the information needed to state that this recommandation is a good one ?
 	}
 	
 	\section{Adaptative compliance learners}
 	{	
 		\label{section::adaptative_learners}
-		\paragraph{} Up to this point, it makes sense to somehow \emph{learn} the optimal value of the confidence parameter $p$, so that we don't have to manually tune its evolution, and so that it can store how right the teacher recommandations are. Ideally, we would like $p$ to be near $0$ when the teacher provide a suboptimal action and $1$ when the recommended action is sampled from the optimal policy. The underlying problem is therefore to infer the optimality of the teacher in different regions of the state space. 
+		\paragraph{} It therefore makes sense to somehow \emph{learn} the optimal value of the confidence parameter $p$, so that we don't have to manually tune its evolution, and so that it can store how right the teacher recommandations are. Ideally, we would like $p$ to be near $0$ when the teacher provide a suboptimal action and $1$ when the recommended action is sampled from the optimal policy. The underlying problem is therefore to infer the optimality of the teacher in different regions of the state space. 
 		
 		\paragraph{}We hereinafter describe two methods which attempt to do so. Their respective experimental results as well as further discussion will be found in chapter (\ref{chap::res}).  
 		
@@ -770,7 +770,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.95\linewidth]{ac_il_subopt_120}
-							\caption{Actor-critic learnt compliance learning curve for }
+							\caption{Actor-critic learnt compliance learning curve}
 							\label{fig::ac_il_subopt_120}
 						\end{center}
 					\end{minipage}
@@ -787,7 +787,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			}
 			\subsection{Discussion}
 			{
-				\paragraph{} It would be interesting to see what is the \emph{posterior distribution} of the $p(s)$ , $s\in\mathcal{S}$. We expect our final policy to be greedy, and hence the posterior distribution of the compliance term to be sharply peaked around $0$ or $1$, with proportion given by how optimal the mentor is. Figures (\ref{fig::post_mean_120}) and (\ref{fig::post_mean_50}) display the histogram of the repartition of the $\E{p(s)}$ for $s\in\mathcal{S}$ (again, we approximate the Beta distribution by its mean to have an understandable visualization), for two suboptimal mentors. As expected, most of the means are either close to $0$ and $1$, and they are more means close to 0 (poor confidence) when using the second mentor - that is far worse than the first. 
+				\paragraph{} It would be interesting to see what is the \emph{posterior distribution} of the $\{p(s)\}_{s\in\mathcal{S}}$. We expect our final policy to be greedy, and hence the posterior distribution of the compliance term to be sharply peaked around $0$ or $1$, with proportion given by how optimal the mentor is. Figures (\ref{fig::post_mean_120}) and (\ref{fig::post_mean_50}) display the histogram of the repartition of the $\E{p(s)}$ for $s\in\mathcal{S}$ (again, we approximate the Beta distribution by its mean to have an understandable visualization), for two suboptimal mentors. As expected, most of the means are either close to $0$ and $1$, and they are more means close to 0 (poor confidence) when using the second mentor - that is far worse than the first. 
 				
 				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
