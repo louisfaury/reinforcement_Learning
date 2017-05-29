@@ -31,7 +31,7 @@
 			\paragraph{} We call suboptimal a teacher that provides imperfect demonstrations of a task. A demonstration can be imperfect in many ways - for instance, it could poorly transfer to the robot abilities, or simply be a naive way of completing the considered task (in the sense that it does not optimize some numerical criterion evaluating the fitness of an agent's behavior). Also, we will use the term \emph{largely suboptimal} for teachers providing demonstrations that are harmful for the learner or present obvious drawbacks at completing a task. 
 			
 			\subsection{Motivating examples}
-			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object : an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it would be unwise, since it contains important information relative to the task (pose of the object, joint coordination,..). We must therefore find a way to handle the demonstration in order to infer those parameters without falling into its suboptimal reproduction. 
+			\paragraph{} For instance, let's consider the example of a robotic arm learning to grasp an object: an unexperienced teacher might provide it with demonstrations that operate near the robot's workspace edges (which is often undesirable in robotics). Even if the robotic arm should not trust this demonstration if it wants to learn an optimal solution, simply discarding it would be unwise, since it contains important information relative to the task (pose of the object, joint coordination,..). We must therefore find a way to handle the demonstration in order to infer those parameters without falling into its suboptimal reproduction. 
 			
 			\paragraph{} Before going any further, let us rephrase the previous problem slightly differently.  Indeed, we can draw a parallel between the latest example and the one of a children learning to dance (or any other technical skill). Because the child's dance teacher doesn't have the same physical abilities than the child, he might give the child a suboptimal way (with respect to the child's physical abilities) of performing dance moves. In a ideal learning process, the child would use the prior information given by the teacher, and use it to practice its skill. He will soon be aware of its own abilities, and can then start learning by itself, exploring around what he has learnt so far. He might find that, by slightly changing how he performs some moves,  he is able to dance better than by blindly listening to the teacher. Therefore, the learning child will first be \emph{compliant} with the teacher, before trying things out by itself once it has become pretty good at performing the learned skill. 
 			
@@ -82,31 +82,29 @@
 			{
 				\paragraph{} Reinforcement learning is a framework in which an \emph{agent} (or a \emph{learner}) learns its actions from interaction with its environment. The environment generates scalar values called \emph{rewards}, that the agent is seeking to maximize over time. 
 			
-				\paragraph{} Let $\mathcal{S}$ denote the state space in which our agent evolves (the localization of a robot on a grid for instance), and $\forall{s}\in\mathcal{S}$ we will define the action state $\mathcal{A}(s)$, describing all possible action that can be taken by the agent at state $s$. When taking an action from a state $s_t$, the agent finds itself in a new state $s_{t+1}$ where it receives a reward $r_{t+1}\in\mathbb{R}$. The action taken is sampled over a probability distribution from the joint space of state and action : 
+				\paragraph{} Let $\mathcal{S}$ denote the state space in which our agent evolves (the localization of a robot on a grid for instance), and $\forall{s}\in\mathcal{S}$ we will define the action state $\mathcal{A}(s)$, describing all possible action that can be taken by the agent at state $s$. When taking an action from a state $s_t$, the agent finds itself in a new state $s_{t+1}$ where it receives a reward $r_{t+1}\in\mathbb{R}$. The action taken is sampled over a probability distribution from the joint space of state and action: 
 				\begin{equation}
 					\begin{aligned}
-						\pi \, : \, \mathcal{S}\times\mathcal{A}(s) \, &\to [0,1]\\
+						\pi \,  : \, \mathcal{S}\times\mathcal{A}(s) \, &\to [0,1]\\
 							 (s,a) \, &\to \,  \pi(s,a)
 					\end{aligned}
 				\end{equation}	
 				where $\pi(s,a)$ is the probability of picking action $a$ in state $s$. Such a distribution is called the agent's \emph{policy}. The key goal of reinforcement learning is teaching an agent on how to change its policy to maximize its reward on the long run. 
 				
-				\paragraph{} The agent indeed seeks to maximize the \emph{expected return} $R_t$ mapping the reward sequence into $\mathbb{R}$. A commonly used expression for this value employs a \emph{discount factor} $\gamma \in [0,1]$, allowing to make the agent's more sensible to rewards it will get in a close future : 
+				\paragraph{} The agent indeed seeks to maximize the \emph{expected return} $R_t$ mapping the reward sequence into $\mathbb{R}$. A commonly used expression for this value employs a \emph{discount factor} $\gamma \in [0,1]$, allowing to make the agent's more sensible to rewards it will get in a close future: 
 				\begin{equation}
 					R_t = \sum_{i=0}^T \gamma^i r_{t+1+i}
 				\end{equation}
 				This also allows to adapt this formulation to continuous tasks, where there are no terminal states and the task goes on indefinitely (there are no \emph{episodes} in the learning). 
-				
-				%% TODO : quote Sutton's book 
 			}
 			\subsection{Markov decision process}
 			{
-				\paragraph{} To make the problem tractable, we ask for the state signal to comply with Markov's property, hence to be \emph{memory-less}. For instance, we want to be able to write that, in a stochastic environment, $\forall s'\in\mathcal{S}$ : 
+				\paragraph{} To make the problem tractable, we ask for the state signal to comply with Markov's property, hence to be \emph{memory-less}. For instance, we want to be able to write that, in a stochastic environment, $\forall s'\in\mathcal{S}$: 
 				\begin{equation}
 					\mathbb{P}\left( s_{t+1}=s' \, \vert \, a_t, s_t, \hdots, a_1,s_1\right) = \mathbb{P}\left( s_{t+1}=s' \, \vert \, s_t, a_t\right)
 				\end{equation}
 				
-				\paragraph{} Hence, every reinforcement learning problem can be represented by a \emph{Markov Decision Process}, that consists in a 5-tuple $\left(\mathcal{S}, \mathcal{A}, \mathcal{P}_{\cdot}(\cdot,\cdot), \mathcal{R}_{\cdot}(\cdot), \gamma \right)$ where : 
+				\paragraph{} Hence, every reinforcement learning problem can be represented by a \emph{Markov Decision Process}, that consists in a 5-tuple $\left(\mathcal{S}, \mathcal{A}, \mathcal{P}_{\cdot}(\cdot,\cdot), \mathcal{R}_{\cdot}(\cdot), \gamma \right)$ where: 
 				\begin{itemize}[label=$\triangleright$]
 					\item $\mathcal{S}$ is the agent's state space
 					\item $\mathcal{A}$ is the agent's action space
@@ -123,22 +121,22 @@
 				\begin{equation}
 					\forall{s}\in\mathcal{S}, \quad V^\pi(s) = \E[\pi]{R_t \, \vert \, s_t = s}
 				\end{equation}
-				The \textbf{action-value function} evaluates the value of taking a given action, and then following the policy $\pi$ : 
+				The \textbf{action-value function} evaluates the value of taking a given action, and then following the policy $\pi$: 
 				\begin{equation}
 					\forall{s,a}\in\mathcal{S}\times\mathcal{A}(s), \quad Q^\pi(s,a) = \E[\pi]{ R_t \, \vert \, s_t=s, \, a_t=a}
 				\end{equation}
 				
-				\paragraph{} Both those functions satisfy particular recursive relationships known as the \emph{Bellman equations}. It is shown that (see \cite{Sutton98a}) we have the following results : 
+				\paragraph{} Both those functions satisfy particular recursive relationships known as the \emph{Bellman equations}. It is shown that (see \cite{Sutton98a}) we have the following results: 
 				\vspace{10pt}
 				
 				\coolbox{white}{\textcolor{black}{Bellman equations for Markov Decision Process}}
 				{
 					\begin{itemize}[label=$\triangleright$]
-						\item Bellman equation for the state-value function : $\forall s \in\mathcal{S}$ 
+						\item Bellman equation for the state-value function: $\forall s \in\mathcal{S}$ 
 						\begin{equation}
 							V^\pi(s) = \sum_{a\in\mathcal{A}}\pi(s,a)\sum_{s'} \mathcal{P}_a(s,s')\left[\mathcal{R}_a(s,s') + \gamma V^\pi(s')\right]
 						\end{equation}
-						\item Bellman equation for the action value function : $\forall{s,a}\in\mathcal{S}\times\mathcal{A}(s)$ : 
+						\item Bellman equation for the action value function: $\forall{s,a}\in\mathcal{S}\times\mathcal{A}(s)$: 
 						\begin{equation}
 							Q^\pi(s,a) = \sum_{s'}\mathcal{P}_a(s,s')\left[ \mathcal{R}_a(s,s') + \gamma V^\pi(s')\right]
 						\end{equation}
@@ -147,7 +145,7 @@
 			}
 			\subsection{Optimal policies}
 			{
-				\paragraph{} The value functions define a partial ordering in the policy space. A policy $\pi$ is therefore said to be better than $\pi'$ (or $\pi\geq \pi'$) if $\forall{s}\in\mathcal{S}$, $V^\pi(s) \geq V^\pi(s')$. We are looking for $\pi^*$ so that : 
+				\paragraph{} The value functions define a partial ordering in the policy space. A policy $\pi$ is therefore said to be better than $\pi'$ (or $\pi\geq \pi'$) if $\forall{s}\in\mathcal{S}$, $V^\pi(s) \geq V^\pi(s')$. We are looking for $\pi^*$ so that: 
 				\begin{equation}
 					\forall\pi, \quad \pi^* \geq \pi 
 				\end{equation}
@@ -159,11 +157,11 @@
 								\coolbox{white}{\textcolor{black}{Bellman optimality equations}}
 				{
 					\begin{itemize}[label=$\triangleright$]
-						\item Bellman optimality equation for the state-value function : $\forall s \in\mathcal{S}$ 
+						\item Bellman optimality equation for the state-value function: $\forall s \in\mathcal{S}$ 
 						\begin{equation}
 							V^\pi(s) = \max_{a\in\mathcal{A}(s)}\pi(s,a)\sum_{s'} \mathcal{P}_a(s,s')\left[\mathcal{R}_a(s,s') + \gamma V^\pi(s')\right]
 						\end{equation}
-						\item Bellman optimality equation for the action value function : $\forall{s,a}\in\mathcal{S}\times\mathcal{A}(s)$ : 
+						\item Bellman optimality equation for the action value function: $\forall{s,a}\in\mathcal{S}\times\mathcal{A}(s)$: 
 						\begin{equation}
 							Q^\pi(s,a) = \sum_{s'}\mathcal{P}_a(s,s')\left[ \mathcal{R}_a(s,s') + \max_{a\in\mathcal{A}(s')} Q(s',a') \right]
 						\end{equation}
@@ -175,7 +173,7 @@
 		}
 
 
-			\paragraph{} There exists several ways of solving (i.e computing the optimal policy) a Markov Decision Process, that can generically be separated in two categories : \emph{model-based} and \emph{model-free} methods. 
+			\paragraph{} There exists several ways of solving (i.e computing the optimal policy) a Markov Decision Process, that can generically be separated in two categories: \emph{model-based} and \emph{model-free} methods. 
 		\section{Dynamic Programing}
 		{
 			\paragraph{} Dynamic programing is a mathematically well-developed theory. It requires the complete and accurate model of the environment, making it a model-based method. 
@@ -186,16 +184,16 @@
 			{
 				\paragraph{} The generalized policy iteration methods rely on alternating two processes known as \textcolor{red}{policy evaluation} and \textcolor{red}{policy improvement}. 
 				\begin{itemize}[label=$\triangleright$]
-					\item Policy evaluation deals with estimating the value function of a given policy $\pi$, without directly solving the full system given by Bellman equations. The idea is actually pretty simple : use Bellman's equation as an update rule, the value function being a fixed point. After setting the tabled value function to an initial value, the algorithm iterates by performing what is called \emph{full Bellman backups} : 
+					\item Policy evaluation deals with estimating the value function of a given policy $\pi$, without directly solving the full system given by Bellman equations. The idea is actually pretty simple: use Bellman's equation as an update rule, the value function being a fixed point. After setting the tabled value function to an initial value, the algorithm iterates by performing what is called \emph{full Bellman backups}: 
 					\begin{equation}
 						\forall{s}\in\mathcal{S}, \quad V_{k+1}^\pi(s) = \sum_{a\in\mathcal{S}} \pi(s,a)\sum_{s'}\mathcal{P}_a(s,s') \left[\mathcal{R}_a(s,s')+V_k^\pi(s')\right]
 					\end{equation}
 					This algorithm converges under the same assumptions that guarantee the existence of the value function, and has the generic name of \emph{iterative policy evaluation}. They are many refining for speeding up that process (reduced backups, prioritized sweeping) which we won't address here. 
-				\item Policy improvement is a process that from a given policy value function, returns a better or equal policy compared to the latter. The simplest way to do that is to consider, for every state $s\in\mathcal{S}$, every action-value functions : 
+				\item Policy improvement is a process that from a given policy value function, returns a better or equal policy compared to the latter. The simplest way to do that is to consider, for every state $s\in\mathcal{S}$, every action-value functions: 
 				\begin{equation}
 					Q(s,a) = \sum_{s'}\mathcal{P}_a(s,s')\left[\mathcal{R}_a(s,s') + \gamma V\pi(s')\right], \quad a\in\mathcal{A}(s)
 				\end{equation}
-				and then to build $\pi'$ to be \emph{greedy} with respect to those actions-values : 
+				and then to build $\pi'$ to be \emph{greedy} with respect to those actions-values: 
 				\begin{equation}
 					\pi'(s) = \argmax{a\in\mathcal{A}(s)}{Q(s,a)}
 				\end{equation}
@@ -206,7 +204,7 @@
 			}	
 			\subsection{The value iteration algorithm}
 			{
-				\paragraph{} The value iteration algorithm takes the limit of the behavior we just described, and stops the value evaluation procedure after only \emph{one state space sweep}. It therefore performs a simple backup procedure : 
+				\paragraph{} The value iteration algorithm takes the limit of the behavior we just described, and stops the value evaluation procedure after only \emph{one state space sweep}. It therefore performs a simple backup procedure: 
 					\begin{equation}
 						\forall{s}\in\mathcal{S}, \quad V_{k+1}(s)  = \max_{a\in\mathcal{A}}  \sum_{s'}\mathcal{P}_a(s,s')\left[\mathcal{R}_a(s,s') + \gamma V_k^\pi(s')\right]
 					\end{equation}
@@ -221,9 +219,9 @@
 			
 			\paragraph{} The justification, proof of convergences and literature and those models is pretty wide, hence we will not cover them in this report. However, a full description of those methods can be found in \cite{Sutton98a}. 
 			
-			\subsection{On-policy method : SARSA}
+			\subsection{On-policy method: SARSA}
 			{
-				\paragraph{} The SARSA algorithm is an \emph{on-policy} control method, meaning that the algorithm updates the value function and improves the current policy it is following. At state $s_t$, it chooses an action $a_t$ from its policy and follows it. After observing the reward $r_{t+1}$ and the next state $s_{t+1}$, it again chooses an action $a_{t+1}$ using a soft policy and performs a one-step backup : 
+				\paragraph{} The SARSA algorithm is an \emph{on-policy} control method, meaning that the algorithm updates the value function and improves the current policy it is following. At state $s_t$, it chooses an action $a_t$ from its policy and follows it. After observing the reward $r_{t+1}$ and the next state $s_{t+1}$, it again chooses an action $a_{t+1}$ using a soft policy and performs a one-step backup: 
 				\begin{equation}
 					Q(s_t,a_t) \leftarrow Q(s_t,a_t) + \alpha\left[r_{t+1} + \gamma Q(s_{t+1},a_{t+1}) - Q(s_t,a_t)\right]
 				\end{equation}
@@ -238,11 +236,11 @@
 						\emph{\textsf{1. Initialize}} $Q(s,a)$ arbitrarily $\forall (s,a)\in\mathcal{S}\times\mathcal{A}(s)$ \\
 						\BlankLine
 						\BlankLine
-						\emph{\textsf{2. Repeat}} for each episode : \\
+						\emph{\textsf{2. Repeat}} for each episode: \\
 						\Indp \Indp 
 							Initialize $s$ \\
 							Choose $a\in\mathcal{A}(s)$ using a soft policy derived from $Q$ (typically $\varepsilon$-greedy) \\
-							Repeat for each step of the current episode :   \\
+							Repeat for each step of the current episode:   \\
 							\Indp \Indp 
 								Take $a$, observe $r,s'$ \\
 								Choose $a'$ from $s'$ using policy derived from $Q$ 
@@ -255,16 +253,16 @@
 						\end{algorithm}
 					}
 					
-					\paragraph{} The convergence properties of SARSA depend on the nature of the policy's dependency on Q. Indeed, SARSA converges with probability 1 to the optimal policy as long as all the sate and actions pairs are visited an infinite number of time, and the policy converges in the limit to the greedy policy. This is done, for instance, by turning the temperate of a softmax based policy to 0, or by having $\eps\to 0$ for a $\eps$-greedy policy. For SARSA to converge, we also as the learning rate to comply with the stochastic approximation conditions : 
+					\paragraph{} The convergence properties of SARSA depend on the nature of the policy's dependency on Q. Indeed, SARSA converges with probability 1 to the optimal policy as long as all the sate and actions pairs are visited an infinite number of time, and the policy converges in the limit to the greedy policy. This is done, for instance, by turning the temperate of a softmax based policy to 0, or by having $\eps\to 0$ for a $\eps$-greedy policy. For SARSA to converge, we also as the learning rate to comply with the stochastic approximation conditions: 
 					\begin{equation}
 						\sum_k \alpha_k(a) = +\infty \quad { and } \quad \sum_k \alpha_k(a)^2 < +\infty
 					\end{equation}
 					where $\alpha_k(a)$ is the learning rate for the k\textsuperscript{th} visit of the pair $(s,a)$. 
 					
 			}
-			\subsection{Off-policy method : Q-learning}
+			\subsection{Off-policy method: Q-learning}
 			{
-				\paragraph{} The Q-learning algorithm is an off-policy method who learns to directly approximate $Q^*$, independently of the policy being followed. Its update rule is given by :
+				\paragraph{} The Q-learning algorithm is an off-policy method who learns to directly approximate $Q^*$, independently of the policy being followed. Its update rule is given by:
 				\begin{equation}
 					Q(s_t,a_t) \leftarrow Q(s_t,a_t) + \alpha \left[ r_{t+1} + \gamma \max_{a\in\mathcal{A}(s_{t+1})} Q(s_{t+1},a) - Q(s_t,a_t)\right]
 				\end{equation}
@@ -279,10 +277,10 @@
 						\emph{\textsf{1. Initialize}} $Q(s,a)$ arbitrarily $\forall (s,a)\in\mathcal{S}\times\mathcal{A}(s)$ \\
 						\BlankLine
 						\BlankLine
-						\emph{\textsf{2. Repeat}} for each episode : \\
+						\emph{\textsf{2. Repeat}} for each episode: \\
 						\Indp \Indp 
 							Initialize $s$ \\
-							Repeat for each step of the current episode :   \\
+							Repeat for each step of the current episode:   \\
 							\Indp \Indp 
 								Choose $a\in\mathcal{A}(s)$ using arbitrary policy \\
 								Take $a$, observe $r,s'$ \\
@@ -301,11 +299,11 @@
 			}
 			\subsection{Eligibility traces}
 			{
-				\paragraph{} In TD(0) approach (described in the latest section), we update the value function in the direction of the \emph{one-step return} : 
+				\paragraph{} In TD(0) approach (described in the latest section), we update the value function in the direction of the \emph{one-step return}: 
 				\begin{equation}
 					\Delta V_t(s_t)^{(1)} = \alpha \left[ r_t + \gamma V_t(s_{t+1}) - V_(s-t)\right]
 				\end{equation}
-				The idea behind eligibility traces is to expand that update rule in order to steer the value fonction towards the \emph{n-step return} (or at least until a terminal state is reached) :
+				The idea behind eligibility traces is to expand that update rule in order to steer the value fonction towards the \emph{n-step return} (or at least until a terminal state is reached):
 				\begin{equation}
 					\begin{aligned}
 					\Delta V_t(s_t) ^{(n)} &= \alpha \left[ r_t + \gamma r_{t+1} + \hdots + \gamma^{n} V_t(s_{t+n})-V_t(s_t)\right]	\\
@@ -313,11 +311,11 @@
 					\end{aligned}
 				\end{equation}
 				
-				\paragraph{} The backups can not only be done toward any n-step return, but toward any average of such returns, as long as the corresponding weights sum-up to one. In this way, the TD($\lambda$) algorithm can be understood as a particular way of averaging $n$-steps returns. With $\lambda<1$, the resulting backup is known as the \textcolor{red}{\emph{$\lambda$-return}} : 
+				\paragraph{} The backups can not only be done toward any n-step return, but toward any average of such returns, as long as the corresponding weights sum-up to one. In this way, the TD($\lambda$) algorithm can be understood as a particular way of averaging $n$-steps returns. With $\lambda<1$, the resulting backup is known as the \textcolor{red}{\emph{$\lambda$-return}}: 
 				\begin{equation}
 					R_t^\lambda = (1-\lambda) \sum_{n=1}^\infty \lambda^{n-1}R_t^{(n)}
 				\end{equation}
-				where the weights are fading with $n$. When the runs are episodic, we can write this return as : 
+				where the weights are fading with $n$. When the runs are episodic, we can write this return as: 
 				\begin{equation}
 					R_t^\lambda = (1-\lambda)\sum_{n=1}^{T-t-1} \lambda^{n-}R_t{(n)} + \lambda_{T-t-1}R_t^{(T)}
 				\end{equation}
@@ -331,16 +329,16 @@
 						\emph{\textsf{1. Initialize}} $Q(s,a)$ arbitrarily $\forall (s,a)\in\mathcal{S}\times\mathcal{A}(s)$ \\
 						\BlankLine
 						\BlankLine
-						\emph{\textsf{2. Repeat}} (for each episode) : \\
+						\emph{\textsf{2. Repeat}} (for each episode): \\
 						\Indp \Indp 
 							Initialize $s,\, a$ \\
-							Repeat for each step of the current episode :   \\
+							Repeat for each step of the current episode:   \\
 							\Indp \Indp 
 								Take action $a$, observe $r, s'$. \\
 								Choose $a'\in\mathcal{A}(s')$ using soft policy derived from $Q$\\
 								$\delta \longleftarrow r + \gamma Q(s',a') - Q(s,a)$ \\
 								$e(s,a) \longleftarrow e(s,a) +1 $\\
-								For all $s,a$ : \\
+								For all $s,a$: \\
 								\Indp \Indp 
 									$ Q(s,a) \longleftarrow Q(s,a) + \alpha \delta e(s,a) $ \\
 									$ e(s,a) \longleftarrow \gamma \lambda e(s,a) $\\
@@ -361,7 +359,7 @@
 		{
 			\paragraph{} We hereinafter describe two grid-world state spaces, on which we will apply the learning rule derived in the latest section. Such example are trivial and are displayed here simply to show convergence and behavior of the different algorithms. 
 			
-			\paragraph{} We'll consider the two following state spaces : 
+			\paragraph{} We'll consider the two following state spaces: 
 			\begin{figure}[ht!]
 				\begin{minipage}{0.4\linewidth}
 					\includegraphics[width=\linewidth]{free_grid}
@@ -375,12 +373,12 @@
 			\end{figure}
 			\subsection{Dynamic Programing solving}
 			{
-				\paragraph{} Let us run the DP algorithm on such grid worlds. We'll consider a stochastic environnement, with the transition probability : 
+				\paragraph{} Let us run the DP algorithm on such grid worlds. We'll consider a stochastic environnement, with the transition probability: 
 				\begin{equation}
 					\mathcal{P}_{s,s'}^a = \left\{\begin{aligned} &0.9 &\text{ if }s' = a(s) \\ &0.1 &\text{ otherwise} \end{aligned}\right.
 				\end{equation}
 				Using a stochastic dynamic, is a first step in designing an environment closer to reality. Also, this allows to provide a simple example (like the one considered) we non-trivial solutions. 
-				\paragraph{} Running the value iteration algorithm (assuming we now the environment model), we obtain the following policies and learning curves. The stopping criterion adresses the maximum absolute change brought to the value function as the sweeping goes through the state space : 
+				\paragraph{} Running the value iteration algorithm (assuming we now the environment model), we obtain the following policies and learning curves. The stopping criterion adresses the maximum absolute change brought to the value function as the sweeping goes through the state space: 
 				\begin{equation}
 					\text{ If } \max_{s\in\mathcal{S}} \vert V_{k+1}(s) - V_k \vert < \delta \text{ then stop}
 				\end{equation}
@@ -416,7 +414,7 @@
 			}
 			\subsection{SARSA solving}
 			{
-				\paragraph{} We display here the learning curves for the \emph{free\_grid} state space using SARSA. The algorithm manages to learn the optimal policy and the right action-value functions. We use \emph{optimistic initialization} to encourage exploration, and Gibbs sampling for following a soft-policy : $\forall (s,a) \in\mathcal{S}\times \mathcal{A}(s)$ 
+				\paragraph{} We display here the learning curves for the \emph{free\_grid} state space using SARSA. The algorithm manages to learn the optimal policy and the right action-value functions. We use \emph{optimistic initialization} to encourage exploration, and Gibbs sampling for following a soft-policy: $\forall (s,a) \in\mathcal{S}\times \mathcal{A}(s)$ 
 				\begin{equation}
 					\pi(s,a) = \displaystyle \frac{ e^{Q(s,a)/\tau}}{\sum_{a'\in\mathcal{A}(s)}e^{Q(s,a')/\tau}}
 				\end{equation}
@@ -447,13 +445,13 @@
 						\label{fig::bargrid_ql_ar}
 					\end{minipage}
 				\end{figure}
-				\paragraph{} More precisely, in this example, we used the following dynamics for the temperature and the learning rate : 
+				\paragraph{} More precisely, in this example, we used the following dynamics for the temperature and the learning rate: 
 				\begin{equation}
-					\tau_t = 0.995*\tau_t
+					\tau_t = 0.995*\tau_{t-1}
 				\end{equation}
-				and, $\forall s \in\mathcal{S}, a\in\mathcal{A}(s)$ :  
+				and, $\forall s \in\mathcal{S}, a\in\mathcal{A}(s)$:  
 				\begin{equation}
-					\alpha_t(s,a) = \frac{\alpha_0(s,a)}{k(s,a)+1}
+					\alpha_t(s,a) = \frac{\alpha_0(s,a)}{(k(s,a)+1)^{0.55}}
 				\end{equation}
 				where $k(s,a)$ denotes the number of time the action-state $(s,a)$ was chosen during the learning. Hence, we comply with the greedy-in-limit as well as the stochastic approximation conditions. 
 				  
@@ -470,15 +468,15 @@
 	\chapter{Compliant Reinforcement Learning}
 	\chaptermark{Compliant RL}
 	{
-		 With our approach, we wish to tackle two topics : on one hand, we wish to develop an imitation based learning framework that \emph{accelerates} the learning process. Also, we wish to apply a shifting compliance based behavior so that an agent can overcome an arbitrarily suboptimal teacher.
+		 With our approach, we wish to tackle two topics: on one hand, we wish to develop an imitation based learning framework that \emph{accelerates} the learning process. Also, we wish to apply a shifting compliance based behavior so that an agent can overcome an arbitrarily suboptimal teacher.
 		
 		\section{Principle}
 		{
 			\paragraph{} We start by making a fairly strong hypothesis to simplify our reasoning. In the following chapters, we will consider that a mentor demonstration provides one recommended action for every state - which is the equivalent of providing one deterministic policy. This somehow out-scopes the case of unique demonstration, but can be understood as a combination of multiple demonstrations.\newline
-			Hence, we will consider that a teacher's demonstration is a mapping between the state space $\mathcal{S}$ of the learner and its action set $\mathcal{A}(s)$, $\forall s\in\mathcal{S}$, denoted $\pi_m$ : 
+			Hence, we will consider that a teacher's demonstration is a mapping between the state space $\mathcal{S}$ of the learner and its action set $\mathcal{A}(s)$, $\forall s\in\mathcal{S}$, denoted $\pi_m$: 
 			\begin{equation}
 				\begin{aligned}
-					\pi_m \, :  \, \mathcal{S} &\to \mathcal{A}\\
+					\pi_m \,:  \, \mathcal{S} &\to \mathcal{A}\\
 						     s &\to a_m(s) 
 				\end{aligned}
 			\end{equation}
@@ -486,9 +484,9 @@
 			\newline 
 			Such an hypothesis isn't trivial, and will be discussed later in this report. The main reason it is considered is that it enables to treat the whole state space in the same way - without having to distinguish regions in the state space that are provided with demonstrations and regions which are not. 
 			
-			\paragraph{} As discussed earlier in this report, our goal is to mimic the shifting compliance a child can have with respect to its teacher when learning a new skill. Because this implies making choices as to wether follow a recommended action or sample elsewhere in the action space, it is clear that \textbf{only the action selection  should be impacted by the presence of the mentor}. 
+			\paragraph{} As discussed earlier in this report, our goal is to mimic the shifting compliance a child can have with respect to its teacher when learning a new skill. Because this implies making choices as to wether follow a recommended action or sample elsewhere in the action space, it is clear that \textbf{only the action selection should be impacted by the presence of the mentor}. 
 
-			\paragraph{} We will now consider an action selection process based on the teacher's recommandation. We introduce a parameter $p$, that can be understood as a \textbf{confidence measure} in the teacher. The action selection process we chose to follow can be understood as a $p$-greedy action selection with respect to the teacher recommandation and is defined as : 
+			\paragraph{} We will now consider an action selection process based on the teacher's recommandation. We introduce a parameter $p$, that can be understood as a \textbf{confidence measure} in the teacher. The action selection process we chose to follow can be understood as a $p$-greedy action selection with respect to the teacher recommandation and is defined as: 
 			\boxedeq{red}
 			{
 				\forall s\in\mathcal{S}, \quad \pi(s) = \left\{
@@ -498,8 +496,8 @@
 				\end{aligned}\right.
 				\label{eq::compliant_exploration}
 			}
-			The learner therefore has two possibilities : follow the teacher with probability $p$, or take its own action, with probability $(1-p)$. This motivates to call $p$ a confidence measure : the greater $p$ is, the more the learner will trust the teacher and follow its recommandation. In the case where the learner decides to take its own action, it samples in its state space through Gibbs softmax sampling, thanks to its current action-value estimates. \newline
-			The updates will follow the SARSA algorithm, and the usual TD(0) updates : $\forall s\in\mathcal{S}, a\in\mathcal{A}(s)$
+			The learner therefore has two possibilities: follow the teacher with probability $p$, or take its own action, with probability $(1-p)$. This motivates to call $p$ a confidence measure: the greater $p$ is, the more the learner will trust the teacher and follow its recommandation. In the case where the learner decides to take its own action, it samples in its state space through Gibbs softmax sampling, thanks to its current action-value estimates. \newline
+			The updates will follow the SARSA algorithm, and the usual TD(0) updates: $\forall s\in\mathcal{S}, a\in\mathcal{A}(s)$
 			\begin{equation}
 				Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + Q(s',a') - Q(s,a) \right]
 			\end{equation}
@@ -512,7 +510,7 @@
 		{
 			\paragraph{} To test the effectiveness of the solutions we will propose, we decided to provide ourself with a model that would stay fixed all along the experiments. We will use it in order to compare our different algorithms.
 			
-			\paragraph{} We designed the state space displayed in figure (\ref{fig::maze_display}). In this environment, all black cells are obstacles. They give out highly negative rewards ($r=-10$). Whenever an agent take the action to enter such a cell, it immediately perceives the negative reward but stays in its current cell. The only positive reward is at the middle of the grid ($r=10$), the only terminal state. Any episode starts at one of the corner of the grid (green cells), and every step spent on a non-terminal cell gives out a small negative reward ($r=-0.1$). The transitions are stochastic, with the transition probability model : 
+			\paragraph{} We designed the state space displayed in figure (\ref{fig::maze_display}). In this environment, all black cells are obstacles. They give out highly negative rewards ($r=-10$). Whenever an agent take the action to enter such a cell, it immediately perceives the negative reward but stays in its current cell. The only positive reward is at the middle of the grid ($r=10$), the only terminal state. Any episode starts at one of the corner of the grid (green cells), and every step spent on a non-terminal cell gives out a small negative reward ($r=-0.1$). The transitions are stochastic, with the transition probability model: 
 			\begin{equation}
 				s' = \left\{ 
 					\begin{aligned}
@@ -563,7 +561,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		
 		\paragraph{} Besides giving us an idea how generic reinforcement learning algorithms performs on our sandbox MDP, those different reinforcement learning methods enables us to \emph{generate mentors of varying sub-optimal levels}. 
 		
-		\paragraph{} If we consider a SARSA learner (for instance), we can at any time of its learning generate a deterministic version of the current exploratory policy. This is done by taking its greedy version with respect to its current Q-values estimates. Hence $\forall s\in\mathcal{S}$ : 
+		\paragraph{} If we consider a SARSA learner (for instance), we can at any time of its learning generate a deterministic version of the current exploratory policy. This is done by taking its greedy version with respect to its current Q-values estimates. Hence $\forall s\in\mathcal{S}$: 
 		\begin{equation}
 			\pi_m(s) = \argmax{a\in\mathcal{A}(s)}{Q(s,a)}
 		\end{equation}
@@ -613,7 +611,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		{
 			\paragraph{} One of the downside of the constant compliance approach is therefore that the exploratory behavior is always biased by the mentor's recommandation. This breaks the need of this policy to be \emph{greedy in limit} (which is a specification for SARSA algorithm to converge). In the case of a sub-obptimal mentor, this means that the optimal behavior could never be reached. 
 			
-			\paragraph{} We now decide to comply with the need to be greedy in limit. Therefore, we decide to set $p$ to be \emph{constantly decreasing along the learning} : 
+			\paragraph{} We now decide to comply with the need to be greedy in limit. Therefore, we decide to set $p$ to be \emph{constantly decreasing along the learning}: 
 			\begin{equation}
 				p_{t+1} = \beta p_{t}
 			\end{equation}
@@ -656,16 +654,16 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 		
 		\subsection{Implicit $\beta$-compliance}
 		{
-			\paragraph{}  Let us define the \emph{confidence} term $p$ locally for every state of the state space. For each $s\in\mathcal{S}$, $p(s)$ is given a Beta prior : $p(s)\sim \beta(\alpha(s),\beta(s))$ and represents the initial trust we have in a mentor's recommandation at state $s$. The initial values $\alpha_0$ and $\beta_0$ define the initial prior belief we have over $p$ (for instance, $\alpha=0.5$ and $\beta = 0.055$ define a prior belief that the teacher is most probably right). 
+			\paragraph{}  Let us define the \emph{confidence} term $p$ locally for every state of the state space. For each $s\in\mathcal{S}$, $p(s)$ is given a Beta prior: $p(s)\sim \beta(\alpha(s),\beta(s))$ and represents the initial trust we have in a mentor's recommandation at state $s$. The initial values $\alpha_0$ and $\beta_0$ define the initial prior belief we have over $p$ (for instance, $\alpha=0.5$ and $\beta = 0.055$ define a prior belief that the teacher is most probably right). 
 			
 			\begin{figure}
 				\begin{center}
 					\includegraphics[width=0.5\linewidth]{Beta_distribution_pdf.png}
-					\caption{The Beta distribution for several values of $(\alpha,\beta)$ (\emph{source : Wikipedia})}
+					\caption{The Beta distribution for several values of $(\alpha,\beta)$ (\emph{source: Wikipedia})}
 				\end{center}
 			\end{figure}
 			
-			\paragraph{} As in before, we perform a $\color{red}p$\textcolor{red}{\emph{-greedy policy}} with respect to the teacher recommandation : 
+			\paragraph{} As in before, we perform a $\color{red}p$\textcolor{red}{\emph{-greedy policy}} with respect to the teacher recommandation: 
 			\begin{equation}
 				\forall s\in\mathcal{S}, \quad \pi_p(s) = 
 					\left\{ 
@@ -676,13 +674,13 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\right. 
 			\end{equation}
 		
-			\paragraph{} The following describe how we wish to learn the value of $p(s)$, $\forall s\in\mathcal{S}$. Based on the $5$-tuple $(s,a,r,s',a')$ obtained thanks to the action selection process we just described, we compute at every step the following temporal difference value : 
+			\paragraph{} The following describe how we wish to learn the value of $p(s)$, $\forall s\in\mathcal{S}$. Based on the $5$-tuple $(s,a,r,s',a')$ obtained thanks to the action selection process we just described, we compute at every step the following temporal difference value: 
 			\begin{equation}
 				\delta_t = r + \gamma Q(s',a') - Q(s,a_m)
 			\end{equation}
 			which compares, \emph{in average}, the advantage (our drawback) of following the state-action pair $(s,a)$ rather than the one indicated by the teacher, according to the current Q-values estimates. 
 		
-			\paragraph{} We then apply the following update rule to $p(s)$ : 
+			\paragraph{} We then apply the following update rule to $p(s)$: 
 			\begin{equation}
 				\label{eq::update_rule}
 				\begin{aligned}
@@ -690,19 +688,19 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m}\delta_t \eps_t
 				\end{aligned}
 			\end{equation}
-			The intuition behind this update rule is simple : if we see that the expected return for the mentor action increases (resp. decreases), then we increase (resp. decrease) $\alpha$ which results in a shift of $p$ toward a larger (resp. smaller) confidence. A similar reasoning holds for the $\beta$ term.  $\eps_t$ is the update rule's learning rate, which value and dynamic will be discussed later. 
+			The intuition behind this update rule is simple: if we see that the expected return for the mentor action increases (resp. decreases), then we increase (resp. decrease) $\alpha$ which results in a shift of $p$ toward a larger (resp. smaller) confidence. A similar reasoning holds for the $\beta$ term.  $\eps_t$ is the update rule's learning rate, which value and dynamic will be discussed later. 
 		
 		}
 	
 		\subsection{Explicit compliance}
 		{
-			\paragraph{} We consider here a somewhat similar approach, where our listen versus discard exploration policy is computed according to the current estimated values of the actions \emph{'listen'} and \emph{'discard'}. Let us introduce the action spaces : 
+			\paragraph{} We consider here a somewhat similar approach, where our listen versus discard exploration policy is computed according to the current estimated values of the actions \emph{'listen'} and \emph{'discard'}. Let us introduce the action spaces: 
 			\begin{equation}
 				\forall s\in\mathcal{S}, \, \mathcal{A}_c(s) = \left\{ 'listen', \, 'discard'\right\}
 			\end{equation}
 			to which we assign the action values $Q_c(\cdot,l)$ and  $Q_c(\cdot,d)$ (where $'l'$ denotes the action of listening and $'d'$ the action of discarding the teacher recommendation). 
 			
-			\paragraph{} The exploration is done by computing a soft policy derived from $\{Q_c(s,l), Q_c(s,d)\}$ for all $s\in\mathcal{S}$. We do this using a Gibbs softmax distribution, which yields : 
+			\paragraph{} The exploration is done by computing a soft policy derived from $\{Q_c(s,l), Q_c(s,d)\}$ for all $s\in\mathcal{S}$. We do this using a Gibbs softmax distribution, which yields: 
 			\begin{equation}
 				\forall s \in\mathcal{S}, \quad \pi_c(s) = 
 					\left\{
@@ -714,7 +712,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\end{equation}
 			where $\sigma(\cdot)$ is the logistic sigmoid and $\tau$ is a temperate coefficient decreasing to $0$ (greedy policy in limit). 
 			
-			\paragraph{} After each SARSA update, we also make the following update : 
+			\paragraph{} After each SARSA update, we also make the following update: 
 			\begin{equation}
 				\label{eq::av_update_rule}
 				\left\{
@@ -725,7 +723,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\right.
 			\end{equation}
 			with $\beta >0$ the update rule's learning rate. 
-			\paragraph{} We can introduce some prior confidence in the teacher by setting, $\forall s\in\mathcal{S}$ : 
+			\paragraph{} We can introduce some prior confidence in the teacher by setting, $\forall s\in\mathcal{S}$: 
 			\begin{equation}
 				Q^0_c(s,l) - Q^0_c(s,d) =\tau \log\{\frac{p}{1-p}\}
 			\end{equation}
@@ -743,14 +741,14 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 			\subsection{Practical considerations}
 			{
 				\paragraph{} One of the main specification of the SARSA learning paradigm is that the exploration policy must be \emph{greedy in limit} so that a fixed point can emerge (hopefully the set of Q-values related to the optimal policy). In an actor-critic approach, the usual way to bring the \emph{critic} term in a stationary regime is to modify its learning rate to take the probability of taking an action into account (see \cite{Sutton98a}). \newline
-				This is the approach we chose in order to pick the learning rate $\eps_t$ of the update rule (\ref{eq::update_rule}), which now becomes : 
+				This is the approach we chose in order to pick the learning rate $\eps_t$ of the update rule (\ref{eq::update_rule}), which now becomes: 
 			\begin{equation}
 				\begin{aligned}
 					\alpha_t(s) &\leftarrow \alpha_t(s) +  \mathds{1}_{a=a_m}\gamma \delta_t(1- p(s))\\
 					\beta_t(s) &\leftarrow \beta_t(s) +   \mathds{1}_{a\neq a_m}\gamma \delta_t p(s)
 				\end{aligned}
 			\end{equation}
-			with $\gamma >0$. This update rule can still be simplified, by approximating $p$ by its mean value, which gives the update rule that we applied in practice : 
+			with $\gamma >0$. This update rule can still be simplified, by approximating $p$ by its mean value, which gives the update rule that we applied in practice: 
 			\boxedeq{red}
 			{
 				\begin{aligned}
@@ -814,14 +812,14 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.95\linewidth]{heatmap_confidence_120}
-							\caption{Learnt confidence : green arrows show near 1 posterior mean, red arrows near 0}
+							\caption{Learnt confidence: green arrows show near 1 posterior mean, red arrows near 0}
 							\label{fig::heatmap_confidence_120}
 						\end{center}
 					\end{minipage}
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.95\linewidth]{heatmap_confidence_50}
-							\caption{Learnt confidence : green arrows show near 1 posterior mean, red arrows near 0}
+							\caption{Learnt confidence: green arrows show near 1 posterior mean, red arrows near 0}
 							\label{fig::heatmap_confidence_50}
 						\end{center}
 					\end{minipage}
@@ -885,7 +883,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.9\linewidth]{heatmap_decision_120}
-							\caption{Learnt decisions : green arrows show listening, red arrows discarding}
+							\caption{Learnt decisions: green arrows show listening, red arrows discarding}
 							\label{fig::heatmap_des_120}
 						\end{center}
 					\end{minipage}
@@ -893,7 +891,7 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\begin{minipage}{0.5\linewidth}
 						\begin{center}
 							\includegraphics[width=0.9\linewidth]{heatmap_decision_50}
-							\caption{Learnt decisions : green arrows show listening, red arrows discarding}
+							\caption{Learnt decisions: green arrows show listening, red arrows discarding}
 							\label{fig::heatmap_des_50}
 						\end{center}
 					\end{minipage}
@@ -926,10 +924,10 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 					\end{minipage}
 				\end{figure}
 				
-				\paragraph{} We now derive some more precise metrics to assess the performances of our different algorithms. We will focus on two different metrics : 
+				\paragraph{} We now derive some more precise metrics to assess the performances of our different algorithms. We will focus on two different metrics: 
 				\begin{itemize}[label=$\cdot$]
-					\item \textbf{Time to convergence} : as its name indicates, we here measure how many iterations it took for the tested algorithm to reach convergence. We define convergence as a threshold value over which the accumulated reward on one episode will stay superior to. This threshold is set to be close to the optimal policy accumulated reward on one episode (99\% of its value). 
-					\item \textbf{Accumulated reward ratio} : this metric measure how the learner behaves until convergence. It computes the ratio between the reward accumulated by the learner until convergence (see above) and the reward the optimal policy would have accumulated over the same period of time. Therefore, the quickest a learning curves goes near the optimal reward, the better this metric would be. 
+					\item \textbf{Time to convergence}: as its name indicates, we here measure how many iterations it took for the tested algorithm to reach convergence. We define convergence as a threshold value over which the accumulated reward on one episode will stay superior to. This threshold is set to be close to the optimal policy accumulated reward on one episode (99\% of its value). 
+					\item \textbf{Accumulated reward ratio}: this metric measure how the learner behaves until convergence. It computes the ratio between the reward accumulated by the learner until convergence (see above) and the reward the optimal policy would have accumulated over the same period of time. Therefore, the quickest a learning curves goes near the optimal reward, the better this metric would be. 
 				\end{itemize}
 				 In figures (\ref{fig::metric_tt}) and (\ref{fig::metric_tr}), different teachers are being tested based on their optimality level. This scalar measure of optimality is computed from a linear scaling between the random policy and the optimal policy mean expected return on one run. As one can see, the time to convergence metric seems to equalize for all methods as the optimality of the teacher decreases. However, the accumulated reward ratio is always better for the two adaptive methods - traducing the absence of the undershoot and better behaving methods. Hence, if our adaptive algorithms can't always speed up the learning (compared to a naive compliant learner), they \emph{provide better behaving agents}. 
 				
@@ -956,12 +954,12 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\begin{figure}[ht!]
 					\begin{minipage}{0.5\linewidth}
 						\includegraphics[width=\linewidth]{loner_comp_50}
-						\caption{Method comparaison (teacher optimality : 50\%)}
+						\caption{Method comparaison (teacher optimality: 50\%)}
 						\label{fig::loner_comp_50}
 					\end{minipage}
 					\begin{minipage}{0.5\linewidth}
 						\includegraphics[width=\linewidth]{loner_comp_120}
-						\caption{Method comparaison (teacher optimality : 75\%)}
+						\caption{Method comparaison (teacher optimality: 75\%)}
 						\label{fig::loner_comp_120}
 					\end{minipage}
 				\end{figure}
@@ -971,17 +969,17 @@ For all the learning algorithms tested, we used optimistic action-value initiali
 				\begin{figure}
 					\begin{minipage}{0.5\linewidth}
 						\includegraphics[width=\linewidth]{tt_metric_w_loners}
-						\caption{Time to convergence metric : comparaison with classical RL algorithms}
+						\caption{Time to convergence metric: comparaison with classical RL algorithms}
 						\label{fig::tt_metric_w_loners}
 					\end{minipage}
 					\begin{minipage}{0.5\linewidth}
 						\includegraphics[width=\linewidth]{tr_metric_w_loners}
-						\caption{Reward ratio to convergence metric : comparaison with classical RL algorithms}
+						\caption{Reward ratio to convergence metric: comparaison with classical RL algorithms}
 						\label{fig::tr_metric_w_loners}
 					\end{minipage}
 				\end{figure}
 				
-			\paragraph{} Those figures confirm the fact that our compliant based algorithms have comparable performance than eligibility traces based reinforcement learning algorithms. This is rather pleasing, knowing that our update are tailored by TD(0) updates. When compared to TD(0) learners (like SARSA or Q-learning), it is clear that our compliant-based learners perform equally or better (depending on the metric). This is reassuring, since they have a significant advantage : the prior knowledge given by the mentor's demonstration. 
+			\paragraph{} Those figures confirm the fact that our compliant based algorithms have comparable performance than eligibility traces based reinforcement learning algorithms. This is rather pleasing, knowing that our update are tailored by TD(0) updates. When compared to TD(0) learners (like SARSA or Q-learning), it is clear that our compliant-based learners perform equally or better (depending on the metric). This is reassuring, since they have a significant advantage: the prior knowledge given by the mentor's demonstration. 
 		}
 		
 		\section{Improvements}
