@@ -1,0 +1,48 @@
+\select@language {english}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces The \emph {free\_grid} state space}}{11}{figure.2.1}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces The \emph {bar\_grid} state space}}{11}{figure.2.2}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces The \emph {free\_grid} learned optimal policy}}{12}{figure.2.3}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces The \emph {bar\_grid} learned optimal policy}}{12}{figure.2.4}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces The \emph {free\_grid} value iteration learning curve}}{12}{figure.2.5}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces The \emph {bar\_grid} value iteration learning curve}}{12}{figure.2.6}
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Learning curve for SARSA on \emph {free\_grid}}}{13}{figure.2.7}
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Averaged rewards over mini-batch for SARSA on \emph {free\_grid}}}{13}{figure.2.8}
+\contentsline {figure}{\numberline {2.9}{\ignorespaces Learning curve for Q-learning on \emph {bar\_grid}}}{13}{figure.2.9}
+\contentsline {figure}{\numberline {2.10}{\ignorespaces Averaged rewards over mini-batch for Q-learning on \emph {bar\_grid}}}{13}{figure.2.10}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces The \emph {maze\_grid} state space}}{16}{figure.3.1}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Optimal policy (value iteration)}}{16}{figure.3.2}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Average rewards on minibatch for learned policies, optimal policy and random policy.}}{17}{figure.3.3}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Generating a suboptimal mentor from a SARSA learner}}{17}{figure.3.4}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Constant compliance learning, $p=0.9$, with the optimal mentor}}{18}{figure.3.5}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Constant compliance learning, $p=0.9$, with a slightly suboptimal mentor}}{18}{figure.3.6}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces An exemple of suboptimal mentor policy that doesn't always lead to the positive reward}}{19}{figure.3.7}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Vanishing compliance, $\beta = 0.99$}}{20}{figure.3.8}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Vanishing compliance, $\beta = 0.97$}}{20}{figure.3.9}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces The Beta distribution for several values of $(\alpha ,\beta )$}}{21}{figure.3.10}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces $\beta $-implicit compliance learning curve}}{24}{figure.4.1}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces $\beta $-implicit compliance learning curve}}{24}{figure.4.2}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Histogram representation of the posterior means for a suboptimal teacher (first mentor)}}{24}{figure.4.3}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Histogram representation of the posterior means for a a suboptimal teacher (second mentor)}}{24}{figure.4.4}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Learnt confidence: green arrows show near 1 posterior mean, red arrows near 0}}{25}{figure.4.5}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Learnt confidence: green arrows show near 1 posterior mean, red arrows near 0}}{25}{figure.4.6}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Explicit compliance learning curve}}{26}{figure.4.7}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Explicit compliance learning curve}}{26}{figure.4.8}
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Histogram representation of the posterior decisions for a suboptimal teacher (first mentor)}}{26}{figure.4.9}
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Histogram representation of the posterior decisions for a suboptimal teacher (second mentor)}}{26}{figure.4.10}
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Learnt decisions: green arrows show listening, red arrows discarding}}{26}{figure.4.11}
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Learnt decisions: green arrows show listening, red arrows discarding}}{26}{figure.4.12}
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Learning curves for a first teacher}}{27}{figure.4.13}
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Learning curve for a second teacher}}{27}{figure.4.14}
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Time to convergence metric}}{28}{figure.4.15}
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Reward ratio to convergence metric}}{28}{figure.4.16}
+\contentsline {figure}{\numberline {4.17}{\ignorespaces Method comparaison (teacher optimality: 50\%)}}{28}{figure.4.17}
+\contentsline {figure}{\numberline {4.18}{\ignorespaces Method comparaison (teacher optimality: 75\%)}}{28}{figure.4.18}
+\contentsline {figure}{\numberline {4.19}{\ignorespaces Time to convergence metric: comparaison with classical RL algorithms}}{29}{figure.4.19}
+\contentsline {figure}{\numberline {4.20}{\ignorespaces Reward ratio to convergence metric: comparaison with classical RL algorithms}}{29}{figure.4.20}
+\contentsline {figure}{\numberline {4.21}{\ignorespaces Learning curves for both off an on-policy compliance-implicit learner}}{29}{figure.4.21}
+\contentsline {figure}{\numberline {4.22}{\ignorespaces Learning curves for both off an on-policy compliance-explicit learner}}{29}{figure.4.22}
+\addvspace {10\p@ }
