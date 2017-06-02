@@ -10,13 +10,21 @@
 \usepackage{tabularx}
 \graphicspath{{./Images/}}
 \cRTitle{Semester project report}
+\usepackage{afterpage}
 
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
 %% ---------------------------------------------------------TITLE --------------------------------------------------------- %%
 
 %% ---------------------------------------------------- DOCUMENT ---------------------------------------------------- %%
 \begin{document}
 	\include{./title_page/title_page}
 	
+	\blankpage 
 	\tableofcontents
 	\begingroup
 \let\clearpage\relax
