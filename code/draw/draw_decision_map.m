@@ -28,7 +28,7 @@ for i=1:n
                 arrows(i,:) = [arrow_length 0];
         end
     end
-    index(i,:) = double(lv >= (dv-0.01));
+    index(i,:) = double(lv >= (dv-0.001));
 end
 
 hold on;

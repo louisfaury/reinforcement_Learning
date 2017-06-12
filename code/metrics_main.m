@@ -213,38 +213,18 @@ title('Total Reward to Convergence Ratio 10-fold statistics');
 
 
 %% With common methods
-% figure; hold on ;
-% d = bar([naive_opt_index,ac_opt_index,av_opt_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1; 
-%      naive_1_index,ac_1_index,av_1_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1;
-%      naive_2_index,ac_2_index,av_2_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2;
-%      naive_3_index,ac_3_index,av_3_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2]);
-% % a = plot([1 2 3 4],[naive_opt_index,naive_1_index,naive_2_index,naive_3_index],'-.s','LineWidth',1);
-% % b = plot([1 2 3 4],[ac_opt_index,ac_1_index,ac_2_index,ac_3_index],'-.s','LineWidth',1);
-% % c = plot([1 2 3 4],[av_opt_index,av_1_index,av_2_index,av_3_index],'-.s','LineWidth',1);
-% % d = plot([1 2 3 4],[sarsa_index_1,sarsa_index_1,sarsa_index_2,sarsa_index_2],'-.s','LineWidth',1);
-% % e = plot([1 2 3 4],[sarsa_lambda_index_1,sarsa_lambda_index_1,sarsa_lambda_index_2,sarsa_lambda_index_2],'-.s','LineWidth',1);
-% % f = plot([1 2 3 4],[ql_index_1,ql_index_1,ql_index_2,ql_index_2],'-.s','LineWidth',1);
-% % g = plot([1 2 3 4],[ql_lambda_index_1,ql_lambda_index_1,ql_lambda_index_2,ql_lambda_index_2],'-.s','LineWidth',1);
-% % 
-% % h = legend([a b c d e f g],{'Naive','Actor-Critic','Action-value','Sarsa','Sarsa $\lambda$','QL','QL $\lambda$'});
-% % set(h,'interpreter','latex','FontSize',14);
-% % xticks([1 2 3 4])
-% % xticklabels({'Optimal (T=5.5)','Suboptimal 1 (T=5.5)','Suboptimal 2 (T=4.5)','Suboptimal 3 (T=4.5)'})
-% % grid minor;
-% % ylabel('Iterations to threshold')
-% % title('Time to threshold 10-fold means');
-% figure; hold on ;
-% %d = bar([naive_opt_index,ac_opt_index,av_opt_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1; 
-% %     naive_1_index,ac_1_index,av_1_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1;
-% %     naive_2_index,ac_2_index,av_2_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2;
-% %     naive_3_index,ac_3_index,av_3_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2]);
-% a = plot([1 2 3 4],[naive_opt_cr_mean,naive_1_cr_mean,naive_2_cr_mean,naive_3_cr_mean],'-.s','LineWidth',1);
-% b = plot([1 2 3 4],[ac_opt_cr_mean,ac_1_cr_mean,ac_2_cr_mean,ac_3_cr_mean],'-.s','LineWidth',1);
-% c = plot([1 2 3 4],[av_opt_cr_mean,av_1_cr_mean,av_2_cr_mean,av_3_cr_mean],'-.s','LineWidth',1);
-% %d = plot([1 2 3 4],[sarsa_index_1,sarsa_index_1,sarsa_index_2,sarsa_index_2],'-.s','LineWidth',1);
-% e = plot([1 2 3 4],[sarsa_lambda_cr_arr,sarsa_lambda_cr_arr,sarsa_lambda_cr_arr,sarsa_lambda_cr_arr],'-.s','LineWidth',1);
-% %f = plot([1 2 3 4],[ql_index_1,ql_index_1,ql_index_2,ql_index_2],'-.s','LineWidth',1);
-% %g = plot([1 2 3 4],[ql_lambda_index_1,ql_lambda_index_1,ql_lambda_index_2,ql_lambda_index_2],'-.s','LineWidth',1);
+figure; hold on ;
+d = bar([naive_opt_index,ac_opt_index,av_opt_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1; 
+     naive_1_index,ac_1_index,av_1_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1;
+     naive_2_index,ac_2_index,av_2_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2;
+     naive_3_index,ac_3_index,av_3_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2]);
+% a = plot([1 2 3 4],[naive_opt_index,naive_1_index,naive_2_index,naive_3_index],'-.s','LineWidth',1);
+% b = plot([1 2 3 4],[ac_opt_index,ac_1_index,ac_2_index,ac_3_index],'-.s','LineWidth',1);
+% c = plot([1 2 3 4],[av_opt_index,av_1_index,av_2_index,av_3_index],'-.s','LineWidth',1);
+% d = plot([1 2 3 4],[sarsa_index_1,sarsa_index_1,sarsa_index_2,sarsa_index_2],'-.s','LineWidth',1);
+% e = plot([1 2 3 4],[sarsa_lambda_index_1,sarsa_lambda_index_1,sarsa_lambda_index_2,sarsa_lambda_index_2],'-.s','LineWidth',1);
+% f = plot([1 2 3 4],[ql_index_1,ql_index_1,ql_index_2,ql_index_2],'-.s','LineWidth',1);
+% g = plot([1 2 3 4],[ql_lambda_index_1,ql_lambda_index_1,ql_lambda_index_2,ql_lambda_index_2],'-.s','LineWidth',1);
 % 
 % h = legend([a b c d e f g],{'Naive','Actor-Critic','Action-value','Sarsa','Sarsa $\lambda$','QL','QL $\lambda$'});
 % set(h,'interpreter','latex','FontSize',14);
@@ -253,3 +233,23 @@ title('Total Reward to Convergence Ratio 10-fold statistics');
 % grid minor;
 % ylabel('Iterations to threshold')
 % title('Time to threshold 10-fold means');
+figure; hold on ;
+%d = bar([naive_opt_index,ac_opt_index,av_opt_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1; 
+%     naive_1_index,ac_1_index,av_1_index,sarsa_index_1,sarsa_lambda_index_1,ql_index_1,ql_lambda_index_1;
+%     naive_2_index,ac_2_index,av_2_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2;
+%     naive_3_index,ac_3_index,av_3_index,sarsa_index_2,sarsa_lambda_index_2,ql_index_2,ql_lambda_index_2]);
+a = plot([1 2 3 4],[naive_opt_cr_mean,naive_1_cr_mean,naive_2_cr_mean,naive_3_cr_mean],'-.s','LineWidth',1);
+b = plot([1 2 3 4],[ac_opt_cr_mean,ac_1_cr_mean,ac_2_cr_mean,ac_3_cr_mean],'-.s','LineWidth',1);
+c = plot([1 2 3 4],[av_opt_cr_mean,av_1_cr_mean,av_2_cr_mean,av_3_cr_mean],'-.s','LineWidth',1);
+%d = plot([1 2 3 4],[sarsa_index_1,sarsa_index_1,sarsa_index_2,sarsa_index_2],'-.s','LineWidth',1);
+e = plot([1 2 3 4],[sarsa_lambda_cr_arr,sarsa_lambda_cr_arr,sarsa_lambda_cr_arr,sarsa_lambda_cr_arr],'-.s','LineWidth',1);
+%f = plot([1 2 3 4],[ql_index_1,ql_index_1,ql_index_2,ql_index_2],'-.s','LineWidth',1);
+%g = plot([1 2 3 4],[ql_lambda_index_1,ql_lambda_index_1,ql_lambda_index_2,ql_lambda_index_2],'-.s','LineWidth',1);
+
+h = legend([a b c d e f g],{'Naive','Actor-Critic','Action-value','Sarsa','Sarsa $\lambda$','QL','QL $\lambda$'});
+set(h,'interpreter','latex','FontSize',14);
+xticks([1 2 3 4])
+xticklabels({'Optimal (T=5.5)','Suboptimal 1 (T=5.5)','Suboptimal 2 (T=4.5)','Suboptimal 3 (T=4.5)'})
+grid minor;
+ylabel('Iterations to threshold')
+title('Time to threshold 10-fold means');

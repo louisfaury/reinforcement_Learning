@@ -63,16 +63,16 @@ while (k<max_iter && delta>stop_criterion)
                 % mdp update
                 n_qvalue = max([mdp.states(next_state_index).actions.value]);
                 qvalue = mdp.states(state_index).actions(action_index).value;
-                lrate = init_lr/(counts(state_index,action_index)^(1));
+                lrate = init_lr/(counts(state_index,action_index)^(0.55));
                 u_qvalue = (1-lrate)*qvalue + lrate*(reward + mdp.discount*n_qvalue);
                 counts(state_index,action_index) = counts(state_index,action_index)+1/mini_batch_size;
                 delta = max(delta,abs(u_qvalue-qvalue));
                 qvalue = u_qvalue;
                 mdp.states(state_index).actions(action_index).value = qvalue;
                 
-                % A('l','d') update 
-                if (action_index == mentor_action_index)
-                   mdp.states(state_index).ql_value =  (1-ld_lr)*ql + ld_lr*qvalue;
+                % A('l','d') update
+                if (action_index==mentor_action_index)
+                    mdp.states(state_index).ql_value =  (1-ld_lr)*ql + ld_lr*qvalue;
                 else
                     action_set_size = size(mdp.states(state_index).actions,2);
                     mdp.states(state_index).qd_value = (1-ld_lr)*qd + ld_lr*max([mdp.states(state_index).actions(1:action_set_size~=mentor_action_index).value]);
