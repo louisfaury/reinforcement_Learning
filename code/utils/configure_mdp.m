@@ -97,7 +97,7 @@ switch model_name
         mdp.av_il.t0 = 0.5;
         mdp.av_il.qd_init_value = 0;
         mdp.av_il.ql_init_value = mdp.av_il.t0*2.19;
-        mdp.av_il.default_value = -4;
+        mdp.av_il.default_value = 0;
         mdp.av_il.init_temp = 2;
         mdp.av_il.stop_criterion = -0.1;
         mdp.av_il.temp_mult = 0.99;
